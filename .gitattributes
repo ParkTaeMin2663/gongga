@@ -1,0 +1,42 @@
+# ===== Unity 텍스트 에셋: 줄바꿈 통일 + diff 가능한 텍스트로 취급 =====
+*.cs        text diff=csharp
+*.unity     text eol=lf
+*.prefab    text eol=lf
+*.asset     text eol=lf
+*.mat       text eol=lf
+*.anim      text eol=lf
+*.controller text eol=lf
+*.meta      text eol=lf
+*.inputactions text eol=lf
+
+# Unity 에디터 레이아웃 파일(.wlt)을 GitHub가 Wolfram 언어로 오인하지 않게 언어 통계에서 제외
+*.wlt linguist-detectable=false
+
+# ===== 큰 바이너리 파일은 Git LFS로 저장 =====
+# 오디오
+*.wav  filter=lfs diff=lfs merge=lfs -text
+*.mp3  filter=lfs diff=lfs merge=lfs -text
+*.ogg  filter=lfs diff=lfs merge=lfs -text
+*.aif  filter=lfs diff=lfs merge=lfs -text
+*.aiff filter=lfs diff=lfs merge=lfs -text
+# 텍스처/이미지
+*.png  filter=lfs diff=lfs merge=lfs -text
+*.jpg  filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.psd  filter=lfs diff=lfs merge=lfs -text
+*.tga  filter=lfs diff=lfs merge=lfs -text
+*.tif  filter=lfs diff=lfs merge=lfs -text
+*.exr  filter=lfs diff=lfs merge=lfs -text
+*.hdr  filter=lfs diff=lfs merge=lfs -text
+# 3D 모델
+*.fbx  filter=lfs diff=lfs merge=lfs -text
+*.obj  filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+# 폰트·영상
+*.ttf  filter=lfs diff=lfs merge=lfs -text
+*.otf  filter=lfs diff=lfs merge=lfs -text
+*.mp4  filter=lfs diff=lfs merge=lfs -text
+# NavMesh·라이트맵 등 Unity가 굽는 큰 파일
+# (Assets 안에서 구운 파일만. ProjectSettings/NavMeshAreas.asset 같은 설정 파일은 제외)
+Assets/**/LightingData.asset filter=lfs diff=lfs merge=lfs -text
+Assets/**/NavMesh*.asset     filter=lfs diff=lfs merge=lfs -text
