@@ -35,6 +35,9 @@ public class PlayerLook : MonoBehaviour
     // ----- 이번 프레임에 들어온 마우스 움직임 -----
     private Vector2 lookDelta;
 
+    /// <summary>true면 시점이 멈춘다. 문 등을 잡고 있는 동안 PlayerInteract가 켠다.</summary>
+    public bool IsLocked { get; set; }
+
     private void Start()
     {
         if (this.cameraTransform == null)
@@ -64,6 +67,13 @@ public class PlayerLook : MonoBehaviour
     {
         if (this.cameraTransform == null)
         {
+            return;
+        }
+
+        // 잠겨 있으면 마우스 움직임을 버린다. (물체를 잡고 있는 동안)
+        if (this.IsLocked)
+        {
+            this.lookDelta = Vector2.zero;
             return;
         }
 
