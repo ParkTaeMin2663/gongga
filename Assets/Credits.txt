@@ -19,7 +19,19 @@
 (아직 없음)
 
 [텍스처]
-(아직 없음)
+- 이름      : Decrepit Wallpaper
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/Walls/decrepit_wallpaper_*_1k.jpg (재질 wall_wallpaper)
+- 출처 URL  : https://polyhaven.com/a/decrepit_wallpaper
+- 저작자    : Poly Haven
+- 라이선스  : CC0
+
+- 이름      : Cracked Concrete Wall
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/Walls/cracked_concrete_wall_*_1k.jpg (재질 wall_concrete)
+- 출처 URL  : https://polyhaven.com/a/cracked_concrete_wall
+- 저작자    : Poly Haven
+- 라이선스  : CC0
 
 [폰트]
 (아직 없음)
