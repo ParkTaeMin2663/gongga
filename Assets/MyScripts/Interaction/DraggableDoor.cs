@@ -23,6 +23,9 @@ public class DraggableDoor : MonoBehaviour, IInteractable
     [Tooltip("체크하면 잠긴 문. 잡아도 열리지 않는다. (나중에 열쇠로 풀 예정)")]
     public bool isLocked = false;
 
+    /// <summary>문은 마우스로 밀어야 하므로 잡는 동안 시점을 고정한다.</summary>
+    public bool LocksLook { get { return true; } }
+
     // ----- Start()에서 한 번만 찾아 저장 (강의 04장) -----
     private Rigidbody rb;
 

@@ -121,8 +121,9 @@ public class PlayerInteract : MonoBehaviour
         this.heldTransform = ((MonoBehaviour)this.lookTarget).transform;
         this.heldTarget.OnGrabStart(this.cameraTransform);
 
-        // 잡는 동안에는 고개를 고정 (마우스는 물체를 미는 데 쓴다)
-        if (this.playerLook != null)
+        // 문처럼 마우스로 미는 물체는 잡는 동안 고개를 고정한다.
+        // 들고 다니는 물건(PickupObject)은 고개를 돌려야 하므로 고정하지 않는다.
+        if (this.playerLook != null && this.heldTarget.LocksLook)
         {
             this.playerLook.IsLocked = true;
         }
