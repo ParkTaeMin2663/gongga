@@ -12,9 +12,9 @@
 ### A (시스템)
 | 할 일 | 상태 | 메모 |
 |---|---|---|
-| ① 물건 집기 | 🟡 코드 완료, 테스트 전 | `PickupObject.cs`. Test_A 씬에서 시험 중 |
-| ② 물건 던지기 | ⬜ | |
-| ③ 서랍 | ⬜ | |
+| ① 물건 집기 | 🟡 A 테스트 완료 | `PickupObject.cs`, `Assets/Prefabs/Box`. Test_A 씬 |
+| ② 물건 던지기 | 🟡 A 테스트 완료 | 들고 있을 때 마우스 오른쪽. 새 액션 `Throw` (InputSystem_Actions) |
+| ③ 서랍 | 🟡 코드 완료, 테스트 전 | `DraggableDrawer.cs`. Dresser(Empty, Scale 1, +Z가 앞) 아래 Body + Drawer(Rigidbody Is Kinematic). Test_A에 아직 안 만듦 |
 | ④ 차단기 레버 | ⬜ | |
 | ⑤ NoiseSystem 뼈대 | ⬜ | B의 셔터·센서등 소리가 이걸 쓴다 |
 
@@ -48,4 +48,5 @@
 - 문은 `LocksLook = true`(잡는 동안 시점 고정), 들고 다니는 물건은 `false` — `IInteractable`에 추가됨
 
 ## 알려진 문제
+- (가끔) 상자를 들고 고개를 빠르게 돌린 뒤 놓으면 멀리 튕겨 나감 → 상자가 플레이어 몸을 통과하며 겹쳐서 생기는 현상. 다시 생기면 `Physics.IgnoreCollision` + `maxDepenetrationVelocity`(강의 외)로 고치기로 함
 - 벽 텍스처가 벽 길이에 따라 늘어나 보임 → 자동 Tiling 스크립트 검토 중 (강의 외 API, 결정 전)

@@ -29,8 +29,12 @@ public class PickupObject : MonoBehaviour, IInteractable
     public float lowestLook = -0.5f;
 
     [Header("놓기")]
-    [Tooltip("놓는 순간 남는 최고 속도(m/s). 휘두르다 놓아도 멀리 날아가지 않게 한다. (던지기는 따로 만든다)")]
+    [Tooltip("놓는 순간 남는 최고 속도(m/s). 휘두르다 놓아도 멀리 날아가지 않게 한다.")]
     public float dropMaxSpeed = 2f;
+
+    [Header("던지기")]
+    [Tooltip("던지는 힘. Mass 1 기준 400이면 1초에 약 8m 날아가는 속도. 무거운 물건(Mass 큼)일수록 덜 날아간다.")]
+    public float throwForce = 400f;
 
     /// <summary>들고 다니는 동안에도 고개를 돌릴 수 있어야 하므로 시점을 잠그지 않는다.</summary>
     public bool LocksLook { get { return false; } }
@@ -123,5 +127,21 @@ public class PickupObject : MonoBehaviour, IInteractable
         {
             this.rb.linearVelocity = velocity.normalized * this.dropMaxSpeed;
         }
+    }
+
+    /// <summary>
+    /// direction 쪽으로 던진다. PlayerInteract가 손에서 놓은(OnGrabEnd) 직후에 부른다.
+    /// </summary>
+    public void Throw(Vector3 direction)
+    {
+        if (this.rb == null)
+        {
+            return;
+        }
+
+        // 강의 03장 AddForce로 발사하기와 같은 방식. 한 번만 힘을 준다.
+        this.rb.AddForce(direction.normalized * this.throwForce);
+
+        // 나중에 NoiseSystem을 만들면, 던진 물건이 바닥에 떨어질 때 괴물을 부르는 소리를 낸다.
     }
 }
