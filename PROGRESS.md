@@ -12,8 +12,8 @@
 ### A (시스템)
 | 할 일 | 상태 | 메모 |
 |---|---|---|
-| ① 물건 집기 | 🟡 A 테스트 완료 | `PickupObject.cs`, `Assets/Prefabs/Box`. Test_A 씬 |
-| ② 물건 던지기 | 🟡 A 테스트 완료 | 들고 있을 때 마우스 오른쪽. 새 액션 `Throw` (InputSystem_Actions) |
+| ① 물건 집기 | ✅ B 확인(11/03) | `PickupObject.cs`, `Assets/Prefabs/Box`. Test_A 씬 |
+| ② 물건 던지기 | ✅ B 확인(11/03) | 들고 있을 때 마우스 오른쪽. 새 액션 `Throw` (InputSystem_Actions) |
 | ③ 서랍 | 🟡 코드 완료, 테스트 전 | `DraggableDrawer.cs`. Dresser(Empty, Scale 1, +Z가 앞) 아래 Body + Drawer(Rigidbody Is Kinematic). Test_A에 아직 안 만듦 |
 | ④ 차단기 레버 | ⬜ | |
 | ⑤ NoiseSystem 뼈대 | ⬜ | B의 셔터·센서등 소리가 이걸 쓴다 |
