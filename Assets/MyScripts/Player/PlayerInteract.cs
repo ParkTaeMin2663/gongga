@@ -13,6 +13,8 @@ using UnityEngine.InputSystem; // Input System Package를 쓰기 위해 반드�
 ///   - Path = Mouse Left Button, Interaction = Press (Press And Release)
 ///   - 누른 순간 OnGrab(isPressed = true), 뗀 순간 OnGrab(isPressed = false)
 ///   - OnLook은 PlayerLook과 이 스크립트가 둘 다 받는다. 잡는 동안에는 이쪽이 문을 미는 데 쓴다.
+/// [입력] 새 액션 Throw 추가 (물건 던지기)
+///   - Path = Mouse Right Button, Interaction = Press (Press Only) → 누른 순간 OnThrow
 /// </summary>
 public class PlayerInteract : MonoBehaviour
 {
@@ -68,6 +70,20 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
+    // 마우스 오른쪽을 누른 순간 (강의 04장 Fire처럼 새로 만든 Throw 액션)
+    // 물건(PickupObject)을 들고 있을 때만 던진다. 문을 잡고 있을 때는 아무 일도 없다.
+    private void OnThrow(InputValue value)
+    {
+        PickupObject pickup = this.heldTarget as PickupObject;
+        if (pickup == null)
+        {
+            return;
+        }
+
+        this.EndGrab();                              // 먼저 손에서 놓고 (중력 되돌리기)
+        pickup.Throw(this.cameraTransform.forward);  // 바라보는 쪽으로 던진다
+    }
+
     private void Update()
     {
         if (this.cameraTransform == null)
@@ -121,8 +137,9 @@ public class PlayerInteract : MonoBehaviour
         this.heldTransform = ((MonoBehaviour)this.lookTarget).transform;
         this.heldTarget.OnGrabStart(this.cameraTransform);
 
-        // 잡는 동안에는 고개를 고정 (마우스는 물체를 미는 데 쓴다)
-        if (this.playerLook != null)
+        // 문처럼 마우스로 미는 물체는 잡는 동안 고개를 고정한다.
+        // 들고 다니는 물건(PickupObject)은 고개를 돌려야 하므로 고정하지 않는다.
+        if (this.playerLook != null && this.heldTarget.LocksLook)
         {
             this.playerLook.IsLocked = true;
         }

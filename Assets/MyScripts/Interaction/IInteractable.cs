@@ -10,6 +10,9 @@ using UnityEngine;
 /// </summary>
 public interface IInteractable
 {
+    /// <summary>잡고 있는 동안 고개(시점)를 고정할지. 문·서랍은 true(마우스로 밀어야 함), 들고 다니는 물건은 false.</summary>
+    bool LocksLook { get; }
+
     /// <summary>마우스 왼쪽을 누른 순간 (잡기 시작)</summary>
     void OnGrabStart(Transform cameraTransform);
 
