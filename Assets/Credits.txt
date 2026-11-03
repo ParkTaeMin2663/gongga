@@ -19,7 +19,33 @@
 (아직 없음)
 
 [텍스처]
-(아직 없음)
+- 이름      : Decrepit Wallpaper
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/Walls/decrepit_wallpaper_*_1k.jpg (재질 wall_wallpaper)
+- 출처 URL  : https://polyhaven.com/a/decrepit_wallpaper
+- 저작자    : Poly Haven
+- 라이선스  : CC0
+
+- 이름      : Cracked Concrete Wall
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/Walls/cracked_concrete_wall_*_1k.jpg (재질 wall_concrete)
+- 출처 URL  : https://polyhaven.com/a/cracked_concrete_wall
+- 저작자    : Poly Haven
+- 라이선스  : CC0
+
+- 이름      : 스프레이 낙서 3종 (직접 제작)
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/graffiti_01~03.png (X 표시 / 지그재그·화살표 / 엉킨 선)
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 그림, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : "공가" 스프레이 글씨 (직접 제작)
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/gongga_spray.png
+- 출처 URL  : 팀 자체 제작 (글자 모양에 WenQuanYi Zen Hei 폰트 사용, http://wenq.org/)
+- 저작자    : 「공가」 팀 / 폰트: Qianqian Fang and The WenQuanYi Project
+- 라이선스  : 폰트는 GPL-2 with Font embedding exception (폰트로 만든 이미지는 자유롭게 사용 가능)
 
 [폰트]
 (아직 없음)
