@@ -40,8 +40,6 @@
 | `Box` | 3층 복도·세대 곳곳 2~3개 (던져서 괴물 유인용) | 그대로 배치. 크기는 바꿔도 됨 |
 | `Nightstand` | 세대 안 침실 자리 (서랍 단서를 넣기 좋음). Dresser 대신 써도 됨 | 무료 모델(Poly Haven, CC0). 서랍이 앞으로 열리게 Open Direction 맞춰 둠. 회전은 서랍 앞면이 방 안쪽을 보게 |
 | `Breaker` | 2층 계단 옆 벽 (분전함). 높이 y ≈ 2.8 + 1.3 | 파란 화살표(+Z)가 복도 쪽(플레이어 쪽)을 향하게 회전. Scale 1 유지. 셔터 연출 스크립트에서 자식 `Lever`의 `DraggableLever.IsOn`을 확인 |
-| `NoiseSystem` | SampleScene에 1개 (위치 상관없음) | 이름을 `NoiseSystem` 그대로 둘 것(코드가 이름으로 찾음). 없으면 괴물이 소리를 못 들음 |
-| (Player 설정) | SampleScene의 Player | Add Component → Audio Source, Audio Resource = `footstep_concrete_000`, Play On Awake·Loop 끔 |
 
 ---
 
@@ -54,6 +52,8 @@
 - 11/03: 계단은 "밟는 건 경사로, 보이는 건 계단" 방식. 계단 걸림은 Player Capsule에 Physics Material `PlayerSlip`(마찰 0, Minimum), 경사로에 마찰 1(Maximum)
 - 11/03: 벽 텍스처 자동 Tiling 스크립트는 보류, 재질 Tiling 수동 조절로 결정
 - 11/07: 가구는 Poly Haven(CC0) 모델 사용. 모델은 `Assets/Models/`, 재질은 텍스처로 직접 만든 URP Lit. 서랍 분리된 후보: Vintage Wooden Drawer 01(서랍 6칸, 관리사무소용), Drawer Cabinet, Painted Wooden Cabinet
+- 11/07: **Player는 프리팹**(`Assets/Prefabs/Player`, 자식 Main Camera·Flashlight 포함). SampleScene·Test_A 둘 다 이 프리팹 사용. Player 수정은 A가 프리팹에서 한다(씬 수정 불필요). Main Camera 이름·태그 유지
+- 11/07: A가 B에게 알리고 SampleScene 수정 — Player 프리팹화 + 발소리 Audio Source, `NoiseSystem` 배치 완료
 - 문은 `LocksLook = true`(잡는 동안 시점 고정), 들고 다니는 물건은 `false` — `IInteractable`에 추가됨
 
 ## 알려진 문제
