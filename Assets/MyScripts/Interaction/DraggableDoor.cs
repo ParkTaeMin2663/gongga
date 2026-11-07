@@ -23,11 +23,30 @@ public class DraggableDoor : MonoBehaviour, IInteractable
     [Tooltip("체크하면 잠긴 문. 잡아도 열리지 않는다. (나중에 열쇠로 풀 예정)")]
     public bool isLocked = false;
 
+    [Header("소리 (없어도 됨)")]
+    [Tooltip("닫힌 문이 열리기 시작할 때 끼이익. 문에 Audio Source를 붙이고 여기로 드래그")]
+    public AudioSource openSound;
+
+    [Tooltip("열린 문이 다시 닫혔을 때 쾅. 두 번째 Audio Source")]
+    public AudioSource closeSound;
+
+    [Tooltip("잠긴 문을 잡았을 때 덜컹. 세 번째 Audio Source")]
+    public AudioSource lockedSound;
+
+    [Tooltip("이 각도(도)보다 적게 열려 있으면 '닫힌 문'으로 본다.")]
+    public float closedAngle = 3f;
+
     /// <summary>문은 마우스로 밀어야 하므로 잡는 동안 시점을 고정한다.</summary>
     public bool LocksLook { get { return true; } }
 
     // ----- Start()에서 한 번만 찾아 저장 (강의 04장) -----
     private Rigidbody rb;
+
+    // [강의 외] Hinge Joint의 현재 각도(angle)를 읽어서 열림/닫힘을 판단한다.
+    private HingeJoint hinge;
+
+    // 지금 문이 닫힌 상태인지 (열림 → 닫힘이 되는 순간 닫히는 소리)
+    private bool isClosed = true;
 
     // 잡고 있는 동안 플레이어 카메라 (어느 쪽이 "앞"인지 알기 위해)
     private Transform cameraTransform;
@@ -35,6 +54,7 @@ public class DraggableDoor : MonoBehaviour, IInteractable
     private void Start()
     {
         this.rb = this.GetComponent<Rigidbody>();
+        this.hinge = this.GetComponent<HingeJoint>();
 
         if (this.rb == null)
         {
@@ -53,8 +73,8 @@ public class DraggableDoor : MonoBehaviour, IInteractable
 
         if (this.isLocked)
         {
-            // 나중에 덜컹거리는 소리를 여기서 재생한다.
             Debug.Log(this.name + " : 잠겨 있다.");
+            this.PlaySound(this.lockedSound);
             return;
         }
 
@@ -90,6 +110,31 @@ public class DraggableDoor : MonoBehaviour, IInteractable
         this.rb.AddForce(push * this.pushStrength, ForceMode.Impulse);
     }
 
+    private void Update()
+    {
+        if (this.hinge == null)
+        {
+            return;
+        }
+
+        // 각도가 음수일 수도 있으므로 크기만 본다. (Mathf.Abs = 절댓값)
+        float angle = Mathf.Abs(this.hinge.angle);
+
+        // 열림 판정은 closedAngle의 2배로 여유를 둔다. (경계에서 떨리며 소리가 반복되는 것 방지)
+        if (this.isClosed && angle > this.closedAngle * 2f)
+        {
+            // 닫혀 있던 문이 열리기 시작했다
+            this.isClosed = false;
+            this.PlaySound(this.openSound);
+        }
+        else if (this.isClosed == false && angle <= this.closedAngle)
+        {
+            // 열려 있던 문이 닫혔다
+            this.isClosed = true;
+            this.PlaySound(this.closeSound);
+        }
+    }
+
     public void OnGrabEnd()
     {
         this.cameraTransform = null;
@@ -98,6 +143,15 @@ public class DraggableDoor : MonoBehaviour, IInteractable
         if (this.rb != null)
         {
             this.rb.isKinematic = true;
+        }
+    }
+
+    // 강의 03장 AudioSource.Play(). 칸이 비어 있으면 아무 소리도 내지 않는다.
+    private void PlaySound(AudioSource sound)
+    {
+        if (sound != null)
+        {
+            sound.Play();
         }
     }
 }

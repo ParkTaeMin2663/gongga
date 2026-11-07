@@ -31,6 +31,16 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
     [Tooltip("체크하면 잠긴 서랍. 잡아도 열리지 않는다.")]
     public bool isLocked = false;
 
+    [Header("소리 (없어도 됨)")]
+    [Tooltip("닫힌 상태에서 열리기 시작할 때. 서랍에 Audio Source를 붙이고 여기로 드래그")]
+    public AudioSource openSound;
+
+    [Tooltip("끝까지 닫혔을 때. 두 번째 Audio Source를 붙이고 여기로 드래그")]
+    public AudioSource closeSound;
+
+    [Tooltip("잠긴 서랍을 잡았을 때 덜컹 소리. 세 번째 Audio Source")]
+    public AudioSource lockedSound;
+
     /// <summary>서랍은 마우스로 당겨야 하므로 잡는 동안 시점을 고정한다.</summary>
     public bool LocksLook { get { return true; } }
 
@@ -56,8 +66,8 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
     {
         if (this.isLocked)
         {
-            // 나중에 덜컹거리는 소리를 여기서 재생한다.
             Debug.Log(this.name + " : 잠겨 있다.");
+            this.PlaySound(this.lockedSound);
         }
     }
 
@@ -80,6 +90,17 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
         {
             amount = this.openDistance;
         }
+
+        // 소리: 닫혀 있다가 열리기 시작한 순간 / 열려 있다가 끝까지 닫힌 순간
+        if (this.OpenAmount == 0f && amount > 0f)
+        {
+            this.PlaySound(this.openSound);
+        }
+        else if (this.OpenAmount > 0f && amount == 0f)
+        {
+            this.PlaySound(this.closeSound);
+        }
+
         this.OpenAmount = amount;
 
         // 부모 기준 openDirection 쪽으로 OpenAmount만큼 밀어낸 위치 (강의 03장 normalized로 길이를 1로 맞춤)
@@ -89,5 +110,14 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
     public void OnGrabEnd()
     {
         // 손을 놓으면 그 위치에 그대로 멈춰 있다. (Is Kinematic이라 혼자 미끄러지지 않음)
+    }
+
+    // 강의 03장 AudioSource.Play(). 칸이 비어 있으면 아무 소리도 내지 않는다.
+    private void PlaySound(AudioSource sound)
+    {
+        if (sound != null)
+        {
+            sound.Play();
+        }
     }
 }

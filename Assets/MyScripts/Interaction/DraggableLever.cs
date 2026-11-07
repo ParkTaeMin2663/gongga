@@ -34,6 +34,9 @@ public class DraggableLever : MonoBehaviour, IInteractable
     [Tooltip("체크하면 한 번 켜진 뒤에는 다시 내릴 수 없다. (차단기 연출은 한 번만 일어나야 하므로 기본 체크)")]
     public bool stayOnOnceSwitched = true;
 
+    [Tooltip("켜질 때 나는 소리 크기 = 괴물이 듣는 거리(m)")]
+    public float noiseLoudness = 15f;
+
     [Header("잠금")]
     [Tooltip("체크하면 잡아도 움직이지 않는다.")]
     public bool isLocked = false;
@@ -53,10 +56,20 @@ public class DraggableLever : MonoBehaviour, IInteractable
     // 끝까지 올렸을 때 소리 (없어도 됨)
     private AudioSource audioSource;
 
+    // 괴물이 듣는 소리를 보낼 곳 (씬의 NoiseSystem 오브젝트)
+    private NoiseSystem noiseSystem;
+
     private void Start()
     {
         this.startLocalRotation = this.transform.localRotation;
         this.audioSource = this.GetComponent<AudioSource>();
+
+        // 강의 04장: Find는 Start()에서 한 번만
+        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        if (noiseObject != null)
+        {
+            this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
+        }
 
         this.Progress = 0f;
         this.IsOn = false;
@@ -129,7 +142,11 @@ public class DraggableLever : MonoBehaviour, IInteractable
             this.audioSource.Play();
         }
 
-        // TODO(⑤ NoiseSystem 완성 후): 큰 소리 발생 → NoiseSystem.Emit(this.transform.position, 크기);
+        // 괴물을 부르는 큰 소리
+        if (this.noiseSystem != null)
+        {
+            this.noiseSystem.Emit(this.transform.position, this.noiseLoudness, this.name);
+        }
     }
 
     // Progress(0~1)에 맞는 각도로 회전시킨다.

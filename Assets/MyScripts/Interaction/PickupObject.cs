@@ -36,6 +36,13 @@ public class PickupObject : MonoBehaviour, IInteractable
     [Tooltip("던지는 힘. Mass 1 기준 400이면 1초에 약 8m 날아가는 속도. 무거운 물건(Mass 큼)일수록 덜 날아간다.")]
     public float throwForce = 400f;
 
+    [Header("소리")]
+    [Tooltip("이 속도(m/s)보다 세게 부딪히면 소리가 난다. 살짝 내려놓을 때는 안 나게.")]
+    public float noiseMinImpactSpeed = 2f;
+
+    [Tooltip("떨어지거나 던져져 부딪힐 때 소리 크기 = 괴물이 듣는 거리(m)")]
+    public float noiseLoudness = 8f;
+
     /// <summary>들고 다니는 동안에도 고개를 돌릴 수 있어야 하므로 시점을 잠그지 않는다.</summary>
     public bool LocksLook { get { return false; } }
 
@@ -44,6 +51,8 @@ public class PickupObject : MonoBehaviour, IInteractable
 
     // ----- Start()에서 한 번만 찾아 저장 (강의 04장) -----
     private Rigidbody rb;
+    private AudioSource audioSource;   // 부딪히는 소리 (없어도 됨)
+    private NoiseSystem noiseSystem;   // 괴물이 듣는 소리를 보낼 곳
 
     // 들고 있는 동안 플레이어 카메라
     private Transform cameraTransform;
@@ -59,6 +68,49 @@ public class PickupObject : MonoBehaviour, IInteractable
         if (this.rb == null)
         {
             Debug.LogError(this.name + "에 Rigidbody가 없습니다. Add Component로 Rigidbody를 추가해 주세요.");
+        }
+
+        this.audioSource = this.GetComponent<AudioSource>();
+
+        // 강의 04장: Find는 Start()에서 한 번만
+        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        if (noiseObject != null)
+        {
+            this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
+        }
+    }
+
+    // 강의 03장 OnCollisionEnter: 바닥·벽에 부딪힌 순간
+    private void OnCollisionEnter(Collision coll)
+    {
+        // 손에 들고 있을 때 벽에 스치는 건 소리로 치지 않는다.
+        if (this.IsHeld)
+        {
+            return;
+        }
+
+        // 게임 시작 직후 공중에 놓인 물건이 바닥에 내려앉는 건 소리로 치지 않는다.
+        if (Time.time < 1f)
+        {
+            return;
+        }
+
+        // 부딪힌 세기 = 두 물체가 서로 다가오던 속도. 살짝 내려놓은 건 무시한다.
+        float impactSpeed = coll.relativeVelocity.magnitude;
+        if (impactSpeed < this.noiseMinImpactSpeed)
+        {
+            return;
+        }
+
+        // 강의 03장 AudioSource.Play()
+        if (this.audioSource != null)
+        {
+            this.audioSource.Play();
+        }
+
+        if (this.noiseSystem != null)
+        {
+            this.noiseSystem.Emit(this.transform.position, this.noiseLoudness, this.name + " 떨어짐");
         }
     }
 
@@ -142,6 +194,6 @@ public class PickupObject : MonoBehaviour, IInteractable
         // 강의 03장 AddForce로 발사하기와 같은 방식. 한 번만 힘을 준다.
         this.rb.AddForce(direction.normalized * this.throwForce);
 
-        // 나중에 NoiseSystem을 만들면, 던진 물건이 바닥에 떨어질 때 괴물을 부르는 소리를 낸다.
+        // 바닥·벽에 부딪히면 OnCollisionEnter에서 소리가 난다 → 괴물 유인
     }
 }

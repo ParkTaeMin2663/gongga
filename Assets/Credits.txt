@@ -16,7 +16,34 @@
 
 -----------------------------------------------------
 [사운드]
-(아직 없음)
+- 이름      : Impact Sounds (1.0) — 발소리·상자·레버 소리
+- 종류      : 사운드
+- 사용 위치 : Assets/Audio/Footsteps/footstep_concrete_000~004.ogg, footstep_snow_000~004.ogg
+              Assets/Audio/Impacts/impactWood_medium_000~004.ogg, impactMetal_light_000~004.ogg
+- 출처 URL  : https://kenney.nl/assets/impact-sounds
+- 저작자    : Kenney (www.kenney.nl)
+- 라이선스  : CC0
+
+- 이름      : RPG Audio — 문·서랍·레버 소리
+- 종류      : 사운드
+- 사용 위치 : Assets/Audio/Furniture/doorOpen_1~2, doorClose_1~4, creak1~3, metalClick, metalLatch (.ogg)
+- 출처 URL  : https://kenney.nl/assets/rpg-audio
+- 저작자    : Kenney (www.kenney.nl)
+- 라이선스  : CC0
+
+- 이름      : Wooden_Drawer_open_close_1 (of 2) — 나무 서랍 열기·닫기
+- 종류      : 사운드 (열기·닫기 부분만 잘라 ogg로 변환)
+- 사용 위치 : Assets/Audio/Furniture/drawerOpen_wood.ogg, drawerClose_wood.ogg
+- 출처 URL  : https://pixabay.com/sound-effects/household-wooden-drawer-open-close-1-of-2-102552/
+- 저작자    : freesound_community (Pixabay)
+- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+
+- 이름      : Close drawer — 나무 서랍 닫기
+- 종류      : 사운드 (앞 무음 잘라 ogg로 변환)
+- 사용 위치 : Assets/Audio/Furniture/drawerClose_wood2.ogg
+- 출처 URL  : https://pixabay.com/sound-effects/film-special-effects-close-drawer-104761/
+- 저작자    : freesound_community (Pixabay)
+- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
 
 [텍스처]
 - 이름      : Decrepit Wallpaper

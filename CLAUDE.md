@@ -62,7 +62,7 @@
 - 인스펙터에서 조절할 값은 **강의 방식대로 `public` 변수**로 노출하고 `[Header]`, `[Tooltip]`으로 한국어 설명을 단다. 인스펙터에 보일 필요 없는 값은 `private`. (6장 참고)
 - 강의 권장대로 `this.`를 붙여 쓴다. 변수는 소문자로 시작, 함수·클래스는 대문자로 시작.
 - 매 프레임 `Find`, `GetComponent` 호출을 피하고 캐싱한다.
-- 다른 시스템과 연결되는 부분은 이벤트나 인터페이스로 느슨하게 연결한다. (예: `IInteractable`, 소리 발생은 `NoiseSystem.Emit(position, loudness)`)
+- 다른 시스템과 연결되는 부분은 이벤트나 인터페이스로 느슨하게 연결한다. (예: `IInteractable`, 소리 발생은 씬의 `NoiseSystem` 오브젝트를 Start()에서 Find해 두고 `noiseSystem.Emit(position, loudness, 이름)`, loudness = 들리는 거리(m))
 - 폴더 구조:
   ```
   Assets/
