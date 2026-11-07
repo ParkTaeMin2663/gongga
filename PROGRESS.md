@@ -15,7 +15,7 @@
 | ① 물건 집기 | ✅ B 확인(11/03) | `PickupObject.cs`, `Assets/Prefabs/Box`. Test_A 씬 |
 | ② 물건 던지기 | ✅ B 확인(11/03) | 들고 있을 때 마우스 오른쪽. 새 액션 `Throw` (InputSystem_Actions) |
 | ③ 서랍 | 🟡 A 테스트 완료(11/07), B 확인 전 | `DraggableDrawer.cs`, `Assets/Prefabs/Dresser`, `Assets/Prefabs/Nightstand`(무료 모델). 가져온 모델은 서랍 부품에 Box Collider + Rigidbody + DraggableDrawer, 방향은 Open Direction으로 맞춤. Dresser(Empty, Scale 1, +Z가 앞) 아래 Body + Drawer(Rigidbody Use Gravity 끔·Is Kinematic). 당기면 열림, 최대 0.35m |
-| ④ 차단기 레버 | ⬜ | |
+| ④ 차단기 레버 | 🟡 A 테스트 완료(11/07), B 확인 전 | `DraggableLever.cs`. `Assets/Prefabs/Breaker`. Breaker(Empty) 아래 Box + Lever(Empty, 회전축) + 자식 Handle(Cube). 재질은 기존 door_material(몸통)·maker material(손잡이). 마우스 위로 밀면 올라감, 끝까지 올리면 `IsOn = true`(한 번 켜지면 고정). B 셔터 연출은 `lever.IsOn` 확인 |
 | ⑤ NoiseSystem 뼈대 | ⬜ | B의 셔터·센서등 소리가 이걸 쓴다 |
 
 ### B (월드·연출)
@@ -39,6 +39,7 @@
 | `Dresser` | 303호 안 (서랍 단서 자리). 다른 세대에 소품으로 더 놓아도 됨 | 파란 화살표(+Z)가 방 안쪽(플레이어 쪽)을 향하게 회전. Scale은 1 유지. 잠글 때는 사본의 Drawer에서 Is Locked 체크 |
 | `Box` | 3층 복도·세대 곳곳 2~3개 (던져서 괴물 유인용) | 그대로 배치. 크기는 바꿔도 됨 |
 | `Nightstand` | 세대 안 침실 자리 (서랍 단서를 넣기 좋음). Dresser 대신 써도 됨 | 무료 모델(Poly Haven, CC0). 서랍이 앞으로 열리게 Open Direction 맞춰 둠. 회전은 서랍 앞면이 방 안쪽을 보게 |
+| `Breaker` | 2층 계단 옆 벽 (분전함). 높이 y ≈ 2.8 + 1.3 | 파란 화살표(+Z)가 복도 쪽(플레이어 쪽)을 향하게 회전. Scale 1 유지. 셔터 연출 스크립트에서 자식 `Lever`의 `DraggableLever.IsOn`을 확인 |
 
 ---
 
