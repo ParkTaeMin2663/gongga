@@ -14,7 +14,7 @@
 |---|---|---|
 | ① 물건 집기 | ✅ B 확인(11/03) | `PickupObject.cs`, `Assets/Prefabs/Box`. Test_A 씬 |
 | ② 물건 던지기 | ✅ B 확인(11/03) | 들고 있을 때 마우스 오른쪽. 새 액션 `Throw` (InputSystem_Actions) |
-| ③ 서랍 | 🟡 코드 완료, 테스트 전 | `DraggableDrawer.cs`. Dresser(Empty, Scale 1, +Z가 앞) 아래 Body + Drawer(Rigidbody Is Kinematic). Test_A에 아직 안 만듦 |
+| ③ 서랍 | 🟡 A 테스트 완료(11/07), B 확인 전 | `DraggableDrawer.cs`, `Assets/Prefabs/Dresser`, `Assets/Prefabs/Nightstand`(무료 모델). 가져온 모델은 서랍 부품에 Box Collider + Rigidbody + DraggableDrawer, 방향은 Open Direction으로 맞춤. Dresser(Empty, Scale 1, +Z가 앞) 아래 Body + Drawer(Rigidbody Use Gravity 끔·Is Kinematic). 당기면 열림, 최대 0.35m |
 | ④ 차단기 레버 | ⬜ | |
 | ⑤ NoiseSystem 뼈대 | ⬜ | B의 셔터·센서등 소리가 이걸 쓴다 |
 
@@ -36,7 +36,9 @@
 
 | 프리팹 | 놓을 곳 | 설정 |
 |---|---|---|
-| (아직 없음) | | |
+| `Dresser` | 303호 안 (서랍 단서 자리). 다른 세대에 소품으로 더 놓아도 됨 | 파란 화살표(+Z)가 방 안쪽(플레이어 쪽)을 향하게 회전. Scale은 1 유지. 잠글 때는 사본의 Drawer에서 Is Locked 체크 |
+| `Box` | 3층 복도·세대 곳곳 2~3개 (던져서 괴물 유인용) | 그대로 배치. 크기는 바꿔도 됨 |
+| `Nightstand` | 세대 안 침실 자리 (서랍 단서를 넣기 좋음). Dresser 대신 써도 됨 | 무료 모델(Poly Haven, CC0). 서랍이 앞으로 열리게 Open Direction 맞춰 둠. 회전은 서랍 앞면이 방 안쪽을 보게 |
 
 ---
 
@@ -48,8 +50,8 @@
 - 11/03: 층 높이 2.8 (1층 0 / 2층 2.8 / 3층 5.6 / 지붕 8.4)
 - 11/03: 계단은 "밟는 건 경사로, 보이는 건 계단" 방식. 계단 걸림은 Player Capsule에 Physics Material `PlayerSlip`(마찰 0, Minimum), 경사로에 마찰 1(Maximum)
 - 11/03: 벽 텍스처 자동 Tiling 스크립트는 보류, 재질 Tiling 수동 조절로 결정
+- 11/07: 가구는 Poly Haven(CC0) 모델 사용. 모델은 `Assets/Models/`, 재질은 텍스처로 직접 만든 URP Lit. 서랍 분리된 후보: Vintage Wooden Drawer 01(서랍 6칸, 관리사무소용), Drawer Cabinet, Painted Wooden Cabinet
 - 문은 `LocksLook = true`(잡는 동안 시점 고정), 들고 다니는 물건은 `false` — `IInteractable`에 추가됨
 
 ## 알려진 문제
 - (가끔) 상자를 들고 고개를 빠르게 돌린 뒤 놓으면 멀리 튕겨 나감 → 상자가 플레이어 몸을 통과하며 겹쳐서 생기는 현상. 다시 생기면 `Physics.IgnoreCollision` + `maxDepenetrationVelocity`(강의 외)로 고치기로 함
-- 벽 텍스처가 벽 길이에 따라 늘어나 보임 → 자동 Tiling 스크립트 검토 중 (강의 외 API, 결정 전)

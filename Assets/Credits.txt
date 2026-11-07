@@ -47,6 +47,14 @@
 - 저작자    : 「공가」 팀 / 폰트: Qianqian Fang and The WenQuanYi Project
 - 라이선스  : 폰트는 GPL-2 with Font embedding exception (폰트로 만든 이미지는 자유롭게 사용 가능)
 
+[모델]
+- 이름      : Painted Wooden Nightstand
+- 종류      : 모델 (+ 텍스처)
+- 사용 위치 : Assets/Models/Furniture/Nightstand/ (재질 nightstand_material)
+- 출처 URL  : https://polyhaven.com/a/painted_wooden_nightstand
+- 저작자    : Poly Haven
+- 라이선스  : CC0
+
 [폰트]
 (아직 없음)
 

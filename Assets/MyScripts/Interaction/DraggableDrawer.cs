@@ -13,7 +13,7 @@ using UnityEngine;
 ///   - Rigidbody    : 강의 03장. Is Kinematic 체크 (힘이 아니라 위치로 움직이므로 물리에 밀리지 않게)
 ///
 /// [동작] 강의 04장: 자식은 부모 기준 상대 좌표(localPosition)를 가진다.
-///        부모의 앞쪽(+Z) 방향으로만 움직이게 localPosition.z만 바꾸고, 열린 길이는 0 ~ openDistance로 제한한다.
+///        부모 기준 openDirection(기본 +Z) 방향으로만 localPosition을 바꾸고, 열린 길이는 0 ~ openDistance로 제한한다.
 /// </summary>
 public class DraggableDrawer : MonoBehaviour, IInteractable
 {
@@ -23,6 +23,9 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
 
     [Tooltip("마우스를 1픽셀 당길 때 서랍이 움직이는 거리(m). 너무 느리면 올린다.")]
     public float dragSensitivity = 0.002f;
+
+    [Tooltip("부모 기준으로 서랍이 열리는 방향. 기본 (0, 0, 1) = 부모의 앞쪽(+Z). 가져온 모델에서 서랍이 엉뚱한 쪽으로 열리면 (0, 0, -1), (1, 0, 0) 등으로 바꾼다.")]
+    public Vector3 openDirection = new Vector3(0f, 0f, 1f);
 
     [Header("잠금")]
     [Tooltip("체크하면 잠긴 서랍. 잡아도 열리지 않는다.")]
@@ -79,8 +82,8 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
         }
         this.OpenAmount = amount;
 
-        // 강의 03장 Vector3.forward = (0, 0, 1). 부모 기준 앞쪽으로 OpenAmount만큼 밀어낸 위치
-        this.transform.localPosition = this.closedLocalPosition + Vector3.forward * this.OpenAmount;
+        // 부모 기준 openDirection 쪽으로 OpenAmount만큼 밀어낸 위치 (강의 03장 normalized로 길이를 1로 맞춤)
+        this.transform.localPosition = this.closedLocalPosition + this.openDirection.normalized * this.OpenAmount;
     }
 
     public void OnGrabEnd()
