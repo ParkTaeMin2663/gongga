@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ec8e5ff079124433955a1faaed017c1e
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pastic_torch_6v
+    second: {fileID: 2100000, guid: 9a0cdeb1031a4aeca963486cc398cb0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pastic_torch_6v_glass
+    second: {fileID: 2100000, guid: 67a0170a01b54668b5d8b2a2d854230d, type: 2}
+  materials:
+    materialImportMode: 2

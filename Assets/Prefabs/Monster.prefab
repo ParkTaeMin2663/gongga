@@ -110,6 +110,17 @@ MonoBehaviour:
   sameFloorHeight: 1.5
   searchTime: 4
   searchTurnSpeed: 60
+  lurkTime: 8
+  lurkRadius: 1.8
+  lurkSpeed: 0.9
+  lurkPauseMin: 0.8
+  lurkPauseMax: 2
+  doorCheckDistance: 1.2
+  doorPushImpulse: 40
+  doorPushWait: 1.5
+  knockInterval: 0.7
+  bashTime: 3
+  doorBreakImpulse: 120
   arriveDistance: 0.6
   showDebug: 1
 --- !u!1 &408270389436791235
@@ -301,7 +312,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 122573692787027670}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50

@@ -33,11 +33,14 @@ public class PlayerHide : MonoBehaviour
     public PlayerMovement playerMovement;
     public PlayerLook playerLook;
 
-    /// <summary>장롱 문이 닫히고 완전히 숨은 상태인지. 괴물은 이 값이 true면 플레이어를 찾지 못한다.</summary>
+    /// <summary>장롱 안에 들어가 숨은 상태인지 (문이 닫히기 시작할 때부터). 괴물은 이 값이 true면 플레이어를 찾지 못한다.</summary>
     public bool IsHidden { get; private set; }
 
     /// <summary>장롱에 들어가는 중 / 숨어 있음 / 나오는 중이면 true. 이 동안에는 걷기·잡기를 못 한다.</summary>
     public bool IsInsideSpot { get { return this.currentSpot != null; } }
+
+    /// <summary>지금 들어가 있는 장롱 (없으면 null). 괴물이 어느 장롱 앞을 서성일지 알 때 쓴다.</summary>
+    public HideSpot CurrentSpot { get { return this.currentSpot; } }
 
     /// <summary>지금 바라보는 좌우 방향(도). HideSpot이 몸을 돌릴 때 쓴다.</summary>
     public float CurrentYaw { get { return this.playerLook != null ? this.playerLook.Yaw : this.transform.eulerAngles.y; } }
@@ -143,6 +146,12 @@ public class PlayerHide : MonoBehaviour
     {
         this.IsHidden = true;
         this.SetLookLocked(false);
+    }
+
+    /// <summary>HideSpot이 플레이어를 장롱 안으로 옮긴 순간 부른다 → 문이 닫히기 전이라도 숨은 것으로 친다.</summary>
+    public void OnInside()
+    {
+        this.IsHidden = true;
     }
 
     /// <summary>HideSpot이 나오기를 다 끝낸 뒤 부른다 → 다시 걸을 수 있다.</summary>

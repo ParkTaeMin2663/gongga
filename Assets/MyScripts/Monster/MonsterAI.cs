@@ -6,10 +6,16 @@ using UnityEngine.SceneManagement; // 강의 04장: SceneManager.LoadScene
 /// 괴물 「집주인」의 AI. 눈이 없어서 소리(NoiseSystem)와 아주 가까운 기척으로만 플레이어를 찾는다.
 ///
 /// [상태]  순찰 → (소리 들음) 확인하러 감 → (플레이어가 가까움) 추격 → (놓침) 수색 → 순찰
+///                                                            → (장롱에 숨음) 장롱 앞 서성이기 → 순찰
 ///   - 순찰(Patrol)      : patrolPoints를 차례로 천천히 돈다. 비어 있으면 제자리에 있다.
 ///   - 확인(Investigate) : 들은 소리 위치로 간다. 도착하면 수색.
 ///   - 추격(Chase)       : 플레이어에게 달려간다. 잡으면 재시작.
 ///   - 수색(Search)      : 그 자리에서 searchTime초 동안 두리번거린 뒤 순찰로 돌아간다.
+///   - 서성이기(Lurk)    : 쫓던 플레이어가 장롱에 숨으면 그 장롱 앞을 천천히 왔다 갔다 하며 가끔 장롱을 쳐다본다.
+///                         lurkTime초가 지나면 순찰로. 안에서 헐떡이면(소리) 시간이 처음부터 다시.
+///   - 문 부수기(BashDoor): 앞에 닫힌 문(DraggableDoor)이 있으면
+///         · 추격 중이거나 잠긴 문 → 쾅쾅 두드리다(bashTime초) 경첩째 뜯어 날린다
+///         · 그 밖에는 문을 밀어서 연다. 밀어도 안 열리면(반대 방향 등) 두드려 부순다
 ///   - 장롱에 숨은 플레이어(PlayerHide.IsHidden)는 느끼지 못한다.
 ///
 /// [붙이는 곳] 괴물 오브젝트 (기준점이 발밑). Monster 프리팹에 들어 있음
@@ -25,7 +31,7 @@ using UnityEngine.SceneManagement; // 강의 04장: SceneManager.LoadScene
 /// </summary>
 public class MonsterAI : MonoBehaviour
 {
-    public enum State { Patrol, Investigate, Chase, Search }
+    public enum State { Patrol, Investigate, Chase, Search, Lurk, BashDoor }
 
     [Header("순찰")]
     [Tooltip("순찰할 지점들 (빈 오브젝트). 순서대로 돈다. 비워 두면 제자리에서 소리만 기다린다")]
@@ -53,6 +59,31 @@ public class MonsterAI : MonoBehaviour
     [Tooltip("두리번거릴 때 도는 속도(도/초)")]
     public float searchTurnSpeed = 60f;
 
+    [Header("장롱 앞 서성이기")]
+    [Tooltip("숨은 장롱 앞을 서성이는 시간(초)")]
+    public float lurkTime = 8f;
+    [Tooltip("장롱 앞 몇 m 안에서 서성일지")]
+    public float lurkRadius = 1.8f;
+    [Tooltip("서성일 때 걷는 속도(m/s)")]
+    public float lurkSpeed = 0.9f;
+    [Tooltip("한 자리에 멈춰 장롱을 쳐다보는 시간(초) 최소~최대")]
+    public float lurkPauseMin = 0.8f;
+    public float lurkPauseMax = 2f;
+
+    [Header("문")]
+    [Tooltip("앞으로 몇 m 안에 닫힌 문이 있으면 반응할지")]
+    public float doorCheckDistance = 1.2f;
+    [Tooltip("문을 밀 때 힘 (문 무게 20 기준)")]
+    public float doorPushImpulse = 40f;
+    [Tooltip("문을 밀고 이 시간(초)이 지나도 안 열리면 부수기 시작")]
+    public float doorPushWait = 1.5f;
+    [Tooltip("두드리는 간격(초)")]
+    public float knockInterval = 0.7f;
+    [Tooltip("두드리기 시작해서 부술 때까지 시간(초)")]
+    public float bashTime = 3f;
+    [Tooltip("문을 날려 버리는 힘")]
+    public float doorBreakImpulse = 120f;
+
     [Header("이동")]
     [Tooltip("목표까지 이 거리(m) 안이면 도착한 것으로 본다")]
     public float arriveDistance = 0.6f;
@@ -68,12 +99,25 @@ public class MonsterAI : MonoBehaviour
     private NavMeshAgent agent;
     private Transform player;
     private PlayerHide playerHide;
+    private PlayerDeath playerDeath;
     private NoiseSystem noiseSystem;
 
     private int lastNoiseCount;      // 마지막으로 확인한 소리 번호 (바뀌면 새 소리)
     private Vector3 targetPosition;  // 지금 가려는 곳
     private int patrolIndex;         // 다음 순찰 지점 번호
-    private float searchTimer;       // 수색한 시간
+    private float searchTimer;       // 수색한 시간 / 서성인 시간
+
+    // 문
+    private DraggableDoor targetDoor;   // 밀거나 부수는 중인 문
+    private float doorTimer;            // 민 뒤 / 두드리기 시작한 뒤 지난 시간
+    private float knockTimer;           // 다음 두드림까지
+    private State stateBeforeDoor;      // 문 일이 끝나면 돌아갈 상태
+
+    // 서성이기
+    private Vector3 lurkCenter;      // 장롱 앞 (ExitPoint)
+    private Vector3 lurkLookAt;      // 쳐다볼 곳 (장롱)
+    private float lurkPauseTimer;    // 남은 멈춤 시간
+    private bool lurkMoving;         // 지금 걷는 중인지
 
     private void Start()
     {
@@ -95,6 +139,7 @@ public class MonsterAI : MonoBehaviour
         {
             this.player = playerObject.transform;
             this.playerHide = playerObject.GetComponent<PlayerHide>();
+            this.playerDeath = playerObject.GetComponent<PlayerDeath>();
         }
         else
         {
@@ -123,6 +168,7 @@ public class MonsterAI : MonoBehaviour
         }
 
         this.ListenForNoise();
+        this.CheckDoorAhead();
 
         switch (this.CurrentState)
         {
@@ -130,10 +176,12 @@ public class MonsterAI : MonoBehaviour
             case State.Investigate: this.UpdateInvestigate(); break;
             case State.Chase:       this.UpdateChase(); break;
             case State.Search:      this.UpdateSearch(); break;
+            case State.Lurk:        this.UpdateLurk(); break;
+            case State.BashDoor:    this.UpdateBashDoor(); break;
         }
 
         // 어느 상태든 플레이어가 바로 옆에 있으면(숨지 않았으면) 기척을 느끼고 추격
-        if (this.CurrentState != State.Chase && this.CanSensePlayer(this.senseDistance))
+        if (this.CurrentState != State.Chase && this.CurrentState != State.BashDoor && this.CanSensePlayer(this.senseDistance))
         {
             this.ChangeState(State.Chase);
         }
@@ -167,10 +215,10 @@ public class MonsterAI : MonoBehaviour
 
     private void UpdateChase()
     {
-        // 장롱에 숨었으면 놓친다 → 마지막으로 있던 곳을 수색
+        // 장롱에 숨었으면 놓친다 → 그 장롱 앞을 서성인다
         if (this.IsPlayerHidden())
         {
-            this.ChangeState(State.Investigate);
+            this.StartLurk();
             return;
         }
 
@@ -208,6 +256,159 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
+    // ---------------- 문 ----------------
+
+    // 걸어가는 방향 바로 앞에 닫힌 문이 있는지 본다 (강의 07장 Physics.Raycast)
+    private void CheckDoorAhead()
+    {
+        if (this.CurrentState == State.BashDoor || this.CurrentState == State.Search || this.agent.velocity.magnitude < 0.1f)
+        {
+            return;
+        }
+
+        RaycastHit hit;
+        Vector3 origin = this.transform.position + Vector3.up * 1.2f;   // 가슴 높이
+        if (Physics.Raycast(origin, this.transform.forward, out hit, this.doorCheckDistance) == false)
+        {
+            return;
+        }
+
+        DraggableDoor door = hit.collider.GetComponentInParent<DraggableDoor>();
+        if (door == null || door.IsBroken || door.IsClosed == false)
+        {
+            return;
+        }
+
+        if (this.CurrentState == State.Chase || door.isLocked)
+        {
+            this.StartDoor(door, true);    // 쫓는 중이거나 잠겼으면 바로 부수기
+        }
+        else
+        {
+            this.StartDoor(door, false);   // 평소에는 밀어서 열기
+        }
+    }
+
+    private void StartDoor(DraggableDoor door, bool bash)
+    {
+        this.stateBeforeDoor = this.CurrentState;
+        this.targetDoor = door;
+        this.ChangeState(State.BashDoor);
+        this.doorTimer = bash ? 0f : -this.doorPushWait;   // 음수 = 아직 밀어 보는 중
+        this.knockTimer = 0f;
+
+        if (bash == false)
+        {
+            door.PushOpen(this.transform.forward, this.doorPushImpulse);
+        }
+    }
+
+    private void UpdateBashDoor()
+    {
+        this.Stop();
+
+        // 문이 사라졌거나 열렸으면(밀어서 열림, 플레이어가 엶) → 하던 일로
+        if (this.targetDoor == null || this.targetDoor.IsBroken || this.targetDoor.IsClosed == false)
+        {
+            this.FinishDoor();
+            return;
+        }
+
+        // 문 쪽을 본다 (강의 07장 LookAt, 높이 고정)
+        Vector3 look = this.targetDoor.transform.position;
+        look.y = this.transform.position.y;
+        this.transform.LookAt(look);
+
+        this.doorTimer = this.doorTimer + Time.deltaTime;
+        if (this.doorTimer < 0f)
+        {
+            return;   // 밀어 놓고 열리길 기다리는 중
+        }
+
+        // 쾅… 쾅… (knockInterval마다)
+        this.knockTimer = this.knockTimer - Time.deltaTime;
+        if (this.knockTimer <= 0f)
+        {
+            this.knockTimer = this.knockInterval;
+            this.targetDoor.Knock();
+        }
+
+        // 다 두드렸으면 부순다
+        if (this.doorTimer >= this.bashTime)
+        {
+            this.targetDoor.Break(this.transform.forward, this.doorBreakImpulse);
+            if (this.noiseSystem != null)
+            {
+                this.lastNoiseCount = this.noiseSystem.NoiseCount;   // 자기가 낸 부서지는 소리는 무시
+            }
+            this.FinishDoor();
+        }
+    }
+
+    private void FinishDoor()
+    {
+        this.targetDoor = null;
+        State back = this.stateBeforeDoor == State.BashDoor ? State.Patrol : this.stateBeforeDoor;
+        this.ChangeState(back);
+    }
+
+    // 쫓던 플레이어가 숨은 장롱 앞으로 가서 서성이기 시작
+    private void StartLurk()
+    {
+        HideSpot spot = this.playerHide != null ? this.playerHide.CurrentSpot : null;
+        if (spot == null || spot.exitPoint == null)
+        {
+            this.ChangeState(State.Investigate);   // 장롱을 모르면 예전처럼 마지막 위치 확인
+            return;
+        }
+
+        this.lurkCenter = spot.exitPoint.position;
+        this.lurkLookAt = spot.transform.position;
+        this.targetPosition = this.lurkCenter;   // 처음엔 장롱 바로 앞으로
+        this.lurkMoving = true;
+        this.ChangeState(State.Lurk);
+    }
+
+    private void UpdateLurk()
+    {
+        this.searchTimer = this.searchTimer + Time.deltaTime;
+        if (this.searchTimer >= this.lurkTime)
+        {
+            this.ChangeState(State.Patrol);   // 포기하고 순찰로
+            return;
+        }
+
+        if (this.lurkMoving)
+        {
+            // 처음 한 번은 조금 빠르게 장롱 앞까지, 그다음부터는 천천히
+            float speed = this.searchTimer < 2f ? this.investigateSpeed : this.lurkSpeed;
+            if (this.MoveTowards(this.targetPosition, speed))
+            {
+                // 도착 → 멈춰서 장롱을 쳐다본다 (강의 03장 Random.Range)
+                this.lurkMoving = false;
+                this.lurkPauseTimer = Random.Range(this.lurkPauseMin, this.lurkPauseMax);
+            }
+        }
+        else
+        {
+            this.Stop();
+
+            // 강의 07장 LookAt: 높이를 맞춰서 고개가 숙여지지 않게
+            Vector3 look = this.lurkLookAt;
+            look.y = this.transform.position.y;
+            this.transform.LookAt(look);
+
+            this.lurkPauseTimer = this.lurkPauseTimer - Time.deltaTime;
+            if (this.lurkPauseTimer <= 0f)
+            {
+                // 장롱 앞 lurkRadius 안의 아무 곳으로 몇 걸음 (강의 03장 Random.Range)
+                Vector3 offset = new Vector3(Random.Range(-this.lurkRadius, this.lurkRadius), 0f, Random.Range(-this.lurkRadius, this.lurkRadius));
+                this.targetPosition = this.lurkCenter + offset;
+                this.lurkMoving = true;
+            }
+        }
+    }
+
     // ---------------- 소리 듣기 ----------------
 
     // 새 소리가 났고, 들리는 거리 안이면 그쪽으로 간다.
@@ -219,6 +420,11 @@ public class MonsterAI : MonoBehaviour
         }
         this.lastNoiseCount = this.noiseSystem.NoiseCount;
 
+        if (this.CurrentState == State.BashDoor)
+        {
+            return;   // 문 부수는 중에는 다른 소리에 신경 쓰지 않는다
+        }
+
         // 다른 층에서 난 소리는 무시한다 (괴물은 자기 층에서만 움직인다)
         if (this.noiseSystem.CanHear(this.transform.position) == false || this.IsSameFloor(this.noiseSystem.LastPosition) == false)
         {
@@ -228,6 +434,14 @@ public class MonsterAI : MonoBehaviour
         if (this.CurrentState == State.Chase)
         {
             return;   // 이미 쫓는 중
+        }
+
+        // 서성이는 중에 장롱 쪽에서 소리(헐떡임 등)가 나면 → 더 오래 서성인다
+        if (this.CurrentState == State.Lurk && Vector3.Distance(this.noiseSystem.LastPosition, this.lurkCenter) < 3f)
+        {
+            this.searchTimer = 0f;
+            if (this.showDebug) Debug.Log("[괴물] 장롱 쪽에서 소리… 더 머문다");
+            return;
         }
 
         // 소리가 플레이어 바로 근처에서 났고 숨지 않았으면 → 곧장 추격, 아니면 확인하러 감
@@ -313,11 +527,24 @@ public class MonsterAI : MonoBehaviour
         return diff.magnitude;
     }
 
-    // 잡혔다 → 지금은 바로 재시작 (강의 04장: 현재 Scene 다시 로드). 사망 연출·체크포인트는 4번 작업에서.
+    // 잡았다 → 괴물은 멈추고, 플레이어 사망 연출(PlayerDeath) 후 체크포인트에서 다시 시작
     private void CatchPlayer()
     {
-        Debug.Log("[괴물] 플레이어를 잡았다!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // 확인용: 잡힌 순간 플레이어가 장롱에 들어가는 중이었는지
+        bool entering = this.playerHide != null && this.playerHide.IsInsideSpot;
+        Debug.Log("[괴물] 플레이어를 잡았다! 거리 " + this.FlatDistance(this.player.position).ToString("0.00") + "m, 장롱 동작 중: " + entering);
+        this.Stop();
+        this.enabled = false;   // 더 이상 움직이지 않음 (씬이 다시 열리면 처음 상태로)
+
+        if (this.playerDeath != null)
+        {
+            this.playerDeath.Die(this.transform);
+        }
+        else
+        {
+            // PlayerDeath가 없으면 예전처럼 바로 재시작 (강의 04장)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     // 강의 04장 OnGUI: 괴물 상태 표시 (NoiseSystem 글자 아래 줄)

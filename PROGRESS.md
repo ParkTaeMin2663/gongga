@@ -13,17 +13,36 @@
 ### A (시스템)
 | 순서 | 할 일 | 단계 | 상태 | 메모 |
 |---|---|---|---|---|
-| 1 | 장롱 숨기 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `HideSpot.cs`(장롱) + `PlayerHide.cs`(Player). 장롱을 보고 **E 1초 꾹** → 문이 열리고 걸어 들어감 → 문 닫힘(12° 틈으로 엿봄, Peek Angle). E 한 번 → 나옴. 안에서는 이동·잡기 불가, 고개만. 모델 문짝을 DoorA/DoorB로 분리, 경첩은 문 모양에서 자동 계산. 모델 안 선반은 지움. 문 연결이 없으면 화면 어두워짐 방식으로 동작. 들어갈 때 3m 소리. 괴물은 `PlayerHide.IsHidden` 확인. 모델: Old Russian wardrobe 1983 (CC BY). 문 달린 모델이면 `doorLeft/Right` 연결 시 문이 실제로 열리는 방식도 지원. Interact 액션 = Press(Press And Release). Main Camera Near Clip 0.05 |
-| 2 | 괴물 뼈대 + 소리 감지 | 필수 + 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `Monster/MonsterAI.cs`, `Assets/Prefabs/Monster`(임시 빨간 캡슐 2.4m). 순찰(patrolPoints) → 소리 들으면 확인 → 2.5m 안 기척이면 추격(3.5m/s, 걷기 3 < 괴물 < 달리기 5.5) → 8m 밖·장롱 숨으면 놓침 → 수색 4초 → 순찰. 1.1m 안이면 잡힘 → 씬 재시작. 씬에 이름 `Player`·`NoiseSystem` 필요. 이동은 **NavMeshAgent**(07장)로 교체 완료(11/15). 다른 층 소리는 무시 |
-| 3 | 괴물 이동 NavMeshAgent로 | 필수 | 🟡 A 테스트 완료(11/15, 07장 자료로 앞당김), B 확인 전 | Monster 프리팹에 Nav Mesh Agent(Radius 0.5, Height 2.4) + NavMesh Modifier(Ignore From Build, 자기 자리 구멍 방지). Rigidbody는 Is Kinematic. Door 프리팹에도 NavMesh Modifier(Ignore From Build) → 닫힌 문도 길로 굽힘(문 앞 멈춤·부수기는 5번). **SampleScene에도 NavMesh Surface Bake 필요(B와 상의)** |
-| 4 | 사망·체크포인트 | 목표 | ⬜ | 처음엔 SceneManager.LoadScene 재시작(강의 04) |
-| 5 | 문 부수기 | 목표 | ⬜ | |
-| 6 | 손전등 배터리 | 목표 | ⬜ | |
-| 7 | 괴물 외형 (무료 모델) | 여유 | ⬜ | 후보: Country Road Creature Rig (CC BY) |
+| 1 | 장롱 숨기 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `HideSpot.cs`(장롱) + `PlayerHide.cs`(Player). 장롱을 보고 **E 1초 꾹** → 문이 열리고 걸어 들어감 → 문 닫힘(12° 틈으로 엿봄, Peek Angle). E 한 번 → 나옴. 안에서는 이동·잡기 불가, 고개만. 모델 문짝을 DoorA/DoorB로 분리, 경첩은 문 모양에서 자동 계산. 모델 안 선반은 지움. 문 연결이 없으면 화면 어두워짐 방식으로 동작. 들어갈 때 3m 소리. 괴물은 `PlayerHide.IsHidden` 확인 (11/15: 문 닫히기 전, 발이 안에 들어간 순간부터 숨은 것으로 변경 — 들어가는 동안 잡히던 문제). 모델: Old Russian wardrobe 1983 (CC BY). 문 달린 모델이면 `doorLeft/Right` 연결 시 문이 실제로 열리는 방식도 지원. Interact 액션 = Press(Press And Release). Main Camera Near Clip 0.05 |
+| 2 | 괴물 뼈대 + 소리 감지 | 필수 + 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `Monster/MonsterAI.cs`, `Assets/Prefabs/Monster`(임시 빨간 캡슐 2.4m). 순찰(patrolPoints) → 소리 들으면 확인 → 2.5m 안 기척이면 추격(3.5m/s, 걷기 3 < 괴물 < 달리기 5.5) → 8m 밖이면 놓침 → 수색 4초 → 순찰. **장롱에 숨으면 그 장롱 앞을 8초 서성이며 가끔 쳐다봄(헐떡이면 시간 초기화) → 순찰**. 1.1m 안이면 잡힘 → 씬 재시작. 씬에 이름 `Player`·`NoiseSystem` 필요. 이동은 **NavMeshAgent**(07장)로 교체 완료(11/15). 다른 층 소리는 무시 |
+| 3 | 괴물 이동 NavMeshAgent로 | 필수 | 🟡 A 테스트 완료(11/15, 07장 자료로 앞당김), B 확인 전 | Monster 프리팹에 Nav Mesh Agent(Radius 0.3, Height 2.4). **Navigation 창 Agents > Humanoid Radius 0.3**(문 틈 1m를 지나가게, ProjectSettings에 저장) + NavMesh Modifier(Ignore From Build, 자기 자리 구멍 방지). Rigidbody는 Is Kinematic. Door 프리팹에도 NavMesh Modifier(Ignore From Build) → 닫힌 문도 길로 굽힘(문 앞 멈춤·부수기는 5번). **SampleScene에도 NavMesh Surface Bake 필요(B와 상의)** |
+| 4 | 사망·체크포인트 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `Core/Checkpoint.cs`(Is Trigger 구역, `public static` 저장값, order 큰 것만 저장) + `Player/PlayerDeath.cs`(잡히면 괴물 쪽으로 고개 → 붉게 → 까맣게(코루틴) → 씬 재로드 → 마지막 체크포인트 위치·방향에서 시작). Player 프리팹 Tag = `Player`. 위치만 되돌리고 물건·문 상태는 안 되돌림. **B 연출은 `Checkpoint.savedOrder`로 이미 지난 장면을 건너뛸 수 있음**. **나중에(11/22 전):** 사망 시 점프스케어(괴물 모델이 카메라로 덮침 + 비명, 7번 외형과 함께) + "다시 시작 / 그만하기" 선택 화면(B 타이틀 화면과 함께, UI 방식 결정·커서 보이기 필요). `PlayerDeath.DeathRoutine` 3단계(자동 재시작)를 바꾸면 됨 |
+| 5 | 문 부수기 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | 괴물 앞 1.2m에 닫힌 문(Raycast) → 추격 중·잠긴 문이면 0.7초마다 쾅(3초) 후 **경첩 Destroy + 문짝 날림**(12m 소리), 평소엔 문을 밀어서 엶(안 열리면 부숨). `DraggableDoor`에 PushOpen/Knock/Break, 소리 `door_knock`(Basement door slam 한 방, 저음 강조판 `door_knock_b`), `door_break`(문 걷어차 부서지는 녹음 + 나무 박살, 대체 `door_break_b`)(자식 `BreakSoundPoint`에서 재생 → 부서질 때 떼어 놓아 그 자리에서 들림). 두 소리 Min Distance 6·도플러 0. 부서진 문짝이 떨어져 부딪히면 `door_fall` 쿵(OnCollisionEnter, 세기에 따라 볼륨). 부서진 문은 못 잡음. 문 틈(1.0m)에 덜 걸리게 **Player Capsule Radius 0.4 → 0.3**(11/15) |
+| 6 | 손전등 배터리 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `PlayerFlashlight.cs`: 켜면 0.5/초 소모(100 → 3분 20초), 20% 아래 어두워지며 깜빡, 0이면 안 켜짐. 왼쪽 아래 배터리 막대(OnGUI). 딸깍 소리. **B 연출용 `FlickerOut(초)`** (깜빡이다 꺼짐, 코루틴), `GiveFlashlight()`(관리사무소에서 얻을 때, `hasFlashlight` 끄고 시작). 건전지 `Assets/Prefabs/Battery`(+50). **설계대로(11/15): Player는 손전등 없이 시작(`hasFlashlight` 끔)** → 관리사무소 `FlashlightPickup`을 **E로 주워** 얻음(Poly Haven Plastic Torch 6V). 줍는 물건은 `ItemPickup.cs`(종류: Flashlight/Battery) + Player의 `PlayerPickup.cs`(바라보면 "[E] 손전등 줍기"). **얻으면 왼손에 들림**(Main Camera > `HeldFlashlight`, 불빛이 렌즈에서 나옴, 걸으면 `FlashlightSway`로 살짝 흔들림·뛰면 크게). 건전지 모델 D Battery(CC BY). 체크포인트가 손전등 보유·배터리 양도 기억 → 죽어도 안 잃음 |
+| 7 | 괴물 외형 (무료 모델) | 여유 | ⬜ | 후보: Country Road Creature Rig (CC BY). 넣을 때 4번 점프스케어도 같이 |
+| + | 숨소리 | 추가 | 🟡 A 테스트 완료(11/15), B 확인 전 | `Player/PlayerBreath.cs`. Player 프리팹에 Loop Audio Source 2개(평소 `breath_calm_a`, 헐떡임 `breath_heavy_b`). 뛰면 숨참 0→1(5초), 쉬면 10초에 가라앉음, 두 소리를 섞음. 장롱 속에서 숨참 0.5 넘으면 1.5초마다 2.5m 소리(괴물이 확인하러 옴). 대체 후보 `breath_calm_b`, `breath_heavy_a` |
 
-### B (월드·연출) — 11/9 주 계획
-| 할 일 | 상태 | 메모 |
-|---|---|---|
+### B (월드·연출)
+11/15 A가 정리. 순서대로 하면 A 기능과 바로 이어진다. 시작 전 `git pull`, SampleScene은 작게 나눠 자주 커밋.
+
+| 순서 | 할 일 | 단계 | 상태 | 메모 |
+|---|---|---|---|---|
+| 1 | SampleScene NavMesh Bake | 필수 | ⬜ | 아래 배치 요청 표. 없으면 괴물이 못 움직임. 맵 바꿀 때마다 다시 Bake |
+| 2 | A 프리팹 배치 | 필수 | ⬜ | 배치 요청 표 전부: Monster+순찰 지점, 장롱 3, 체크포인트 3, Breaker, Dresser·Nightstand·Box |
+| 3 | A 기능 확인 → ✅ | 필수 | ⬜ | 장롱 숨기, 괴물(소리·추격·서성이기), 문 부수기, 사망·체크포인트, 숨소리, 서랍·레버 |
+| 4 | UI 방식 A와 결정 | 필수 | ⬜ | OnGUI(강의) / Canvas(강의 외). 단서 UI·타이틀·엔딩·사망 선택 화면을 같은 방식으로 |
+| 5 | 2층 연출 (셔터·센서등·실루엣·"숨어라") | 필수 | ⬜ | 레버 `DraggableLever.IsOn`, 숨음 `PlayerHide.IsHidden`. 셔터·센서등 소리는 `noiseSystem.Emit(위치, 20, "셔터")` |
+| 6 | 단서 UI (일기장·사진·카세트) | 필수 | ⬜ | 4번 결정 후 |
+| 7 | 단지 바깥 + 바깥에서 시작 | 필수 | ⬜ | 06장 Terrain 가능. Player와 체크포인트 1번을 바깥 시작점으로 옮기기 → NavMesh 다시 Bake |
+| 8 | 지하 맵 (보일러실·제사상·비상구) | 필수 | ⬜ | 체크포인트 4번 + 괴물 최종 추격용 순찰 지점 (A에게 위치 알려 주기) |
+| 9 | 3장 시작 시 Monster 켜기 | 필수 | ⬜ | 3층 도착 연출에서 Monster 오브젝트 활성화 |
+| 10 | 다시 시작 시 지난 연출 건너뛰기 | 목표 | ⬜ | `Checkpoint.savedOrder` 확인 (예: 2 이상이면 셔터 열린 상태로) |
+| 11 | 스토리 연출·엔딩 | 필수 | ⬜ | 302호 동생 흔적, 지하 제사상, 탈출 엔딩 |
+| 12 | 타이틀·엔딩 화면 | 필수 | ⬜ | A의 "다시 시작 / 그만하기" 화면과 같이 |
+| 13 | 사운드 (배경음·환경음) | 목표 | ⬜ | 바람, 눈, 건물 삐걱임 등. 출처 Credits.txt |
+| — | **11/22 기능 동결** | | | 이후 버그 수정·통플레이만 |
+
+---|---|---|
 | 2층 연출 (셔터·센서등·실루엣) | ⬜? | 레버 `IsOn` 사용, 장롱(201호) 필요 |
 | 단서 UI | ⬜? | OnGUI(강의) / Canvas(강의 외) 중 결정 필요 |
 | 지하 맵, 바깥 1차 | ⬜? | |
@@ -69,6 +88,9 @@
 | `Wardrobe` (304호) | `Wardrobe_304` **(-10, 5.6, 7.93)**, Rotation **(0, 180, 0)** | 추격 중 숨는 두 번째 장롱 |
 | **NavMesh Bake** | SampleScene에 빈 오브젝트 `NavMesh` 하나 (위치 상관없음) | Add Component → **NavMesh Surface** → Collect Objects = **All** → **Bake** (07장 47쪽). 맵(벽·바닥·계단·가구)을 바꿀 때마다 다시 Bake. 생기는 `SampleScene/NavMesh-NavMesh.asset`도 커밋 |
 | `Monster` | 3층. 시작 위치 304호 안 **(-12, 5.6, 5)**, Rotation (0, 90, 0) | 순찰 지점: 빈 오브젝트 `Patrol_1` (-12, 5.6, 5) / `Patrol_2` (-12, 5.6, 1) / `Patrol_3` (12, 5.6, 1) / `Patrol_4` (2, 5.6, 1) 을 Monster의 Patrol Points에 순서대로. **3장 전에는 Monster 오브젝트를 꺼 두고, 3장 시작 연출에서 켜기** (2층 연출용 실루엣은 별도) |
+| `FlashlightPickup` (손전등) | 1층 관리사무소(x -16~-8, z 2.2~8.2) 책상·선반 위 | **필수**: 이게 없으면 손전등을 못 얻음(Player는 손전등 없이 시작). E로 주우면 바로 켜짐 |
+| `Battery` (건전지) | 1층 관리사무소 1개, 2층 201호 1개, 3층 세대 2~3개 (책상·서랍 위나 바닥) | E로 주우면 +50%. 배터리가 3분 20초 분량이라 게임(20~30분) 동안 4~5개면 충분 |
+| `Checkpoint` ×3 (+지하 1) | 1번: 시작 위치 **(14, 0, 1)** / 2번: 2층 계단 앞 복도 **(15, 2.8, 1)** / 3번: 3층 계단 앞 복도 **(15, 5.6, 1)** — 모두 Rotation **(0, -90, 0)** | 사본마다 **Order = 1, 2, 3**. 파란 화살표가 다시 시작할 때 보는 방향. 단지 바깥이 생기면 1번은 바깥 시작점으로 옮기기. 지하 생기면 4번 추가 |
 
 ---
 

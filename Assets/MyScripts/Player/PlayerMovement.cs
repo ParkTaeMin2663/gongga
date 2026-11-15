@@ -64,6 +64,9 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>지금 달리고 있는지. 나중에 소리 시스템(괴물이 듣는 소리)에서 사용한다.</summary>
     public bool IsSprinting { get; private set; }
 
+    /// <summary>지금 WASD로 움직이는 중인지. 손전등 흔들림(FlashlightSway)에서 사용한다.</summary>
+    public bool IsMoving { get; private set; }
+
     private void Start()
     {
         this.rb = this.GetComponent<Rigidbody>();
@@ -112,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
 
         // 1) 달리기 여부: Shift를 누르고 있고, 실제로 움직이는 중일 때만 달리는 것으로 본다.
         bool isMoving = this.moveInput != Vector2.zero;
+        this.IsMoving = isMoving;
         this.IsSprinting = this.isSprintHeld && isMoving;
 
         float speed = this.IsSprinting ? this.sprintSpeed : this.walkSpeed;

@@ -20,6 +20,7 @@
 - 종류      : 사운드
 - 사용 위치 : Assets/Audio/Footsteps/footstep_concrete_000~004.ogg, footstep_snow_000~004.ogg
               Assets/Audio/Impacts/impactWood_medium_000~004.ogg, impactMetal_light_000~004.ogg
+              Assets/Audio/Impacts/door_fall.ogg (impactWood_heavy_001 + impactPlank_medium_002)
 - 출처 URL  : https://kenney.nl/assets/impact-sounds
 - 저작자    : Kenney (www.kenney.nl)
 - 라이선스  : CC0
@@ -43,6 +44,26 @@
 - 사용 위치 : Assets/Audio/Furniture/drawerClose_wood2.ogg
 - 출처 URL  : https://pixabay.com/sound-effects/film-special-effects-close-drawer-104761/
 - 저작자    : freesound_community (Pixabay)
+- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+
+- 이름      : 숨소리 4종 — Breathing / Male breathing / Male Heavy Breathing / Heavy breath male
+- 종류      : 사운드 (모노·음량 맞춤·앞뒤 0.25초 페이드, ogg 변환)
+- 사용 위치 : Assets/Audio/Breath/breath_calm_a.ogg, breath_calm_b.ogg, breath_heavy_a.ogg, breath_heavy_b.ogg
+- 출처 URL  : https://pixabay.com/sound-effects/people-breathing-6811/
+              https://pixabay.com/sound-effects/people-male-breathing-84775/
+              https://pixabay.com/sound-effects/people-male-heavy-breathing-67325/
+              https://pixabay.com/sound-effects/people-heavy-breath-male-63980/
+- 저작자    : freesound_community (Pixabay)
+- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+
+- 이름      : 문 두드림·부서짐 — Basement door slam / A door got kicked / Locked door being forced open / Wood Smash 3
+- 종류      : 사운드 (한 번 치는 부분만 자르고 겹쳐서 음량 맞춤, ogg 변환. door_knock_b는 저음 강조판)
+- 사용 위치 : Assets/Audio/Impacts/door_knock.ogg, door_knock_b.ogg, door_break.ogg, door_break_b.ogg
+- 출처 URL  : https://pixabay.com/sound-effects/film-special-effects-basement-door-slam-202981/
+              https://pixabay.com/sound-effects/film-special-effects-a-door-got-kicked-579124/
+              https://pixabay.com/sound-effects/household-locked-door-being-forced-open-85088/
+              https://pixabay.com/sound-effects/film-special-effects-wood-smash-3-170418/
+- 저작자    : alex_jauk, soumages, freesound_community, floraphonic (Pixabay)
 - 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
 
 [텍스처]
@@ -75,6 +96,20 @@
 - 라이선스  : 폰트는 GPL-2 with Font embedding exception (폰트로 만든 이미지는 자유롭게 사용 가능)
 
 [모델]
+- 이름      : Plastic Torch 6V — 손전등 (관리사무소에서 줍기, 왼손에 들기)
+- 종류      : 모델 + 텍스처
+- 사용 위치 : Assets/Models/Props/Flashlight/ (pastic_torch_6v_1k.fbx, diff·nor_gl·ao 텍스처), 프리팹 FlashlightPickup, Player(HeldFlashlight)
+- 출처 URL  : https://polyhaven.com/a/pastic_torch_6v
+- 저작자    : Poly Haven
+- 라이선스  : CC0
+
+- 이름      : D Battery — 건전지
+- 종류      : 모델 (D형 크기로 맞추고 윗면·아랫면/옆면 재질을 나눔. 재질은 직접 만든 색)
+- 사용 위치 : Assets/Models/Props/Battery/battery_d.obj, 프리팹 Assets/Prefabs/Battery
+- 출처 URL  : https://sketchfab.com/3d-models/d-battery-997adbcda4234a0cb89b00adb6e7b0bc
+- 저작자    : hollowmj (Sketchfab)
+- 라이선스  : CC BY 4.0 (저작자 표기 필수)
+
 - 이름      : Old Russian wardrobe in 1983 V 2.0 — 장롱 (숨기)
 - 종류      : 모델 + 텍스처 (OBJ를 미터 단위·앞면 +Z로 변환, 텍스처 4K → 1K로 줄임)
 - 사용 위치 : Assets/Models/Furniture/Wardrobe/ (wardrobe1983.obj, 텍스처 12개), 재질 Assets/Materials/Wardrobe/, 프리팹 Assets/Prefabs/Wardrobe

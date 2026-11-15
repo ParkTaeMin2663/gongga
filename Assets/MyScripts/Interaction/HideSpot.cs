@@ -16,7 +16,8 @@ using UnityEngine;
 ///          나오기: 문 열림 → ExitPoint로 걸어 나옴 → 문 닫힘
 ///        문이 없으면(통짜 모델): 문 소리 + 화면이 어두워짐 → 그 사이 안/밖으로 옮김 → 화면 밝아짐
 ///        강의 03장: Time.deltaTime으로 조금씩 움직이기, rotation + Quaternion.Euler
-///        문이 다 닫힌 뒤에야 IsOccupied(숨은 상태)가 된다 → 들어가는 도중에는 잡힐 수 있다.
+///        발이 장롱 안(HidePoint)에 들어간 순간부터 IsOccupied(숨은 상태)가 된다.
+///        문이 열리고 걸어 들어가는 도중(약 1초)에는 아직 잡힐 수 있다.
 /// </summary>
 public class HideSpot : MonoBehaviour
 {
@@ -56,7 +57,7 @@ public class HideSpot : MonoBehaviour
     [Tooltip("숨고 나올 때 나는 소리 크기 = 괴물이 듣는 거리(m). 아주 가까이 있을 때만 들리게 작게.")]
     public float noiseLoudness = 3f;
 
-    /// <summary>문이 다 닫히고 플레이어가 안에 숨은 상태인지. 괴물이 이 값을 본다.</summary>
+    /// <summary>플레이어가 장롱 안에 들어가 숨은 상태인지 (문이 닫히기 시작할 때부터). 괴물이 이 값을 본다.</summary>
     public bool IsOccupied { get; private set; }
 
     /// <summary>화면을 얼마나 어둡게 덮을지 (0 = 안 덮음, 1 = 완전히 검정). 문 없는 장롱에서 PlayerHide가 화면에 그린다.</summary>
@@ -146,7 +147,11 @@ public class HideSpot : MonoBehaviour
                 if (this.UseFade)
                 {
                     this.FadeAmount = doorRate;
-                    if (doorRate >= 1f) this.Teleport(this.hidePoint, Step.CloseIn);   // 화면이 까만 동안 안으로
+                    if (doorRate >= 1f)
+                    {
+                        this.Teleport(this.hidePoint, Step.CloseIn);   // 화면이 까만 동안 안으로
+                        this.SetInside();
+                    }
                 }
                 else
                 {
@@ -157,7 +162,11 @@ public class HideSpot : MonoBehaviour
 
             case Step.MoveIn:
                 this.MovePlayer(this.hidePoint, moveRate);
-                if (moveRate >= 1f) this.ChangeStep(Step.CloseIn);
+                if (moveRate >= 1f)
+                {
+                    this.ChangeStep(Step.CloseIn);
+                    this.SetInside();   // 발이 장롱 안에 들어갔다 → 이때부터 숨은 것으로 친다
+                }
                 break;
 
             case Step.CloseIn:
@@ -168,7 +177,6 @@ public class HideSpot : MonoBehaviour
                 {
                     // 문이 다 닫혔다 → 이제 숨은 상태
                     this.ChangeStep(Step.None);
-                    this.IsOccupied = true;
                     this.player.OnHideFinished();
                 }
                 break;
@@ -216,6 +224,13 @@ public class HideSpot : MonoBehaviour
         this.moveFrom = this.player.transform.position;
         this.yawFrom = this.player.CurrentYaw;
         this.ChangeStep(next);
+    }
+
+    // 장롱 안에 들어갔다: 문이 닫히기 전이라도 괴물은 더 이상 플레이어를 느끼지 못한다
+    private void SetInside()
+    {
+        this.IsOccupied = true;
+        this.player.OnInside();
     }
 
     // 한 번에 target으로 옮기고 다음 단계로 (화면이 까말 때 쓴다)

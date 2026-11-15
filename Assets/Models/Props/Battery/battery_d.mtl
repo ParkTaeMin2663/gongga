@@ -1,0 +1,9 @@
+newmtl battery_metal
+Kd 0.8 0.8 0.8
+
+newmtl battery_red
+Kd 0.8 0.8 0.8
+
+newmtl battery_black
+Kd 0.8 0.8 0.8
+

@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 986d47a9a95f46d49cfd1d71a6a3e000
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: battery_metal
+    second: {fileID: 2100000, guid: 9da06218609e4f019e8775b1fa5f8a37, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: battery_red
+    second: {fileID: 2100000, guid: 3fa27d72f7284feca39e7824ae203126, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: battery_black
+    second: {fileID: 2100000, guid: 395ba9b370f94e709d78d9f1d0eef160, type: 2}
+  materials:
+    materialImportMode: 2
