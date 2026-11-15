@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7082616881300893593}
   - component: {fileID: 6577144788337715280}
   - component: {fileID: 5748426319820021262}
+  - component: {fileID: 6187242565483046272}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -284,6 +285,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6187242565483046272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6718144869075674137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24f4bc2cc064dc04a8632a5b08b604e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHide
+  playerInteract: {fileID: 0}
+  playerMovement: {fileID: 0}
+  playerLook: {fileID: 0}
 --- !u!1 &7276177705158878517
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +366,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.05
   far clip plane: 1000
   field of view: 60
   orthographic: 0

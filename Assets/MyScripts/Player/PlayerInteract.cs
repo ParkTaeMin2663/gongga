@@ -38,6 +38,15 @@ public class PlayerInteract : MonoBehaviour
     private Transform heldTransform;    // 잡고 있는 물체의 위치 (거리 확인용)
     private Vector2 lookDelta;          // 이번 프레임 마우스 움직임
 
+    // 숨어 있는 동안에는 잡기를 막기 위해 (같은 Player의 PlayerHide)
+    private PlayerHide playerHide;
+
+    /// <summary>지금 바라보고 있는 장롱 (없으면 null). PlayerHide가 E를 눌렀을 때 확인한다.</summary>
+    public HideSpot LookHideSpot { get; private set; }
+
+    /// <summary>지금 무언가를 잡고 있는지. 잡은 채로는 장롱에 숨을 수 없다.</summary>
+    public bool IsHolding { get { return this.heldTarget != null; } }
+
     // 조준점 그리기용 흰색 그림 (Unity가 기본으로 제공하는 1x1 흰색)
     private Texture2D dotTexture;
 
@@ -49,6 +58,7 @@ public class PlayerInteract : MonoBehaviour
         }
 
         this.dotTexture = Texture2D.whiteTexture;
+        this.playerHide = this.GetComponent<PlayerHide>();
     }
 
     // 마우스가 움직일 때마다 호출 (PlayerLook도 같은 메시지를 받는다)
@@ -91,6 +101,15 @@ public class PlayerInteract : MonoBehaviour
             return;
         }
 
+        // 장롱에 숨어 있는 동안에는 아무것도 찾거나 잡지 않는다.
+        if (this.playerHide != null && this.playerHide.IsInsideSpot)
+        {
+            this.lookTarget = null;
+            this.LookHideSpot = null;
+            this.lookDelta = Vector2.zero;
+            return;
+        }
+
         if (this.heldTarget != null)
         {
             // 잡고 있는 동안: 마우스 움직임을 물체에 전달
@@ -115,6 +134,7 @@ public class PlayerInteract : MonoBehaviour
     private void FindLookTarget()
     {
         this.lookTarget = null;
+        this.LookHideSpot = null;
 
         // [강의 외] Physics.Raycast: 카메라에서 정면으로 보이지 않는 선을 쏴서 처음 맞은 물체를 알려준다.
         //           reachDistance(m)까지만 쏜다. 벽에 먼저 맞으면 벽 너머 물체는 찾지 않는다.
@@ -123,6 +143,9 @@ public class PlayerInteract : MonoBehaviour
         {
             // 맞은 물체(또는 그 부모)에 IInteractable이 붙어 있는지 확인
             this.lookTarget = hit.collider.GetComponentInParent<IInteractable>();
+
+            // 장롱인지도 같이 확인 (장롱은 잡는 물체가 아니라 E로 숨는 곳)
+            this.LookHideSpot = hit.collider.GetComponentInParent<HideSpot>();
         }
     }
 
@@ -165,7 +188,7 @@ public class PlayerInteract : MonoBehaviour
     // 평소에는 작은 점, 잡을 수 있는 물체를 보거나 잡고 있으면 큰 점
     private void OnGUI()
     {
-        bool isActive = this.lookTarget != null || this.heldTarget != null;
+        bool isActive = this.lookTarget != null || this.heldTarget != null || this.LookHideSpot != null;
         float size = isActive ? 10f : 4f;
 
         GUI.color = isActive ? Color.white : new Color(1f, 1f, 1f, 0.5f);

@@ -216,7 +216,7 @@
 | 사망 후 재시작 | `SceneManager.LoadScene`으로 현재 Scene 다시 로드 |
 
 ### 강의에 아직 없는 것 (쓰기 전에 사용자 확인)
-- **사용자가 새 강의자료를 올리면**, 거기서 다룬 기능이 이미 `// [강의 외]`로 쓴 코드에 있는지 찾아서 강의 방식으로 고친다. (현재 사용 중: `Physics.Raycast`, `HingeJoint`, `ForceMode.Impulse`, `interface` — PlayerInteract, DraggableDoor, IInteractable / 커서 잠금 — PlayerLook)
+- **사용자가 새 강의자료를 올리면**, 거기서 다룬 기능이 이미 `// [강의 외]`로 쓴 코드에 있는지 찾아서 강의 방식으로 고친다. (현재 사용 중: `Physics.Raycast`, `HingeJoint`, `ForceMode.Impulse`, `interface` — PlayerInteract, DraggableDoor, IInteractable / 커서 잠금 — PlayerLook / `Transform.RotateAround`, `Vector3.SignedAngle`, `Vector3.ProjectOnPlane` — HideSpot 문 회전, 11/15 사용자 허락)
 - `HingeJoint` 등 Joint (문·서랍·레버 드래그)
 - `Physics.Raycast` (바라보는 물체 찾기)
 - `OnTriggerEnter` / Is Trigger (구역 진입 감지, 장롱 숨기)

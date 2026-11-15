@@ -75,6 +75,13 @@
 - 라이선스  : 폰트는 GPL-2 with Font embedding exception (폰트로 만든 이미지는 자유롭게 사용 가능)
 
 [모델]
+- 이름      : Old Russian wardrobe in 1983 V 2.0 — 장롱 (숨기)
+- 종류      : 모델 + 텍스처 (OBJ를 미터 단위·앞면 +Z로 변환, 텍스처 4K → 1K로 줄임)
+- 사용 위치 : Assets/Models/Furniture/Wardrobe/ (wardrobe1983.obj, 텍스처 12개), 재질 Assets/Materials/Wardrobe/, 프리팹 Assets/Prefabs/Wardrobe
+- 출처 URL  : https://sketchfab.com/3d-models/old-russian-wardrobe-in-1983-v-20-f0ad9f13bc784d5ebaa81e6956cf5118
+- 저작자    : Paule Gennadievich (Sketchfab @PauleMenson)
+- 라이선스  : CC BY 4.0 (저작자 표기 필수)
+
 - 이름      : Painted Wooden Nightstand
 - 종류      : 모델 (+ 텍스처)
 - 사용 위치 : Assets/Models/Furniture/Nightstand/ (재질 nightstand_material)

@@ -57,6 +57,26 @@ public class PlayerLook : MonoBehaviour
     }
 
     // 마우스가 움직일 때마다 Player Input이 호출한다. 값 = 이번에 움직인 픽셀 수 (x = 좌우, y = 위아래)
+    /// <summary>
+    /// 바라보는 좌우 방향을 강제로 정한다. (장롱에 들어가고 나올 때 PlayerHide가 부른다)
+    /// angle = 월드 기준 Y 각도. 위아래(pitch)는 정면으로 되돌린다.
+    /// </summary>
+    public void SetYaw(float angle)
+    {
+        this.yaw = angle;
+        this.pitch = 0f;
+        this.lookDelta = Vector2.zero;
+
+        // 시점이 잠겨 있어도(IsLocked) 바로 보이도록 카메라를 직접 돌린다. (강의 03장 rotation + Quaternion.Euler)
+        if (this.cameraTransform != null)
+        {
+            this.cameraTransform.rotation = Quaternion.Euler(this.pitch, this.yaw, 0f);
+        }
+    }
+
+    /// <summary>지금 바라보는 좌우 각도(도)</summary>
+    public float Yaw { get { return this.yaw; } }
+
     // 한 프레임에 여러 번 불릴 수 있어서 더해서(+=) 모아 둔다.
     private void OnLook(InputValue value)
     {
