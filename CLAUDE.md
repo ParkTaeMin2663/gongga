@@ -164,7 +164,7 @@
 
 ## 6. 강의자료 기준 구현 (최우선 참고)
 
-사용자는 **강의(02·03·04장)에서 배운 방식으로 최대한 구현하기를 원한다.** 코드를 설계할 때 항상 이 장을 먼저 본다.
+사용자는 **강의(02~07장)에서 배운 방식으로 최대한 구현하기를 원한다.** (강의자료: `Downloads/02_~07_*.pptx`. 01은 강의 소개) 코드를 설계할 때 항상 이 장을 먼저 본다.
 
 - **원칙:** 아래 "강의에서 배운 것"에 있는 기능·API·에디터 방식을 먼저 쓴다.
 - **강의에 없는 기능**이 꼭 필요하면, 코드를 쓰기 전에 ① 왜 필요한지 ② 강의 방식으로는 왜 안 되는지 설명하고 **사용자 확인을 받은 뒤** 쓴다. 코드에는 `// [강의 외]` 주석으로 표시한다.
@@ -200,6 +200,40 @@
 - 새 Input Action 만들기 (예: `Fire` → `OnFire`, Press + Press And Release)
 - `RigidbodyConstraints.FreezeAll` / `FreezePosition` / `FreezeRotation` (코드로 제약)
 
+**05 횡스크롤 미니 게임 모음** (점핑·러닝 게임)
+- 코루틴: `IEnumerator` + `yield return new WaitForSeconds(초)` + `StartCoroutine` (`using System.Collections`) — 타이머 대신 쓰면 효율적
+- `Destroy(gameObject, 초)`로 일정 시간 뒤 제거
+- Project Settings > Physics > Gravity 변경
+- Tag: 기본 태그 `Player`, `GameObject.FindGameObjectWithTag()`
+- 실행 순서: `Awake`(스크립트 꺼져 있어도 호출) → `OnEnable` → `Start` → `Update` → `LateUpdate`(카메라 따라가기)
+- `public` 배열(예: `GameObject[] blockPrefabs`)을 Inspector에서 채우기, 다른 스크립트를 변수 타입으로 저장
+- Interactions `Tap` (짧은 점프), Constraints Freeze Position
+- **Is Trigger** + `OnTriggerEnter/Stay/Exit(Collider other)` (발 밑 감지용 빈 오브젝트)
+
+**06 3차원 다트 게임**
+- Terrain: 높이 올리기/내리기(Shift), 텍스처 Layer, 나무 심기(Paint Trees)
+- 외부 모델(.fbx) 등록, Asset Store 무료 에셋 가져오기
+- `isKinematic`을 코드로 켜서 맞은 자리에 멈추기 (충돌 검사는 계속됨)
+- **Particle System** (Emission, Duration, Start Lifetime, Size over Lifetime, `Play On Awake` 끄고 코드로 `Play()`)
+- `Mouse.current.position.ReadValue()` + `Camera.ScreenPointToRay()` (화면 클릭 → 3D 방향)
+- `Mathf.Sqrt` 등으로 거리 계산, OnGUI로 점수 표시
+
+**07 미니탱크 슈팅게임**
+- 빈 오브젝트로 계층 구성, `this.transform.forward`(월드 기준 앞) vs `Vector3.forward`
+- Input: Interact를 이름 바꿔 쓰기, Hold 제거, Positive/Negative Binding(Q/E), `value.Get<float>()`
+- `Instantiate(prefab, 위치, 회전)`, Prefab을 `Transform` 타입 변수로, **Spawn Point**(빈 오브젝트)
+- Trail Renderer, **Particle System** + `URP/Particles/Unlit` 재질
+- `OnCollisionEnter(Collision)`: `other.gameObject/transform/rigidbody/contactCount/GetContact(i)/relativeVelocity`
+- `OnTriggerEnter(Collider)`: `other.gameObject/transform/attachedRigidbody`
+- `AudioSource.PlayClipAtPoint(clip, 위치)`
+- **Tag**: Add Tag, `other.CompareTag("Obstacle")`
+- `transform.parent`, `transform.root` (맞은 부분의 최상위 오브젝트 찾기)
+- `transform.LookAt` (y를 고정해 숙여지지 않게), `[SerializeField]`(private을 Inspector에 표시)
+- **`Physics.Raycast(시작점, 방향, out hit, 길이)`**, `Debug.DrawRay`
+- **`transform.RotateAround(중심점, 축, 각도)`**
+- **NavMesh**: AI Navigation 패키지, Window > AI > Navigation(Agent Radius/Height/Step Height/Max Slope, Areas·Cost), 바닥에 **NavMesh Surface** + Bake, **Nav Mesh Agent**(Speed, Angular Speed, Acceleration, Stopping Distance, Auto Braking, Obstacle Avoidance), `agent.SetDestination()`
+- `public static` 변수 (점수처럼 게임 전체가 공유하는 값)
+
 ### 「공가」 기능 ↔ 강의 방식 대응
 
 | 기능 | 강의 방식으로 구현 |
@@ -214,11 +248,18 @@
 | 재질·바닥 | Material, Texture, Physics Material |
 | 안내 문구·단서 글 | `OnGUI()` |
 | 사망 후 재시작 | `SceneManager.LoadScene`으로 현재 Scene 다시 로드 |
+| 바라보는 물체 찾기 | `Physics.Raycast` (07장) |
+| 괴물 추적·순찰 | NavMesh Surface + `NavMeshAgent.SetDestination` (07장) |
+| 장롱 문 회전 | `transform.RotateAround` (07장) |
+| 구역 진입 감지 | Is Trigger + `OnTriggerEnter` (05·07장) |
+| 시간 지연 연출 | 코루틴 `WaitForSeconds` (05장) |
+| 효과(먼지·불꽃) | Particle System (06·07장) |
 
 ### 강의에 아직 없는 것 (쓰기 전에 사용자 확인)
-- **사용자가 새 강의자료를 올리면**, 거기서 다룬 기능이 이미 `// [강의 외]`로 쓴 코드에 있는지 찾아서 강의 방식으로 고친다. (현재 사용 중: `Physics.Raycast`, `HingeJoint`, `ForceMode.Impulse`, `interface` — PlayerInteract, DraggableDoor, IInteractable / 커서 잠금 — PlayerLook / `Transform.RotateAround`, `Vector3.SignedAngle`, `Vector3.ProjectOnPlane` — HideSpot 문 회전, 11/15 사용자 허락)
-- `HingeJoint` 등 Joint (문·서랍·레버 드래그)
-- `Physics.Raycast` (바라보는 물체 찾기)
-- `OnTriggerEnter` / Is Trigger (구역 진입 감지, 장롱 숨기)
-- `NavMeshAgent` (괴물 추적 — 일정상 11/17 수업에서 다룰 예정)
-- `CharacterController`, UI(Canvas/TextMeshPro), Timeline
+- **사용자가 새 강의자료를 올리면**, 거기서 다룬 기능이 이미 `// [강의 외]`로 쓴 코드에 있는지 찾아서 강의 방식으로 고친다.
+- 11/15 07장 반영: `Physics.Raycast`, `RotateAround`, Trigger, NavMesh는 이제 강의 내용 → `[강의 외]` 표시 제거.
+- 현재 사용 중인 강의 외 기능:
+  - `HingeJoint` (DraggableDoor), `ForceMode.Impulse` (DraggableDoor), `interface` (IInteractable)
+  - 커서 잠금 `Cursor.lockState` (PlayerLook)
+  - `Vector3.SignedAngle`, `Vector3.ProjectOnPlane` (HideSpot 문 닫힘 각도 계산, 11/15 허락)
+- 아직 강의에 없는 것: `CharacterController`, UI(Canvas/TextMeshPro), Timeline, Animator

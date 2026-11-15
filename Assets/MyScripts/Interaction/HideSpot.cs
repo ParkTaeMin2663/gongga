@@ -255,7 +255,7 @@ public class HideSpot : MonoBehaviour
     {
         door.position = closedPos;
         door.rotation = closedRot;
-        // [강의 외] RotateAround: 강의 03장 Rotate와 같지만, 자기 중심이 아니라 지정한 점(경첩)을 축으로 돈다.
+        // 강의 07장 RotateAround: 강의 03장 Rotate와 같지만, 자기 중심이 아니라 지정한 점(경첩)을 축으로 돈다.
         door.RotateAround(hinge, this.transform.up, angle);
     }
 

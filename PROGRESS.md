@@ -14,8 +14,8 @@
 | 순서 | 할 일 | 단계 | 상태 | 메모 |
 |---|---|---|---|---|
 | 1 | 장롱 숨기 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `HideSpot.cs`(장롱) + `PlayerHide.cs`(Player). 장롱을 보고 **E 1초 꾹** → 문이 열리고 걸어 들어감 → 문 닫힘(12° 틈으로 엿봄, Peek Angle). E 한 번 → 나옴. 안에서는 이동·잡기 불가, 고개만. 모델 문짝을 DoorA/DoorB로 분리, 경첩은 문 모양에서 자동 계산. 모델 안 선반은 지움. 문 연결이 없으면 화면 어두워짐 방식으로 동작. 들어갈 때 3m 소리. 괴물은 `PlayerHide.IsHidden` 확인. 모델: Old Russian wardrobe 1983 (CC BY). 문 달린 모델이면 `doorLeft/Right` 연결 시 문이 실제로 열리는 방식도 지원. Interact 액션 = Press(Press And Release). Main Camera Near Clip 0.05 |
-| 2 | 괴물 뼈대 + 소리 감지 (직진 이동) | 필수 + 목표 | ⬜ | NoiseSystem의 `NoiseCount`/`CanHear`/`LastPosition` 사용 |
-| 3 | 괴물 이동 NavMeshAgent로 | 필수 | ⬜ | 11/17 수업 후 |
+| 2 | 괴물 뼈대 + 소리 감지 | 필수 + 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `Monster/MonsterAI.cs`, `Assets/Prefabs/Monster`(임시 빨간 캡슐 2.4m). 순찰(patrolPoints) → 소리 들으면 확인 → 2.5m 안 기척이면 추격(3.5m/s, 걷기 3 < 괴물 < 달리기 5.5) → 8m 밖·장롱 숨으면 놓침 → 수색 4초 → 순찰. 1.1m 안이면 잡힘 → 씬 재시작. 씬에 이름 `Player`·`NoiseSystem` 필요. 이동은 **NavMeshAgent**(07장)로 교체 완료(11/15). 다른 층 소리는 무시 |
+| 3 | 괴물 이동 NavMeshAgent로 | 필수 | 🟡 A 테스트 완료(11/15, 07장 자료로 앞당김), B 확인 전 | Monster 프리팹에 Nav Mesh Agent(Radius 0.5, Height 2.4) + NavMesh Modifier(Ignore From Build, 자기 자리 구멍 방지). Rigidbody는 Is Kinematic. Door 프리팹에도 NavMesh Modifier(Ignore From Build) → 닫힌 문도 길로 굽힘(문 앞 멈춤·부수기는 5번). **SampleScene에도 NavMesh Surface Bake 필요(B와 상의)** |
 | 4 | 사망·체크포인트 | 목표 | ⬜ | 처음엔 SceneManager.LoadScene 재시작(강의 04) |
 | 5 | 문 부수기 | 목표 | ⬜ | |
 | 6 | 손전등 배터리 | 목표 | ⬜ | |
@@ -67,6 +67,8 @@
 | `Wardrobe` (201호) | `Wardrobe_201` 월드 Position **(9, 2.8, 7.93)**, Rotation **(0, 180, 0)** | 2장 숨기 연출용. 숨으면 문틈 정면으로 201호 현관이 보임. Hierarchy 맨 바깥(부모 없음)에 두고 값 그대로 입력 |
 | `Wardrobe` (301호) | `Wardrobe_301` **(15.63, 5.6, 5.5)**, Rotation **(0, -90, 0)** | 동쪽 칸막이 벽에 붙어 서쪽을 봄. 일기장은 근처에 |
 | `Wardrobe` (304호) | `Wardrobe_304` **(-10, 5.6, 7.93)**, Rotation **(0, 180, 0)** | 추격 중 숨는 두 번째 장롱 |
+| **NavMesh Bake** | SampleScene에 빈 오브젝트 `NavMesh` 하나 (위치 상관없음) | Add Component → **NavMesh Surface** → Collect Objects = **All** → **Bake** (07장 47쪽). 맵(벽·바닥·계단·가구)을 바꿀 때마다 다시 Bake. 생기는 `SampleScene/NavMesh-NavMesh.asset`도 커밋 |
+| `Monster` | 3층. 시작 위치 304호 안 **(-12, 5.6, 5)**, Rotation (0, 90, 0) | 순찰 지점: 빈 오브젝트 `Patrol_1` (-12, 5.6, 5) / `Patrol_2` (-12, 5.6, 1) / `Patrol_3` (12, 5.6, 1) / `Patrol_4` (2, 5.6, 1) 을 Monster의 Patrol Points에 순서대로. **3장 전에는 Monster 오브젝트를 꺼 두고, 3장 시작 연출에서 켜기** (2층 연출용 실루엣은 별도) |
 
 ---
 
@@ -80,6 +82,7 @@
 - 11/03: 벽 텍스처 자동 Tiling 스크립트는 보류, 재질 Tiling 수동 조절로 결정
 - 11/07: 가구는 Poly Haven(CC0) 모델 사용. 모델은 `Assets/Models/`, 재질은 텍스처로 직접 만든 URP Lit. 서랍 분리된 후보: Vintage Wooden Drawer 01(서랍 6칸, 관리사무소용), Drawer Cabinet, Painted Wooden Cabinet
 - 11/07: **Player는 프리팹**(`Assets/Prefabs/Player`, 자식 Main Camera·Flashlight 포함). SampleScene·Test_A 둘 다 이 프리팹 사용. Player 수정은 A가 프리팹에서 한다(씬 수정 불필요). Main Camera 이름·태그 유지
+- 11/15: 강의자료 05·06·07장을 CLAUDE.md 6장에 반영. Raycast·RotateAround·Trigger·NavMesh·코루틴·Particle·Tag·static은 이제 강의 내용
 - 11/07: A가 B에게 알리고 SampleScene 수정 — Player 프리팹화 + 발소리 Audio Source, `NoiseSystem` 배치 완료
 - 문은 `LocksLook = true`(잡는 동안 시점 고정), 들고 다니는 물건은 `false` — `IInteractable`에 추가됨
 

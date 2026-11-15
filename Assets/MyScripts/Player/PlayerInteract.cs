@@ -136,7 +136,7 @@ public class PlayerInteract : MonoBehaviour
         this.lookTarget = null;
         this.LookHideSpot = null;
 
-        // [강의 외] Physics.Raycast: 카메라에서 정면으로 보이지 않는 선을 쏴서 처음 맞은 물체를 알려준다.
+        // 강의 07장 Physics.Raycast: 카메라에서 정면으로 보이지 않는 선을 쏴서 처음 맞은 물체를 알려준다.
         //           reachDistance(m)까지만 쏜다. 벽에 먼저 맞으면 벽 너머 물체는 찾지 않는다.
         RaycastHit hit;
         if (Physics.Raycast(this.cameraTransform.position, this.cameraTransform.forward, out hit, this.reachDistance))
