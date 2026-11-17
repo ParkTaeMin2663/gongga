@@ -165,8 +165,10 @@ public class PlayerDeath : MonoBehaviour
         float ago = Time.time - Checkpoint.lastSaveTime;
         if (Checkpoint.lastSaveShowsMessage && ago >= 0f && ago < 2f)
         {
-            GUI.color = new Color(1f, 1f, 1f, 1f - ago / 2f);
-            GUI.Label(new Rect(Screen.width - 110f, Screen.height - 40f, 100f, 25f), "저장됨");
+            // 공통 UI 스타일 (UIStyle.cs): 오른쪽 아래, 흐린 글자로 서서히 사라짐
+            GUIStyle style = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.LowerRight);
+            Rect rect = new Rect(0f, 0f, Screen.width - UIStyle.Size(32), Screen.height - UIStyle.Size(28));
+            UIStyle.Label(rect, "저장됨", style, 1f - ago / 2f);
         }
     }
 }

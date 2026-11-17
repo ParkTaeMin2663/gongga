@@ -42,8 +42,7 @@ public class PlayerPickup : MonoBehaviour
         {
             return;
         }
-        GUI.color = Color.white;
-        GUI.Label(new Rect(Screen.width / 2f - 60f, Screen.height / 2f + 20f, 200f, 25f),
-                  "[E] " + this.playerInteract.LookItem.DisplayName + " 줍기");
+        // 공통 UI 스타일 (UIStyle.cs): 조준점 아래 가운데, [E]는 노란색
+        UIStyle.Prompt("[E] " + this.playerInteract.LookItem.DisplayName + " 줍기");
     }
 }

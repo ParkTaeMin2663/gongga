@@ -222,20 +222,23 @@ public class PlayerHide : MonoBehaviour
             return;
         }
 
-        float x = Screen.width / 2f - 60f;
-        float y = Screen.height / 2f + 20f;
-        GUI.color = Color.white;
-        GUI.Label(new Rect(x, y, 200f, 25f), message);
+        // 공통 UI 스타일 (UIStyle.cs): 조준점 아래 가운데
+        UIStyle.Prompt(message);
 
-        // 3) E를 누르고 있는 동안 막대가 차오른다
+        // 3) E를 누르고 있는 동안 막대가 차오른다 (안내 문구 바로 아래, 가운데)
         float needTime = this.IsHidden ? this.exitHoldTime : this.enterHoldTime;
         if (this.holdTimer > 0f && needTime > 0f)
         {
             float rate = Mathf.Clamp01(this.holdTimer / needTime);
-            GUI.color = new Color(1f, 1f, 1f, 0.3f);
-            GUI.DrawTexture(new Rect(x, y + 25f, 120f, 6f), this.whiteTexture);        // 바탕
+            Rect prompt = UIStyle.PromptRect();
+            float width = UIStyle.Size(140);
+            float height = Mathf.Max(2f, UIStyle.Size(4));
+            Rect bar = new Rect(Screen.width / 2f - width / 2f, prompt.yMax + UIStyle.Size(4), width, height);
+            GUI.color = new Color(1f, 1f, 1f, 0.2f);
+            GUI.DrawTexture(bar, this.whiteTexture);                                                  // 바탕
+            GUI.color = UIStyle.yellow;
+            GUI.DrawTexture(new Rect(bar.x, bar.y, bar.width * rate, bar.height), this.whiteTexture); // 찬 만큼
             GUI.color = Color.white;
-            GUI.DrawTexture(new Rect(x, y + 25f, 120f * rate, 6f), this.whiteTexture); // 찬 만큼
         }
     }
 }

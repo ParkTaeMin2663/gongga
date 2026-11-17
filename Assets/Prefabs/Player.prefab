@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 4242424242424242453}
   - component: {fileID: 4242424242424242491}
   - component: {fileID: 4242424242424242501}
+  - component: {fileID: 4242424242424242601}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1016,3 +1017,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ec8e5ff079124433955a1faaed017c1e, type: 3}
   m_PrefabInstance: {fileID: 4242424242424242514}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4242424242424242601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6718144869075674137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78bdc47c47b24cf79d4875ca1672b7af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIStyle
+  regularFont: {fileID: 12800000, guid: 28b2663ffaf94f94994b2f150f6e27fe, type: 3}
+  boldFont: {fileID: 12800000, guid: 2ecda261771a4e2daf3ea48470a3363d, type: 3}
+  blackFont: {fileID: 12800000, guid: ba5447cedd4f4570aabd3ca9578592a2, type: 3}

@@ -84,6 +84,29 @@ public class MonsterAI : MonoBehaviour
     [Tooltip("문을 날려 버리는 힘")]
     public float doorBreakImpulse = 120f;
 
+    [Header("순찰 지점에서 멈추기 (예: 2층 201호 장롱 앞에서 킁킁)")]
+    [Tooltip("이 번호의 순찰 지점에 도착하면 pauseTime초 동안 멈춰 있는다. -1이면 안 멈춤")]
+    public int pausePointIndex = -1;
+    [Tooltip("멈춰 있는 시간(초)")]
+    public float pauseTime = 4f;
+    [Tooltip("멈춰 있는 동안 쳐다볼 곳 (예: 장롱). 비워 두면 그냥 서 있는다")]
+    public Transform pauseLookAt;
+
+    [Header("한 번만 지나가기 (2층 연출용)")]
+    [Tooltip("체크하면 순찰 지점을 처음부터 끝까지 한 번만 지나가고, 마지막 지점에 도착하면 사라진다 (3층 괴물은 끔)")]
+    public bool patrolOnce = false;
+
+    [Header("발소리")]
+    [Tooltip("괴물 몸에 붙은 Audio Source (3D). 비워 두면 발소리 없음")]
+    public AudioSource footstepSound;
+    [Tooltip("발소리 파일들 (Assets/Audio/Monster/monster_step_0~3). 걸음마다 무작위로 하나")]
+    public AudioClip[] footstepClips;
+    [Tooltip("몇 m 걸을 때마다 한 걸음 소리를 낼지 (클수록 느릿느릿 무거운 걸음)")]
+    public float stepDistance = 1.1f;
+    [Tooltip("천천히 걸을 때(순찰) 볼륨 / 달릴 때(추격) 볼륨")]
+    [Range(0f, 1f)] public float walkStepVolume = 0.7f;
+    [Range(0f, 1f)] public float chaseStepVolume = 1f;
+
     [Header("이동")]
     [Tooltip("목표까지 이 거리(m) 안이면 도착한 것으로 본다")]
     public float arriveDistance = 0.6f;
@@ -94,6 +117,9 @@ public class MonsterAI : MonoBehaviour
 
     /// <summary>지금 상태. B의 연출이나 소리(괴물 울음 등)에서 읽을 수 있다.</summary>
     public State CurrentState { get; private set; }
+
+    /// <summary>patrolOnce일 때 마지막 지점까지 가서 사라졌는지. 2층 연출(Floor2Event)이 이걸 보고 셔터를 연다.</summary>
+    public bool IsRouteFinished { get; private set; }
 
     // ----- Start()에서 한 번만 찾아 저장 (강의 04장) -----
     private NavMeshAgent agent;
@@ -119,6 +145,14 @@ public class MonsterAI : MonoBehaviour
     private float lurkPauseTimer;    // 남은 멈춤 시간
     private bool lurkMoving;         // 지금 걷는 중인지
 
+    // 순찰 지점에서 멈추기
+    private bool isPausing;          // 지금 멈춰 있는 중인지
+    private float pauseTimer;        // 멈춘 시간
+
+    // 발소리
+    private Vector3 lastStepPosition;  // 마지막 발소리를 낸 자리
+    private float stepMoved;           // 그 뒤로 걸은 거리
+
     private void Start()
     {
         this.agent = this.GetComponent<NavMeshAgent>();
@@ -126,6 +160,8 @@ public class MonsterAI : MonoBehaviour
         {
             Debug.LogError("[MonsterAI] Nav Mesh Agent가 없습니다. Add Component로 추가해 주세요.");
         }
+
+        this.lastStepPosition = this.transform.position;
 
         // Agent가 위치를 정하므로 물리에 밀리지 않게 한다 (강의 03장 Is Kinematic)
         Rigidbody rb = this.GetComponent<Rigidbody>();
@@ -169,6 +205,7 @@ public class MonsterAI : MonoBehaviour
 
         this.ListenForNoise();
         this.CheckDoorAhead();
+        this.UpdateFootsteps();
 
         switch (this.CurrentState)
         {
@@ -197,12 +234,52 @@ public class MonsterAI : MonoBehaviour
             return;
         }
 
+        // 멈춰 있는 중 (예: 장롱 앞에서 킁킁)
+        if (this.isPausing)
+        {
+            this.Stop();
+            if (this.pauseLookAt != null)
+            {
+                // 강의 07장 LookAt: 높이를 맞춰서 고개가 숙여지지 않게
+                Vector3 look = this.pauseLookAt.position;
+                look.y = this.transform.position.y;
+                this.transform.LookAt(look);
+            }
+            this.pauseTimer = this.pauseTimer + Time.deltaTime;
+            if (this.pauseTimer >= this.pauseTime)
+            {
+                this.isPausing = false;
+                this.NextPatrolPoint();
+            }
+            return;
+        }
+
         Transform point = this.patrolPoints[this.patrolIndex];
         if (this.MoveTowards(point.position, this.patrolSpeed))
         {
-            // 도착 → 다음 지점 (마지막이면 처음으로)
-            this.patrolIndex = (this.patrolIndex + 1) % this.patrolPoints.Length;
+            if (this.patrolIndex == this.pausePointIndex)
+            {
+                // 이 지점에서는 잠깐 멈춘다
+                this.isPausing = true;
+                this.pauseTimer = 0f;
+                return;
+            }
+            this.NextPatrolPoint();
         }
+    }
+
+    // 다음 순찰 지점으로. 마지막이면 처음으로 (patrolOnce면 사라진다)
+    private void NextPatrolPoint()
+    {
+        if (this.patrolOnce && this.patrolIndex >= this.patrolPoints.Length - 1)
+        {
+            if (this.showDebug) Debug.Log("[괴물] 길 끝까지 감 → 사라짐");
+            this.IsRouteFinished = true;
+            this.Stop();
+            this.gameObject.SetActive(false);   // 강의 04장 SetActive
+            return;
+        }
+        this.patrolIndex = (this.patrolIndex + 1) % this.patrolPoints.Length;
     }
 
     private void UpdateInvestigate()
@@ -467,6 +544,33 @@ public class MonsterAI : MonoBehaviour
         }
         this.CurrentState = next;
         this.searchTimer = 0f;
+        this.isPausing = false;   // 멈춰 있다가 소리를 들으면 바로 움직인다 (돌아오면 그 지점에서 다시 멈춤)
+    }
+
+    // 걸은 거리가 stepDistance를 넘을 때마다 쿵 (강의 03장 AudioSource.Play, Pitch, Random.Range)
+    private void UpdateFootsteps()
+    {
+        if (this.footstepSound == null || this.footstepClips == null || this.footstepClips.Length == 0)
+        {
+            return;
+        }
+
+        Vector3 moved = this.transform.position - this.lastStepPosition;
+        moved.y = 0f;
+        this.stepMoved = this.stepMoved + moved.magnitude;
+        this.lastStepPosition = this.transform.position;
+
+        if (this.stepMoved < this.stepDistance)
+        {
+            return;
+        }
+        this.stepMoved = 0f;
+
+        bool fast = this.CurrentState == State.Chase || this.CurrentState == State.Investigate;
+        this.footstepSound.clip = this.footstepClips[Random.Range(0, this.footstepClips.Length)];
+        this.footstepSound.volume = fast ? this.chaseStepVolume : this.walkStepVolume;
+        this.footstepSound.pitch = Random.Range(0.9f, 1.1f);
+        this.footstepSound.Play();
     }
 
     /// <summary>

@@ -21,7 +21,8 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 | 5 | 문 부수기 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | 괴물 앞 1.2m에 닫힌 문(Raycast) → 추격 중·잠긴 문이면 0.7초마다 쾅(3초) 후 **경첩 Destroy + 문짝 날림**(12m 소리), 평소엔 문을 밀어서 엶(안 열리면 부숨). `DraggableDoor`에 PushOpen/Knock/Break, 소리 `door_knock`(Basement door slam 한 방, 저음 강조판 `door_knock_b`), `door_break`(문 걷어차 부서지는 녹음 + 나무 박살, 대체 `door_break_b`)(자식 `BreakSoundPoint`에서 재생 → 부서질 때 떼어 놓아 그 자리에서 들림). 두 소리 Min Distance 6·도플러 0. 부서진 문짝이 떨어져 부딪히면 `door_fall` 쿵(OnCollisionEnter, 세기에 따라 볼륨). 부서진 문은 못 잡음. 문 틈(1.0m)에 덜 걸리게 **Player Capsule Radius 0.4 → 0.3**(11/15) |
 | 6 | 손전등 배터리 | 목표 | 🟡 A 테스트 완료(11/15), B 확인 전 | `PlayerFlashlight.cs`: 켜면 0.5/초 소모(100 → 3분 20초), 20% 아래 어두워지며 깜빡, 0이면 안 켜짐. 왼쪽 아래 배터리 막대(OnGUI). 딸깍 소리. **B 연출용 `FlickerOut(초)`** (깜빡이다 꺼짐, 코루틴), `GiveFlashlight()`(관리사무소에서 얻을 때, `hasFlashlight` 끄고 시작). 건전지 `Assets/Prefabs/Battery`(+50). **설계대로(11/15): Player는 손전등 없이 시작(`hasFlashlight` 끔)** → 관리사무소 `FlashlightPickup`을 **E로 주워** 얻음(Poly Haven Plastic Torch 6V). 줍는 물건은 `ItemPickup.cs`(종류: Flashlight/Battery) + Player의 `PlayerPickup.cs`(바라보면 "[E] 손전등 줍기"). **얻으면 왼손에 들림**(Main Camera > `HeldFlashlight`, 불빛이 렌즈에서 나옴, 걸으면 `FlashlightSway`로 살짝 흔들림·뛰면 크게). 건전지 모델 D Battery(CC BY). 체크포인트가 손전등 보유·배터리 양도 기억 → 죽어도 안 잃음 |
 | 7 | 괴물 외형 (무료 모델) | 여유 | ⬜ | 후보: Country Road Creature Rig (CC BY). 넣을 때 4번 점프스케어도 같이 |
-| 8 | 공통 UI 스타일 | 필수 | ⬜ | `UI/UIStyle.cs`(public static 글꼴·색·GUIStyle) + 무료 한글 글꼴(OFL, Credits 기록). A 화면 표시(배터리·안내 문구·저장됨·사망)를 먼저 바꾸고, B는 단서·타이틀·엔딩 화면에서 가져다 씀 |
+| 8 | 공통 UI 스타일 | 필수 | 🟡 스크립트 완료(11/16), A 테스트 전 | `UI/UIStyle.cs` — **Player 프리팹에 붙어 있음**(글꼴 연결됨). 글꼴 **Noto Serif KR(본명조) Regular/Bold/Black**(`Assets/Fonts`, OFL, Credits 기록) 하나로 통일. 색: `UIStyle.white/yellow/red/paper/gray`. 쓰는 법(OnGUI 안): `UIStyle.Prompt("[E] 일기장 읽기")`(조준점 아래, [E] 노란색), `UIStyle.Label(rect, 글자, UIStyle.Title(40))`(그림자 있는 글자), 스타일만: `UIStyle.Body(22, UIStyle.paper)` / `Strong` / `Title`. 크기는 1080p 기준 숫자를 넣으면 화면 높이에 맞춰 바뀜. A 쪽 적용 완료: 줍기·숨기 안내, E 막대, "저장됨". **B: `ClueReader`(안내 문구·종이 글자)를 UIStyle로 바꿔 주기.** `Floor2Event`의 "숨어라"는 A가 UIStyle로 바꿈(11/16, 크기 36 → `hideHintSize` 120, 본명조 Black·그림자, 사용자 요청), 타이틀·엔딩도 UIStyle 사용. 제출 전 `NoiseSystem`·`MonsterAI`의 Show Debug 끄기 |
+| + | 괴물 발소리 + 2층용 기능 | 추가 | 🟡 스크립트 완료(11/17), A 테스트 전 | `MonsterAI`에 발소리(걸은 거리 1.1m마다 쿵, `Assets/Audio/Monster/monster_step_0~3` = Kenney 콘크리트 발소리를 낮고 무겁게 가공), **순찰 지점에서 멈추기**(`pausePointIndex`·`pauseTime`·`pauseLookAt`), **한 번만 지나가고 사라지기**(`patrolOnce`, `IsRouteFinished`). Monster 프리팹에 발소리 Audio Source(3D, Min 3, Max 40) 추가. 3층 괴물은 patrolOnce 끔·pause -1이라 예전과 같음 |
 | + | 숨소리 | 추가 | 🟡 A 테스트 완료(11/15), B 확인 전 | `Player/PlayerBreath.cs`. Player 프리팹에 Loop Audio Source 2개(평소 `breath_calm_a`, 헐떡임 `breath_heavy_b`). 뛰면 숨참 0→1(5초), 쉬면 10초에 가라앉음, 두 소리를 섞음. 장롱 속에서 숨참 0.5 넘으면 1.5초마다 2.5m 소리(괴물이 확인하러 옴). 대체 후보 `breath_calm_b`, `breath_heavy_a` |
 
 ### B (월드·연출)
@@ -33,11 +34,11 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 | 2 | A 프리팹 배치 | 필수 | ✅ A 확인(11/16) | 배치 요청 표 전부: Monster+순찰 지점, 장롱 3, 체크포인트 3, Breaker, Dresser·Nightstand·Box |
 | 3 | A 기능 확인 → ✅ | 필수 | ⬜ | 장롱 숨기, 괴물(소리·추격·서성이기), 문 부수기, 사망·체크포인트, 숨소리, 서랍·레버 |
 | 4 | UI 방식 A와 결정 | 필수 | ✅ A 확인(11/16): **OnGUI + 공통 스타일** | A 쪽 화면 표시(배터리·숨기·사망·줍기)가 전부 OnGUI라 맞춤. 단서 UI도 OnGUI로 작성함. 타이틀·엔딩·사망 선택 화면도 OnGUI로 (커서는 `Cursor.lockState = None`, `visible = true`로 보이기). A가 반대면 PROGRESS에 적어 주기 |
-| 5 | 2층 연출 (셔터·센서등·실루엣·"숨어라") | 필수 | ✅ A 확인(11/16) | `Story/Floor2Event.cs` (빈 오브젝트 `Floor2Event`). 레버 IsOn → 셔터가 0.4m 올라가다 걸림 → 센서등이 계단 쪽부터 하나씩 → 204호 앞 실루엣 → `FlickerOut` + 센서등 꺼짐 → "숨어라" → 실루엣이 길(Path)을 따라 1m/s로 기어 옴(201호 앞에서 4초 킁킁) → 숨지 않고 1.3m 안이면 `PlayerDeath.Die` → 계단으로 사라지면 셔터 끝까지. 셔터는 localScale.y를 줄여 위로 말려 올라감(3층 바닥 안 뚫음). 셔터·센서등 `Emit(…, 20)`. 실루엣은 MonsterAI 없는 별도 오브젝트(임시 검은 캡슐, 괴물 외형 나오면 교체) |
+| 5 | 2층 연출 (셔터·센서등·괴물·"숨어라") | 필수 | 🟡 A가 수정(11/17), A 테스트 전 | `Story/Floor2Event.cs` (빈 오브젝트 `Floor2Event`). 레버 IsOn → 셔터가 0.4m 올라가다 걸림 → 센서등이 계단 쪽부터 하나씩 → 204호 앞에 괴물 → `FlickerOut` + 센서등 꺼짐 → "숨어라" → **(11/17 사용자 결정) 검은 실루엣 대신 진짜 Monster 프리팹 사본 `Monster_2F`** 의 AI가 켜져 순찰 지점을 **한 번만** 지나감: 202 앞 → 201 문 앞(밀어서 열고, 안 열리면 부숨) → **201호 안 장롱 앞에서 5초 킁킁**(Pause Point) → 다시 복도 → 계단에서 사라짐(`MonsterAI.IsRouteFinished`) → 셔터 끝까지. 진짜 괴물이라 소리 듣고, 숨지 않으면 쫓아와 잡음 → 체크포인트 2에서 다시. 셔터는 localScale.y를 줄여 위로 말려 올라감. 셔터·센서등 `Emit(…, 20)`. `Silhouette_2F`(검은 캡슐)와 Floor2Event의 실루엣 길·속도 설정은 안 씀(괴물 외형은 Monster 프리팹만 바꾸면 2·3층 같이 바뀜). **SampleScene은 A(사용자)가 직접 수정함(11/17) — B는 pull 후 작업** |
 | 6 | 단서 UI (일기장·사진·카세트) | 필수 | ✅ A 확인(11/16) | `Story/ClueItem.cs`(단서 물건: 종류·제목·pages·image·audioClip) + `UI/ClueReader.cs`(빈 오브젝트 `ClueReader` + Audio Source). 바라보면 "[E] 일기장 읽기", E → 누런 종이 화면, E로 다음 장/닫기. 읽는 동안 걷기·시점·잡기 멈춤. **Player 프리팹은 안 건드림**: E는 `Keyboard.current.eKey`로 직접 읽음(06장 Mouse.current 방식), Raycast는 Main Camera에서 |
 | 7 | 단지 바깥 + 바깥에서 시작 | 필수 | ⬜ | 06장 Terrain 가능. Player와 체크포인트 1번을 바깥 시작점으로 옮기기 → NavMesh 다시 Bake |
 | 8 | 지하 맵 (보일러실·제사상·비상구) | 필수 | ⬜ | 체크포인트 4번 + 괴물 최종 추격용 순찰 지점 (A에게 위치 알려 주기) |
-| 9 | 3장 시작 시 Monster 켜기 | 필수 | ✅ A 확인(11/16) | `Story/ActivateOnEnter.cs`: 3층 계단 위 Trigger 구역 `Chapter3Start`에 들어오면 Targets(Monster) SetActive(true) |
+| 9 | 3장 시작 시 Monster 켜기 | 필수 | 🟡 A가 수정(11/17), A 테스트 전 | `Story/ActivateOnEnter.cs`: Trigger 구역 `Chapter3Start`에 들어오면 Targets(Monster) SetActive(true). **(11/17 사용자 결정) 구역을 3층 계단 위 → 301호 안으로 옮김. 2층 괴물이 1층으로 내려간 뒤, 플레이어가 301호에 들어오면 3층 괴물이 2층 계단참(Enter Positions)에서 나타나 계단으로 올라와 복도를 지나 304호 쪽으로 감**(발소리가 아래에서 올라옴 → 301호 장롱에 숨기). 체크포인트 3에서 다시 시작하면 원래 자리(304호)에서 켬. FireShutter에 NavMesh Modifier(Ignore) + 다시 Bake (닫힌 셔터가 길을 끊지 않게) |
 | 10 | 다시 시작 시 지난 연출 건너뛰기 | 목표 | ✅ A 확인(11/16) | `Floor2Event.skipFromCheckpoint`(3 이상이면 셔터 열림·실루엣 없음), `ActivateOnEnter.activeFromCheckpoint`(3 이상이면 Monster 바로 켬). 2층 연출 중 잡히면 체크포인트 2에서 연출 다시 |
 | 11 | 스토리 연출·엔딩 | 필수 | ⬜ | 302호 동생 흔적, 지하 제사상, 탈출 엔딩 |
 | 12 | 타이틀·엔딩 화면 | 필수 | ⬜ | A의 "다시 시작 / 그만하기" 화면과 같이 |
@@ -96,5 +97,10 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 
 - 11/16: **UI는 OnGUI(강의 04장) + A·B 공통 스타일(글꼴·색)**. Canvas/TMP는 강의 외 + 다시 만들어야 해서 안 씀. 타이틀·엔딩은 이미지 위주로. 공통 스타일은 A가 `UI/UIStyle.cs`로 만든다
 
+- 11/17: **2층 괴물 = 진짜 Monster 프리팹 사본**(정해진 길을 한 번 지나가는 AI, 201호 안까지 들어와 장롱 앞 킁킁, 문 부수기 동일). 실루엣 전용 연출 코드는 없앰 (CLAUDE.md 4장 수정)
+- 11/17: 2층 괴물은 계단 아래(1층)로 내려가 사라지고, 3층 괴물은 플레이어가 301호에 들어오면 아래 계단에서 올라온다 (`ActivateOnEnter.enterPositions`)
+
 ## 알려진 문제
+- (11/17) 문 위 벽(Lintel) 아래 NavMesh가 끊겨 괴물이 세대 안으로 못 들어가고 문 앞에서 멈춤 → **Navigation Agents > Humanoid Height 2 → 1.8**(괴물 키 1.9로 줄임과 함께) + 다시 Bake. 맵을 고치면 Bake 후 Scene 창 Show NavMesh로 문 앞이 이어졌는지 확인
+- (11/17, B에게) 문 위 벽 `Lintel_101~304`, `Lintel_Office`의 Scale Z가 2라서 복도 쪽으로 0.9m 튀어나와 천장에 상자가 매달린 것처럼 보임 → **Scale Z를 0.2로** (Position z 2.1 그대로). 괴물이 여기에 파묻혀 보여서 A가 Monster 프리팹을 키 1.9m·폭 0.6m로 줄임(2층·3층 공통)
 - (가끔) 상자를 들고 고개를 빠르게 돌린 뒤 놓으면 멀리 튕겨 나감 → 상자가 플레이어 몸을 통과하며 겹쳐서 생기는 현상. 다시 생기면 `Physics.IgnoreCollision` + `maxDepenetrationVelocity`(강의 외)로 고치기로 함

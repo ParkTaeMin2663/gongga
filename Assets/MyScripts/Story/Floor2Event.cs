@@ -2,16 +2,17 @@ using System.Collections;          // 강의 05장: 코루틴
 using UnityEngine;
 
 /// <summary>
-/// 2장(2층) 연출. 차단기를 올리면 순서대로 진행된다. (괴물 AI 없이 정해진 연출만)
+/// 2장(2층) 연출. 차단기를 올리면 순서대로 진행된다.
+/// (11/17 A 수정) 검은 실루엣 대신 **진짜 Monster 프리팹 사본(Monster_2F)** 이 정해진 길을 한 번 지나간다.
 ///
 ///   1) 차단기 레버(DraggableLever.IsOn)가 올라감
 ///   2) 방화 셔터가 "끼이익" 올라가다가 중간에 걸려 멈춘다 (아직 못 지나감)
-///   3) 센서등이 계단 쪽부터 복도 끝 쪽으로 하나씩 켜짐 → 복도 끝(204호 앞)에 집주인 실루엣
-///   4) 손전등이 깜빡이다 꺼지고(PlayerFlashlight.FlickerOut) 센서등도 꺼짐, 기어 오는 소리
-///   5) 화면에 "숨어라" → 실루엣이 복도를 따라 천천히 기어 온다
-///      · 숨지 않고 가까이 있으면 잡힌다 (PlayerDeath.Die → 체크포인트에서 다시 시작)
-///      · 201호 장롱에 숨으면(PlayerHide.IsHidden) 앞을 지나가 계단 쪽으로 사라진다
-///   6) 실루엣이 사라지면 셔터가 끝까지 올라감 → 3층으로 갈 수 있다
+///   3) 센서등이 계단 쪽부터 복도 끝 쪽으로 하나씩 켜짐 → 복도 끝(204호 앞)에 집주인(Monster_2F)이 서 있다 (AI 꺼짐)
+///   4) 손전등이 깜빡이다 꺼지고(PlayerFlashlight.FlickerOut) 센서등도 꺼짐
+///   5) 화면에 "숨어라" → 괴물 AI(MonsterAI)가 켜져 순찰 지점을 한 번 지나간다 (patrolOnce)
+///      202호 앞 → 201호 문 앞(닫혀 있으면 밀고, 안 열리면 부숨) → 201호 안 장롱 앞에서 킁킁(pausePointIndex)
+///      → 다시 복도 → 계단에서 사라짐. 진짜 괴물과 똑같이 소리를 듣고, 숨지 않은 플레이어는 쫓아와 잡는다
+///   6) 괴물이 사라지면(MonsterAI.IsRouteFinished) 셔터가 끝까지 올라감 → 3층으로 갈 수 있다
 ///
 /// [붙이는 곳] SampleScene의 빈 오브젝트 "Floor2Event" (위치 상관없음)
 /// [Inspector 연결] 아래 칸들. 비어 있는 칸은 그 단계를 건너뛴다(에러 없음).
@@ -47,21 +48,12 @@ public class Floor2Event : MonoBehaviour
     [Tooltip("센서등이 켜질 때 딸깍 소리 (없어도 됨). 소리 파일을 드래그")]
     public AudioClip sensorClickClip;
 
-    [Header("실루엣 (집주인, 연출용 — MonsterAI 없음)")]
-    [Tooltip("복도 끝에 나타나는 집주인 오브젝트. 처음엔 꺼 둔다(체크 해제)")]
+    [Header("2층 괴물 (Monster 프리팹 사본)")]
+    [Tooltip("2층용 Monster 사본(Monster_2F)을 드래그. 처음엔 꺼 둔다(체크 해제). 순찰 지점·Patrol Once·Pause 설정은 그 괴물의 MonsterAI에서")]
+    public MonsterAI monster;
+
+    [Tooltip("(예전 방식, 비워 두기) 움직이지 않는 실루엣. monster가 비어 있을 때만 잠깐 보였다가 사라진다")]
     public Transform silhouette;
-    [Tooltip("실루엣이 기어 갈 길 (빈 오브젝트들). 0번 = 처음 나타나는 자리(204호 앞) → … → 마지막 = 사라지는 자리(계단)")]
-    public Transform[] silhouettePath;
-    [Tooltip("기어 오는 속도(m/초). 플레이어 걷기 3보다 훨씬 느리게")]
-    public float crawlSpeed = 1.0f;
-    [Tooltip("이 번호의 지점에 도착하면 잠깐 멈춰 킁킁거린다 (예: 201호 앞). -1이면 안 멈춤")]
-    public int sniffPointIndex = 2;
-    [Tooltip("킁킁거리며 멈춰 있는 시간(초)")]
-    public float sniffTime = 4f;
-    [Tooltip("숨지 않은 플레이어가 이 거리(m) 안이면 잡힌다")]
-    public float catchDistance = 1.3f;
-    [Tooltip("기어 오는 소리 (실루엣에 붙인 Audio Source, Loop 체크, Play On Awake 끔)")]
-    public AudioSource crawlSound;
 
     [Header("손전등")]
     [Tooltip("손전등이 깜빡이다 꺼지는 시간(초)")]
@@ -70,13 +62,15 @@ public class Floor2Event : MonoBehaviour
     [Header("안내 문구")]
     [Tooltip("화면에 띄울 힌트")]
     public string hideHint = "숨어라";
+    [Tooltip("\"숨어라\" 글자 크기 (1080p 기준, 화면 크기에 맞춰 바뀜)")]
+    public int hideHintSize = 120;
 
     [Header("시간 (초)")]
     [Tooltip("셔터가 걸린 뒤 센서등이 켜지기 시작할 때까지")]
     public float waitBeforeLights = 1.5f;
-    [Tooltip("실루엣이 보인 뒤 손전등이 깜빡이기 시작할 때까지 (플레이어가 실루엣을 볼 시간)")]
+    [Tooltip("괴물이 보인 뒤 손전등이 깜빡이기 시작할 때까지 (플레이어가 괴물을 볼 시간)")]
     public float waitBeforeFlicker = 2.5f;
-    [Tooltip("손전등이 꺼진 뒤 실루엣이 기어 오기 시작할 때까지")]
+    [Tooltip("손전등이 꺼진 뒤 괴물이 움직이기 시작할 때까지")]
     public float waitBeforeCrawl = 1.5f;
 
     /// <summary>연출이 끝났는지 (셔터가 다 열림)</summary>
@@ -84,7 +78,6 @@ public class Floor2Event : MonoBehaviour
 
     private bool isStarted;
     private bool showHint;
-    private bool hasCaught;   // 실루엣이 플레이어를 잡았는지
     private Vector3 shutterClosedPosition;
     private Vector3 shutterClosedScale;
     private GUIStyle hintStyle;
@@ -93,7 +86,6 @@ public class Floor2Event : MonoBehaviour
     private Transform player;
     private PlayerHide playerHide;
     private PlayerFlashlight playerFlashlight;
-    private PlayerDeath playerDeath;
     private NoiseSystem noiseSystem;
 
     private void Start()
@@ -104,7 +96,6 @@ public class Floor2Event : MonoBehaviour
             this.player = playerObject.transform;
             this.playerHide = playerObject.GetComponent<PlayerHide>();
             this.playerFlashlight = playerObject.GetComponent<PlayerFlashlight>();
-            this.playerDeath = playerObject.GetComponent<PlayerDeath>();
         }
         GameObject noiseObject = GameObject.Find("NoiseSystem");
         if (noiseObject != null)
@@ -118,8 +109,12 @@ public class Floor2Event : MonoBehaviour
             this.shutterClosedScale = this.shutter.localScale;
         }
 
-        // 처음 상태: 센서등 꺼짐, 실루엣 숨김
+        // 처음 상태: 센서등 꺼짐, 괴물·실루엣 숨김
         this.SetLights(false);
+        if (this.monster != null)
+        {
+            this.monster.gameObject.SetActive(false);
+        }
         if (this.silhouette != null)
         {
             this.silhouette.gameObject.SetActive(false);
@@ -185,7 +180,7 @@ public class Floor2Event : MonoBehaviour
         {
             this.Emit(this.sensorLights[this.sensorLights.Length - 1].transform.position, 20f, "센서등");
         }
-        this.ShowSilhouette();
+        this.ShowMonster();
         yield return new WaitForSeconds(this.waitBeforeFlicker);
 
         // 4) 손전등이 깜빡이다 꺼지고, 센서등도 꺼진다
@@ -195,30 +190,26 @@ public class Floor2Event : MonoBehaviour
         }
         yield return new WaitForSeconds(this.flickerTime);
         this.SetLights(false);
-        if (this.crawlSound != null)
+        if (this.silhouette != null)
         {
-            this.crawlSound.Play();   // 강의 03장
+            this.silhouette.gameObject.SetActive(false);   // (예전 방식) 어둠 속에서 사라진다
         }
         yield return new WaitForSeconds(this.waitBeforeCrawl);
 
-        // 5) "숨어라" + 실루엣이 기어 온다
+        // 5) "숨어라" + 괴물 AI가 켜져 정해진 길을 한 번 지나간다
         this.showHint = true;
-        yield return this.StartCoroutine(this.CrawlRoutine());
-        if (this.hasCaught)
+        if (this.monster != null)
         {
-            yield break;   // 잡혔으면 여기서 끝 (PlayerDeath가 씬을 다시 불러온다)
+            this.monster.enabled = true;   // MonsterAI 켜기 → Start가 불리고 순찰 시작
+            // 괴물이 길 끝에서 사라질 때까지 기다린다. 잡히면 씬이 다시 열리므로 여기서 끝난다
+            while (this.monster.IsRouteFinished == false)
+            {
+                yield return null;
+            }
         }
 
-        // 6) 실루엣이 사라지면 셔터가 끝까지 열린다
+        // 6) 괴물이 사라지면 셔터가 끝까지 열린다
         this.showHint = false;
-        if (this.crawlSound != null)
-        {
-            this.crawlSound.Stop();
-        }
-        if (this.silhouette != null)
-        {
-            this.silhouette.gameObject.SetActive(false);
-        }
         yield return new WaitForSeconds(1.5f);
         if (this.shutter != null)
         {
@@ -259,90 +250,18 @@ public class Floor2Event : MonoBehaviour
         this.shutter.position = position;
     }
 
-    private void ShowSilhouette()
+    // 복도 끝에 괴물을 보이게 한다. AI는 아직 꺼 둔다 (가만히 서 있기만 함)
+    private void ShowMonster()
     {
-        if (this.silhouette == null)
+        if (this.monster != null)
         {
-            return;
+            this.monster.enabled = false;               // 컴포넌트 끄기 (켜지기 전이라 Start도 아직 안 불림)
+            this.monster.gameObject.SetActive(true);    // 강의 04장 SetActive
         }
-        if (this.silhouettePath.Length > 0 && this.silhouettePath[0] != null)
+        else if (this.silhouette != null)
         {
-            this.silhouette.position = this.silhouettePath[0].position;
+            this.silhouette.gameObject.SetActive(true);
         }
-        this.silhouette.gameObject.SetActive(true);
-    }
-
-    // 실루엣이 길(silhouettePath)을 따라 기어 간다. 숨지 않은 플레이어가 가까우면 잡는다.
-    private IEnumerator CrawlRoutine()
-    {
-        if (this.silhouette == null)
-        {
-            yield break;
-        }
-
-        for (int i = 1; i < this.silhouettePath.Length; i++)
-        {
-            if (this.silhouettePath[i] == null)
-            {
-                continue;
-            }
-            Vector3 target = this.silhouettePath[i].position;
-
-            // 다음 지점을 향해 고개를 돌린다 (강의 07장 LookAt, y 고정해서 숙여지지 않게)
-            Vector3 lookPoint = new Vector3(target.x, this.silhouette.position.y, target.z);
-            this.silhouette.LookAt(lookPoint);
-
-            while (Vector3.Distance(this.silhouette.position, target) > 0.05f)
-            {
-                this.silhouette.position = Vector3.MoveTowards(this.silhouette.position, target, this.crawlSpeed * Time.deltaTime);
-                if (this.TryCatchPlayer())
-                {
-                    yield break;
-                }
-                yield return null;
-            }
-
-            // 킁킁 (201호 앞 등에서 잠깐 멈춤)
-            if (i == this.sniffPointIndex)
-            {
-                float time = 0f;
-                while (time < this.sniffTime)
-                {
-                    time = time + Time.deltaTime;
-                    if (this.TryCatchPlayer())
-                    {
-                        yield break;
-                    }
-                    yield return null;
-                }
-            }
-        }
-    }
-
-    // 숨지 않은 플레이어가 가까우면 잡는다. 잡았으면 true
-    private bool TryCatchPlayer()
-    {
-        if (this.player == null || this.playerDeath == null)
-        {
-            return false;
-        }
-        if (this.playerHide != null && this.playerHide.IsHidden)
-        {
-            return false;
-        }
-        if (Vector3.Distance(this.player.position, this.silhouette.position) > this.catchDistance)
-        {
-            return false;
-        }
-
-        this.hasCaught = true;
-        this.showHint = false;
-        if (this.crawlSound != null)
-        {
-            this.crawlSound.Stop();
-        }
-        this.playerDeath.Die(this.silhouette);   // 잡힘 → 체크포인트에서 다시 시작
-        return true;
     }
 
     private void SetLights(bool on)
@@ -388,15 +307,10 @@ public class Floor2Event : MonoBehaviour
             return;
         }
 
-        // 글자 모양은 처음 한 번만 만든다 (GUI.skin은 OnGUI 안에서만 쓸 수 있음)
-        if (this.hintStyle == null)
-        {
-            this.hintStyle = new GUIStyle(GUI.skin.label);
-            this.hintStyle.fontSize = 36;
-            this.hintStyle.alignment = TextAnchor.MiddleCenter;
-        }
+        // 공통 UI 스타일 (UIStyle.cs): 제목 글꼴(본명조 Black) + 빨간색, 그림자. 화면 크기가 바뀔 수 있어 매번 만든다
+        this.hintStyle = UIStyle.Title(this.hideHintSize);
+        float height = UIStyle.Size(this.hideHintSize) * 1.6f;
         float alpha = 0.55f + 0.45f * Mathf.Sin(Time.time * 3f);
-        GUI.color = new Color(0.85f, 0.1f, 0.1f, alpha);
-        GUI.Label(new Rect(0f, Screen.height * 0.25f, Screen.width, 60f), this.hideHint, this.hintStyle);
+        UIStyle.Label(new Rect(0f, Screen.height * 0.3f - height / 2f, Screen.width, height), this.hideHint, this.hintStyle, alpha);
     }
 }
