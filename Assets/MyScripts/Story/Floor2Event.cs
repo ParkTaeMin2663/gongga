@@ -18,6 +18,8 @@ using UnityEngine;
 /// [Inspector 연결] 아래 칸들. 비어 있는 칸은 그 단계를 건너뛴다(에러 없음).
 /// [소리] NoiseSystem.Emit(위치, 20, "셔터") — 20m 안의 괴물이 듣는다 (CLAUDE.md 소리 규칙)
 /// [다시 시작] Checkpoint.savedOrder가 skipFromCheckpoint 이상이면 연출을 끝난 상태로 시작한다 (셔터 열림, 실루엣 없음)
+///            (11/18 A 추가) "숨어라"까지 본 뒤 2층에서 잡혀 체크포인트 2에서 다시 시작하면,
+///            레버·센서등을 건너뛰고 셔터가 걸린 상태에서 바로 "숨어라" + 괴물이 다시 출발한다.
 /// </summary>
 public class Floor2Event : MonoBehaviour
 {
@@ -27,6 +29,11 @@ public class Floor2Event : MonoBehaviour
 
     [Tooltip("이 번호 이상의 체크포인트를 이미 지났으면 연출을 건너뛴다 (3 = 3층 체크포인트)")]
     public int skipFromCheckpoint = 3;
+
+    [Tooltip("\"숨어라\"를 본 뒤 잡혀서 이 번호 체크포인트(2층)에서 다시 시작하면 바로 \"숨어라\"부터 다시 한다")]
+    public int retryFromCheckpoint = 2;
+    [Tooltip("다시 시작한 뒤 \"숨어라\"와 괴물 출발까지 기다리는 시간(초). 화면이 밝아지는 동안")]
+    public float retryDelay = 1.5f;
 
     [Header("방화 셔터")]
     [Tooltip("3층 계단을 막는 셔터 Cube (부모 없이, Scale Y = 셔터 높이). 아래쪽부터 위로 말려 올라간다")]
@@ -76,8 +83,12 @@ public class Floor2Event : MonoBehaviour
     /// <summary>연출이 끝났는지 (셔터가 다 열림)</summary>
     public bool IsFinished { get; private set; }
 
+    // 강의 07장 public static: 씬을 다시 불러와도 값이 남는다. "숨어라"까지 진행했는지 기억
+    public static bool reachedHidePhase = false;
+
     private bool isStarted;
     private bool showHint;
+    private bool isRespawn;   // 죽고 다시 시작한 씬인지 (Awake에서 저장)
     private Vector3 shutterClosedPosition;
     private Vector3 shutterClosedScale;
     private GUIStyle hintStyle;
@@ -87,6 +98,17 @@ public class Floor2Event : MonoBehaviour
     private PlayerHide playerHide;
     private PlayerFlashlight playerFlashlight;
     private NoiseSystem noiseSystem;
+
+    // 강의 05장 실행 순서: Awake는 모든 Start보다 먼저 불린다.
+    // PlayerDeath.Start가 Checkpoint.isRespawning을 false로 되돌리기 전에 읽어 둔다.
+    private void Awake()
+    {
+        this.isRespawn = Checkpoint.isRespawning;
+        if (this.isRespawn == false)
+        {
+            reachedHidePhase = false;   // 처음부터 시작하는 게임
+        }
+    }
 
     private void Start()
     {
@@ -132,6 +154,26 @@ public class Floor2Event : MonoBehaviour
                                       this.shutterClosedPosition.y + fullHeight / 2f);
             }
         }
+        // "숨어라"까지 보고 2층에서 잡혀 체크포인트 2에서 다시 시작한 경우 → 바로 "숨어라"부터
+        else if (this.isRespawn && reachedHidePhase && Checkpoint.savedOrder >= this.retryFromCheckpoint)
+        {
+            this.isStarted = true;   // 레버는 다시 안 봄
+            if (this.shutter != null)
+            {
+                float fullHeight = this.shutterClosedScale.y;
+                this.SetShutterRaised(Mathf.Clamp(this.shutterJamHeight, 0f, fullHeight - 0.1f), fullHeight,
+                                      this.shutterClosedPosition.y + fullHeight / 2f);   // 걸린 셔터
+            }
+            this.StartCoroutine(this.RetryRoutine());   // 강의 05장
+        }
+    }
+
+    // 다시 시작: 괴물이 204호 앞에 서 있고, 잠깐 뒤 "숨어라" + 출발
+    private IEnumerator RetryRoutine()
+    {
+        this.ShowMonster();
+        yield return new WaitForSeconds(this.retryDelay);
+        yield return this.StartCoroutine(this.HideRoutine());
     }
 
     private void Update()
@@ -196,7 +238,14 @@ public class Floor2Event : MonoBehaviour
         }
         yield return new WaitForSeconds(this.waitBeforeCrawl);
 
+        yield return this.StartCoroutine(this.HideRoutine());
+    }
+
+    // 5)~6) "숨어라" → 괴물이 지나감 → 셔터 열림. 처음 연출과 다시 시작이 같이 쓴다
+    private IEnumerator HideRoutine()
+    {
         // 5) "숨어라" + 괴물 AI가 켜져 정해진 길을 한 번 지나간다
+        reachedHidePhase = true;   // 여기서 잡히면 다음엔 바로 여기부터
         this.showHint = true;
         if (this.monster != null)
         {

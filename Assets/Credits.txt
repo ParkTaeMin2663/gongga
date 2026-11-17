@@ -125,6 +125,20 @@
 - 저작자    : Poly Haven
 - 라이선스  : CC0
 
+- 이름      : Cursed Rune Demon (괴물 「집주인」 외형)
+- 종류      : 모델 (+ 텍스처, Idle 동작)
+- 사용 위치 : Assets/Models/Monster/CursedRuneDemon/ (GLB를 Blender로 FBX 변환), Assets/Prefabs/Monster
+- 출처 URL  : https://sketchfab.com/3d-models/cursed-rune-demon-0d2348598de9425b95e3a9a1cb915b79
+- 저작자    : PolyGoreStudio (Sketchfab @Phu.99)
+- 라이선스  : CC BY 4.0 (저작자 표기 필수)
+
+- 이름      : Mixamo 애니메이션 (Walking - Creeping Zombie Walk, Zombie Running, Looking Around, Zombie Attack, Zombie Scream)
+- 종류      : 애니메이션
+- 사용 위치 : Assets/Models/Monster/Animations/Monster_Walk·Run·LookAround·BashDoor·Scream.fbx
+- 출처 URL  : https://www.mixamo.com
+- 저작자    : Adobe Mixamo
+- 라이선스  : Mixamo 이용약관 — 개인·상업 프로젝트에 무료 사용 가능 (로열티 없음)
+
 [폰트]
 - 이름      : Noto Serif KR (본명조) Regular / Bold / Black
 - 종류      : 폰트 (OTF)

@@ -107,6 +107,16 @@ public class MonsterAI : MonoBehaviour
     [Range(0f, 1f)] public float walkStepVolume = 0.7f;
     [Range(0f, 1f)] public float chaseStepVolume = 1f;
 
+    [Header("애니메이션 ([강의 외] Animator, 11/18 사용자 허락)")]
+    [Tooltip("괴물 모델의 Animator (비워 두면 자식에서 자동으로 찾음). 상태: Idle, Walk, Run, LookAround, BashDoor, Scream")]
+    public Animator animator;
+    [Tooltip("걷기 동작이 이 속도(m/s)일 때 발이 자연스럽다. 실제 속도에 맞춰 재생 속도를 바꾼다")]
+    public float walkAnimSpeed = 1.0f;
+    [Tooltip("뛰기 동작이 이 속도(m/s)일 때 발이 자연스럽다")]
+    public float runAnimSpeed = 3.5f;
+    [Tooltip("이 속도(m/s)보다 빠르면 뛰기 동작")]
+    public float runThreshold = 2.6f;
+
     [Header("이동")]
     [Tooltip("목표까지 이 거리(m) 안이면 도착한 것으로 본다")]
     public float arriveDistance = 0.6f;
@@ -153,6 +163,9 @@ public class MonsterAI : MonoBehaviour
     private Vector3 lastStepPosition;  // 마지막 발소리를 낸 자리
     private float stepMoved;           // 그 뒤로 걸은 거리
 
+    // 애니메이션
+    private string currentAnim = "";   // 지금 재생 중인 동작 이름
+
     private void Start()
     {
         this.agent = this.GetComponent<NavMeshAgent>();
@@ -162,6 +175,15 @@ public class MonsterAI : MonoBehaviour
         }
 
         this.lastStepPosition = this.transform.position;
+
+        if (this.animator == null)
+        {
+            this.animator = this.GetComponentInChildren<Animator>();   // 강의 04장 계층구조: 자식 모델의 Animator
+        }
+        if (this.animator != null)
+        {
+            this.animator.applyRootMotion = false;   // 위치는 NavMeshAgent가 정한다 (동작은 제자리에서만)
+        }
 
         // Agent가 위치를 정하므로 물리에 밀리지 않게 한다 (강의 03장 Is Kinematic)
         Rigidbody rb = this.GetComponent<Rigidbody>();
@@ -206,6 +228,7 @@ public class MonsterAI : MonoBehaviour
         this.ListenForNoise();
         this.CheckDoorAhead();
         this.UpdateFootsteps();
+        this.UpdateAnimation();
 
         switch (this.CurrentState)
         {
@@ -547,6 +570,56 @@ public class MonsterAI : MonoBehaviour
         this.isPausing = false;   // 멈춰 있다가 소리를 들으면 바로 움직인다 (돌아오면 그 지점에서 다시 멈춤)
     }
 
+    // [강의 외] Animator: 상태와 실제 속도를 보고 동작을 고른다. 같은 동작이면 다시 틀지 않는다.
+    private void UpdateAnimation()
+    {
+        if (this.animator == null)
+        {
+            return;
+        }
+
+        float speed = this.agent.velocity.magnitude;
+        string next;
+        float playSpeed = 1f;
+
+        if (this.CurrentState == State.BashDoor && this.doorTimer >= 0f)
+        {
+            next = "BashDoor";   // 쾅쾅 두드리는 중
+        }
+        else if (speed > this.runThreshold)
+        {
+            next = "Run";
+            playSpeed = speed / this.runAnimSpeed;
+        }
+        else if (speed > 0.15f)
+        {
+            next = "Walk";
+            playSpeed = speed / this.walkAnimSpeed;
+        }
+        else if (this.CurrentState == State.Search || this.CurrentState == State.Lurk || this.isPausing)
+        {
+            next = "LookAround";   // 두리번, 장롱 앞 킁킁
+        }
+        else
+        {
+            next = "Idle";
+        }
+
+        this.animator.speed = Mathf.Clamp(playSpeed, 0.5f, 1.8f);
+        this.PlayAnim(next);
+    }
+
+    // [강의 외] Animator.CrossFade: 0.25초 동안 부드럽게 다음 동작으로 넘어간다
+    private void PlayAnim(string animName)
+    {
+        if (this.animator == null || animName == this.currentAnim)
+        {
+            return;
+        }
+        this.currentAnim = animName;
+        this.animator.CrossFade(animName, 0.25f);
+    }
+
     // 걸은 거리가 stepDistance를 넘을 때마다 쿵 (강의 03장 AudioSource.Play, Pitch, Random.Range)
     private void UpdateFootsteps()
     {
@@ -638,6 +711,11 @@ public class MonsterAI : MonoBehaviour
         bool entering = this.playerHide != null && this.playerHide.IsInsideSpot;
         Debug.Log("[괴물] 플레이어를 잡았다! 거리 " + this.FlatDistance(this.player.position).ToString("0.00") + "m, 장롱 동작 중: " + entering);
         this.Stop();
+        if (this.animator != null)
+        {
+            this.animator.speed = 1f;
+            this.PlayAnim("Scream");   // 잡는 순간 비명 동작 (플레이어가 이쪽으로 고개를 돌림)
+        }
         this.enabled = false;   // 더 이상 움직이지 않음 (씬이 다시 열리면 처음 상태로)
 
         if (this.playerDeath != null)

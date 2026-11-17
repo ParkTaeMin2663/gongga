@@ -262,4 +262,5 @@
   - `HingeJoint` (DraggableDoor), `ForceMode.Impulse` (DraggableDoor), `interface` (IInteractable)
   - 커서 잠금 `Cursor.lockState` (PlayerLook)
   - `Vector3.SignedAngle`, `Vector3.ProjectOnPlane` (HideSpot 문 닫힘 각도 계산, 11/15 허락)
-- 아직 강의에 없는 것: `CharacterController`, UI(Canvas/TextMeshPro), Timeline, Animator
+  - `Animator` + `Animator.CrossFade` (MonsterAI 괴물 동작, 11/18 허락)
+- 아직 강의에 없는 것: `CharacterController`, UI(Canvas/TextMeshPro), Timeline
