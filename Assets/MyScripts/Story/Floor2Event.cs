@@ -59,6 +59,9 @@ public class Floor2Event : MonoBehaviour
     [Tooltip("2층용 Monster 사본(Monster_2F)을 드래그. 처음엔 꺼 둔다(체크 해제). 순찰 지점·Patrol Once·Pause 설정은 그 괴물의 MonsterAI에서")]
     public MonsterAI monster;
 
+    [Tooltip("체크하면 2층 괴물이 201호 문을 열지 않고 쾅쾅 두드려 부수고 들어온다")]
+    public bool monsterBashesDoors = true;
+
     [Tooltip("(예전 방식, 비워 두기) 움직이지 않는 실루엣. monster가 비어 있을 때만 잠깐 보였다가 사라진다")]
     public Transform silhouette;
 
@@ -75,10 +78,14 @@ public class Floor2Event : MonoBehaviour
     [Header("시간 (초)")]
     [Tooltip("셔터가 걸린 뒤 센서등이 켜지기 시작할 때까지")]
     public float waitBeforeLights = 1.5f;
-    [Tooltip("괴물이 보인 뒤 손전등이 깜빡이기 시작할 때까지 (플레이어가 괴물을 볼 시간)")]
+    [Tooltip("(안 씀, 11/18부터 아래 두 값을 씀) 예전: 괴물이 보인 뒤 손전등이 깜빡이기까지")]
     public float waitBeforeFlicker = 2.5f;
-    [Tooltip("손전등이 꺼진 뒤 괴물이 움직이기 시작할 때까지")]
+    [Tooltip("(안 씀) 예전: 손전등이 꺼진 뒤 괴물이 움직이기까지 — 지금은 꺼지자마자 \"숨어라\"")]
     public float waitBeforeCrawl = 1.5f;
+    [Tooltip("마지막 센서등이 켜진 뒤 괴물이 걸어오기 시작할 때까지 (거의 바로)")]
+    public float monsterStartDelay = 0.3f;
+    [Tooltip("마지막 센서등이 켜진 뒤 손전등이 깜빡이기 시작할 때까지 (괴물이 다가오는 걸 볼 시간)")]
+    public float flickerStartDelay = 1.5f;
 
     /// <summary>연출이 끝났는지 (셔터가 다 열림)</summary>
     public bool IsFinished { get; private set; }
@@ -97,6 +104,9 @@ public class Floor2Event : MonoBehaviour
     private Transform player;
     private PlayerHide playerHide;
     private PlayerFlashlight playerFlashlight;
+    private PlayerDeath playerDeath;   // 잡혀서 죽는 중이면 "숨어라"를 숨긴다
+    private TensionMusic tensionMusic; // "숨어라" 동안 긴장 BGM (Player 프리팹)
+    private RoarScare roarScare;       // "숨어라" 때 포효 + 그 뒤 3분마다 포효 (Player 프리팹)
     private NoiseSystem noiseSystem;
 
     // 강의 05장 실행 순서: Awake는 모든 Start보다 먼저 불린다.
@@ -118,6 +128,9 @@ public class Floor2Event : MonoBehaviour
             this.player = playerObject.transform;
             this.playerHide = playerObject.GetComponent<PlayerHide>();
             this.playerFlashlight = playerObject.GetComponent<PlayerFlashlight>();
+            this.playerDeath = playerObject.GetComponent<PlayerDeath>();
+            this.tensionMusic = playerObject.GetComponent<TensionMusic>();
+            this.roarScare = playerObject.GetComponent<RoarScare>();
         }
         GameObject noiseObject = GameObject.Find("NoiseSystem");
         if (noiseObject != null)
@@ -173,6 +186,7 @@ public class Floor2Event : MonoBehaviour
     {
         this.ShowMonster();
         yield return new WaitForSeconds(this.retryDelay);
+        this.StartMonsterMove();
         yield return this.StartCoroutine(this.HideRoutine());
     }
 
@@ -194,6 +208,9 @@ public class Floor2Event : MonoBehaviour
     // 강의 05장 코루틴: 시간 순서대로 연출
     private IEnumerator EventRoutine()
     {
+        // 1-1) 레버를 올린 순간 괴물이 복도 끝 어둠 속에 이미 서 있다 (센서등이 켜지며 드러남, 11/18)
+        this.ShowMonster();
+
         // 2) 셔터가 올라가다 걸린다
         if (this.shutter != null)
         {
@@ -222,8 +239,10 @@ public class Floor2Event : MonoBehaviour
         {
             this.Emit(this.sensorLights[this.sensorLights.Length - 1].transform.position, 20f, "센서등");
         }
-        this.ShowMonster();
-        yield return new WaitForSeconds(this.waitBeforeFlicker);
+        // 3-1) 괴물이 거의 바로 걸어오기 시작한다 (11/18: 가만히 서 있는 시간을 줄임)
+        yield return new WaitForSeconds(this.monsterStartDelay);
+        this.StartMonsterMove();
+        yield return new WaitForSeconds(Mathf.Max(0f, this.flickerStartDelay - this.monsterStartDelay));
 
         // 4) 손전등이 깜빡이다 꺼지고, 센서등도 꺼진다
         if (this.playerFlashlight != null && this.playerFlashlight.hasFlashlight)
@@ -236,8 +255,7 @@ public class Floor2Event : MonoBehaviour
         {
             this.silhouette.gameObject.SetActive(false);   // (예전 방식) 어둠 속에서 사라진다
         }
-        yield return new WaitForSeconds(this.waitBeforeCrawl);
-
+        // 꺼지자마자 바로 "숨어라" (11/18: 빈 시간 없앰)
         yield return this.StartCoroutine(this.HideRoutine());
     }
 
@@ -247,9 +265,16 @@ public class Floor2Event : MonoBehaviour
         // 5) "숨어라" + 괴물 AI가 켜져 정해진 길을 한 번 지나간다
         reachedHidePhase = true;   // 여기서 잡히면 다음엔 바로 여기부터
         this.showHint = true;
+        if (this.tensionMusic != null)
+        {
+            this.tensionMusic.PlayHide();   // 심장 소리 긴장 음악 시작 (서서히 커짐)
+        }
+        if (this.roarScare != null && this.monster != null)
+        {
+            this.roarScare.StartScare(this.monster.transform.position);   // 복도 끝에서 크게 포효 → 이후 약 3분마다
+        }
         if (this.monster != null)
         {
-            this.monster.enabled = true;   // MonsterAI 켜기 → Start가 불리고 순찰 시작
             // 괴물이 길 끝에서 사라질 때까지 기다린다. 잡히면 씬이 다시 열리므로 여기서 끝난다
             while (this.monster.IsRouteFinished == false)
             {
@@ -259,6 +284,10 @@ public class Floor2Event : MonoBehaviour
 
         // 6) 괴물이 사라지면 셔터가 끝까지 열린다
         this.showHint = false;
+        if (this.tensionMusic != null)
+        {
+            this.tensionMusic.StopHide();   // 긴장 음악이 서서히 줄어든다 → "갔나?"
+        }
         yield return new WaitForSeconds(1.5f);
         if (this.shutter != null)
         {
@@ -299,12 +328,22 @@ public class Floor2Event : MonoBehaviour
         this.shutter.position = position;
     }
 
+    // 괴물 AI 켜기 → MonsterAI.Start가 불리고 정해진 길로 걸어오기 시작
+    private void StartMonsterMove()
+    {
+        if (this.monster != null)
+        {
+            this.monster.enabled = true;
+        }
+    }
+
     // 복도 끝에 괴물을 보이게 한다. AI는 아직 꺼 둔다 (가만히 서 있기만 함)
     private void ShowMonster()
     {
         if (this.monster != null)
         {
             this.monster.enabled = false;               // 컴포넌트 끄기 (켜지기 전이라 Start도 아직 안 불림)
+            this.monster.alwaysBashDoors = this.monsterBashesDoors;   // 201호 문을 부수고 들어오게
             this.monster.gameObject.SetActive(true);    // 강의 04장 SetActive
         }
         else if (this.silhouette != null)
@@ -351,7 +390,7 @@ public class Floor2Event : MonoBehaviour
     // 강의 04장 OnGUI: 화면 가운데 위쪽에 "숨어라" (천천히 깜빡임)
     private void OnGUI()
     {
-        if (this.showHint == false || (this.playerHide != null && this.playerHide.IsHidden))
+        if (this.showHint == false || (this.playerHide != null && this.playerHide.IsHidden) || (this.playerDeath != null && this.playerDeath.IsDead))
         {
             return;
         }

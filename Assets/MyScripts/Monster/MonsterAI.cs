@@ -83,6 +83,8 @@ public class MonsterAI : MonoBehaviour
     public float bashTime = 3f;
     [Tooltip("문을 날려 버리는 힘")]
     public float doorBreakImpulse = 120f;
+    [Tooltip("체크하면 순찰 중에도 문을 밀지 않고 항상 쾅쾅 두드려 부순다 (2층 연출용, Floor2Event가 켬)")]
+    public bool alwaysBashDoors = false;
 
     [Header("순찰 지점에서 멈추기 (예: 2층 201호 장롱 앞에서 킁킁)")]
     [Tooltip("이 번호의 순찰 지점에 도착하면 pauseTime초 동안 멈춰 있는다. -1이면 안 멈춤")]
@@ -106,6 +108,25 @@ public class MonsterAI : MonoBehaviour
     [Tooltip("천천히 걸을 때(순찰) 볼륨 / 달릴 때(추격) 볼륨")]
     [Range(0f, 1f)] public float walkStepVolume = 0.7f;
     [Range(0f, 1f)] public float chaseStepVolume = 1f;
+
+    [Header("목소리 (11/18)")]
+    [Tooltip("괴물 몸에 붙은 두 번째 Audio Source (3D, Loop). 숨소리·킁킁을 계속 낸다")]
+    public AudioSource voiceSource;
+    [Tooltip("평소 숨소리·그르렁 (반복)")]
+    public AudioClip breathLoopClip;
+    [Tooltip("멈춰서 냄새 맡을 때·두리번거릴 때 킁킁 (반복)")]
+    public AudioClip sniffLoopClip;
+    [Tooltip("숨소리 볼륨 / 킁킁 볼륨 (장롱 앞 킁킁은 크게)")]
+    [Range(0f, 1f)] public float breathVolume = 0.7f;
+    [Range(0f, 1f)] public float sniffVolume = 1f;
+    [Tooltip("추격을 시작할 때 포효 (한 번)")]
+    public AudioClip roarClip;
+    [Tooltip("문을 부수기 시작할 때 으르렁 (한 번)")]
+    public AudioClip bashGrowlClip;
+    [Tooltip("포효를 다시 내기까지 최소 시간(초). 너무 자주 울부짖지 않게")]
+    public float roarCooldown = 8f;
+    [Tooltip("추격하는 동안 긴장 BGM을 튼다 (Player의 TensionMusic)")]
+    public bool chaseMusic = true;
 
     [Header("애니메이션 ([강의 외] Animator, 11/18 사용자 허락)")]
     [Tooltip("괴물 모델의 Animator (비워 두면 자식에서 자동으로 찾음). 상태: Idle, Walk, Run, LookAround, BashDoor, Scream")]
@@ -166,6 +187,11 @@ public class MonsterAI : MonoBehaviour
     // 애니메이션
     private string currentAnim = "";   // 지금 재생 중인 동작 이름
 
+    // 목소리·음악
+    private float lastRoarTime = -100f;
+    private TensionMusic tensionMusic;
+    private bool isChaseMusicOn;
+
     private void Start()
     {
         this.agent = this.GetComponent<NavMeshAgent>();
@@ -198,6 +224,7 @@ public class MonsterAI : MonoBehaviour
             this.player = playerObject.transform;
             this.playerHide = playerObject.GetComponent<PlayerHide>();
             this.playerDeath = playerObject.GetComponent<PlayerDeath>();
+            this.tensionMusic = playerObject.GetComponent<TensionMusic>();
         }
         else
         {
@@ -229,6 +256,7 @@ public class MonsterAI : MonoBehaviour
         this.CheckDoorAhead();
         this.UpdateFootsteps();
         this.UpdateAnimation();
+        this.UpdateVoice();
 
         switch (this.CurrentState)
         {
@@ -379,9 +407,9 @@ public class MonsterAI : MonoBehaviour
             return;
         }
 
-        if (this.CurrentState == State.Chase || door.isLocked)
+        if (this.CurrentState == State.Chase || door.isLocked || this.alwaysBashDoors)
         {
-            this.StartDoor(door, true);    // 쫓는 중이거나 잠겼으면 바로 부수기
+            this.StartDoor(door, true);    // 쫓는 중이거나 잠겼거나 2층 연출이면 바로 부수기
         }
         else
         {
@@ -396,6 +424,11 @@ public class MonsterAI : MonoBehaviour
         this.ChangeState(State.BashDoor);
         this.doorTimer = bash ? 0f : -this.doorPushWait;   // 음수 = 아직 밀어 보는 중
         this.knockTimer = 0f;
+
+        if (bash && this.bashGrowlClip != null)
+        {
+            AudioSource.PlayClipAtPoint(this.bashGrowlClip, this.transform.position + Vector3.up * 1.6f);   // 강의 07장: 으르렁
+        }
 
         if (bash == false)
         {
@@ -565,9 +598,49 @@ public class MonsterAI : MonoBehaviour
         {
             Debug.Log("[괴물] " + this.CurrentState + " → " + next);
         }
+        // 추격 시작: 포효 + 긴장 BGM / 추격이 끝나 순찰로 돌아가면 BGM을 서서히 줄인다
+        if (next == State.Chase && this.CurrentState != State.Chase)
+        {
+            if (this.roarClip != null && Time.time - this.lastRoarTime > this.roarCooldown)
+            {
+                this.lastRoarTime = Time.time;
+                AudioSource.PlayClipAtPoint(this.roarClip, this.transform.position + Vector3.up * 1.6f);   // 강의 07장
+            }
+            if (this.chaseMusic && this.tensionMusic != null && this.isChaseMusicOn == false)
+            {
+                this.isChaseMusicOn = true;
+                this.tensionMusic.PlayChase();
+            }
+        }
+        if (next == State.Patrol && this.isChaseMusicOn)
+        {
+            this.isChaseMusicOn = false;
+            this.tensionMusic.StopChase();
+        }
+
         this.CurrentState = next;
         this.searchTimer = 0f;
         this.isPausing = false;   // 멈춰 있다가 소리를 들으면 바로 움직인다 (돌아오면 그 지점에서 다시 멈춤)
+    }
+
+    // 숨소리/킁킁: 멈춰서 냄새 맡는 상태면 킁킁, 아니면 숨소리 (강의 03장 AudioSource clip·Loop·Play)
+    private void UpdateVoice()
+    {
+        if (this.voiceSource == null)
+        {
+            return;
+        }
+        bool sniffing = this.CurrentState == State.Search || this.CurrentState == State.Lurk || this.isPausing;
+        AudioClip want = sniffing && this.sniffLoopClip != null ? this.sniffLoopClip : this.breathLoopClip;
+        if (want != null && (this.voiceSource.clip != want || this.voiceSource.isPlaying == false))
+        {
+            this.voiceSource.clip = want;
+            this.voiceSource.loop = true;
+            // 킁킁은 처음부터 바로 들리게, 숨소리는 매번 다른 곳부터 (같은 소리 반복처럼 안 들리게)
+            this.voiceSource.time = sniffing ? 0f : Random.Range(0f, want.length * 0.8f);
+            this.voiceSource.volume = sniffing ? this.sniffVolume : this.breathVolume;
+            this.voiceSource.Play();
+        }
     }
 
     // [강의 외] Animator: 상태와 실제 속도를 보고 동작을 고른다. 같은 동작이면 다시 틀지 않는다.
@@ -715,6 +788,10 @@ public class MonsterAI : MonoBehaviour
         {
             this.animator.speed = 1f;
             this.PlayAnim("Scream");   // 잡는 순간 비명 동작 (플레이어가 이쪽으로 고개를 돌림)
+        }
+        if (this.voiceSource != null)
+        {
+            this.voiceSource.Stop();   // 비명은 PlayerDeath가 낸다
         }
         this.enabled = false;   // 더 이상 움직이지 않음 (씬이 다시 열리면 처음 상태로)
 

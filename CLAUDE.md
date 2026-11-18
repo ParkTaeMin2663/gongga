@@ -258,9 +258,16 @@
 ### 강의에 아직 없는 것 (쓰기 전에 사용자 확인)
 - **사용자가 새 강의자료를 올리면**, 거기서 다룬 기능이 이미 `// [강의 외]`로 쓴 코드에 있는지 찾아서 강의 방식으로 고친다.
 - 11/15 07장 반영: `Physics.Raycast`, `RotateAround`, Trigger, NavMesh는 이제 강의 내용 → `[강의 외]` 표시 제거.
-- 현재 사용 중인 강의 외 기능:
-  - `HingeJoint` (DraggableDoor), `ForceMode.Impulse` (DraggableDoor), `interface` (IInteractable)
-  - 커서 잠금 `Cursor.lockState` (PlayerLook)
-  - `Vector3.SignedAngle`, `Vector3.ProjectOnPlane` (HideSpot 문 닫힘 각도 계산, 11/15 허락)
-  - `Animator` + `Animator.CrossFade` (MonsterAI 괴물 동작, 11/18 허락)
+- 현재 사용 중인 강의 외 기능 (**새로 쓸 때마다 여기에 추가한다. 마지막에 사용자가 전체 목록을 물어봄**, 코드에는 `// [강의 외]`):
+  - `HingeJoint` (DraggableDoor 문 경첩), `ForceMode.Impulse` (DraggableDoor 문 밀기·부수기)
+  - C# `interface` (IInteractable)
+  - 커서 잠금·보이기 `Cursor.lockState`, `Cursor.visible` (PlayerLook, PlayerDeath 선택 화면)
+  - `Vector3.SignedAngle`, `Vector3.ProjectOnPlane` (HideSpot 장롱 문 각도 계산, 11/15 허락)
+  - `Animator` + `Animator.CrossFade`, `applyRootMotion` (MonsterAI 괴물 동작, 11/18 허락)
+  - `Application.Quit` / `UnityEditor.EditorApplication.isPlaying` (PlayerDeath "그만하기", 11/18 허락)
+  - 강의에서 직접 다루진 않았지만 강의 기능을 보조하는 작은 API (설명하면서 사용):
+    `GetComponentInParent/InChildren`(계층구조에서 찾기), `Mathf.Lerp/LerpAngle/MoveTowards/Clamp/Atan2`,
+    `Vector3.Lerp/MoveTowards/Distance`, `Quaternion` 회전 곱하기, `GUIStyle`·`Font`·`GUI.Button`·`Rect.Contains`·`Event.current`(OnGUI 꾸미기, UIStyle),
+    `ColorUtility`(글자 색), `AudioSource.clip/time/isPlaying/volume`(괴물 목소리 바꾸기, BGM 서서히 줄이기), `NavMeshAgent.velocity/remainingDistance/isStopped/ResetPath/enabled`,
+    `#if UNITY_EDITOR`, `FindFirstObjectByType`(RoarScare가 3분에 한 번 괴물 찾기), Unity 외부 도구(Blender로 GLB→FBX 변환, Mixamo 동작, ffmpeg로 소리 가공)
 - 아직 강의에 없는 것: `CharacterController`, UI(Canvas/TextMeshPro), Timeline

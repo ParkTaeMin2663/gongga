@@ -67,6 +67,21 @@
 - 저작자    : alex_jauk, soumages, freesound_community, floraphonic (Pixabay)
 - 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
 
+- 이름      : 괴물 목소리·비명, 긴장 BGM (Pixabay)
+- 종류      : 사운드
+- 사용 위치 : Assets/Audio/Monster/monster_breath_loop.ogg (Deep Demonic Beast Breathing and Growl — alesiadavina)
+              Assets/Audio/Monster/monster_sniff_loop.ogg (Monster Sniffing Sound Effect, Deep Beast Breathing — alesiadavina)
+              Assets/Audio/Monster/monster_roar.ogg (Low Monster Roar — freesound_community)
+              Assets/Audio/Monster/monster_growl.ogg (Deep Guttural Growl — Dragon Studio, 앞 6초)
+              Assets/Audio/Monster/monster_scream.ogg (Monster Scream 1 — freesound_community)
+              Assets/Audio/Music/hide_heartbeat_loop.ogg (Intense horror music 01 — freesound_community + Sfx6 - Horror Suspense [Hiding - Heartbeat] (loop) — yarzur_ofc, 두 곡을 ffmpeg로 섞음)
+              Assets/Audio/Monster/monster_roar_far.ogg (Monster Roar 02 — freesound_community)
+              Assets/Audio/Music/chase_loop.ogg (Horror Chase Music loop — freesound_community)
+              Assets/Audio/Music/ambient_loop.ogg (Eerie Suspense Atmosphere — Universfield)
+              (앞쪽 무음 자르기·크기 맞추기·ogg 변환은 ffmpeg로 직접 가공)
+- 출처 URL  : https://pixabay.com/sound-effects/ (각 제목으로 검색, ID 541145 / 541144 / 97413 / 102957 / 472380 / 45669 / 14890 / 323052 / 67634 / 345816)
+- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+
 [텍스처]
 - 이름      : Decrepit Wallpaper
 - 종류      : 텍스처
