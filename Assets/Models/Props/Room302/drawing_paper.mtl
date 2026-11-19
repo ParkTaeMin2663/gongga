@@ -1,0 +1,5 @@
+newmtl drawing
+Kd 0.6 0.6 0.6
+
+newmtl paper_side
+Kd 0.6 0.6 0.6

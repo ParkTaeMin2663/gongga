@@ -9,7 +9,7 @@ using UnityEngine.InputSystem; // Input System Package (강의 03장)
 /// [같이 필요한 컴포넌트] Audio Source (Play On Awake 끔) — 카세트 소리를 튼다. Spatial Blend 0(2D)
 /// [씬에 필요한 것] 이름이 "Player"인 플레이어 (자식 Main Camera)
 ///
-/// [방식] 화면 그리기는 강의 04장 OnGUI. 바라보는 단서는 강의 07장 Physics.Raycast.
+/// [방식] 화면 그리기는 강의 04장 OnGUI + 공통 스타일 UIStyle(본명조 글꼴, Player 프리팹에 붙어 있음). 바라보는 단서는 강의 07장 Physics.Raycast.
 ///        E 키는 Player 프리팹(A 담당)을 고치지 않으려고 Keyboard.current로 직접 읽는다
 ///        (강의 06장 Mouse.current와 같은 방식).
 /// </summary>
@@ -20,12 +20,12 @@ public class ClueReader : MonoBehaviour
     public float reachDistance = 2f;
 
     [Header("화면")]
-    [Tooltip("글자 크기")]
-    public int fontSize = 22;
+    [Tooltip("본문 글자 크기 (1080p 기준, 화면 크기에 맞춰 자동으로 바뀜)")]
+    public int fontSize = 26;
     [Tooltip("종이 색 (낡은 누런 종이)")]
     public Color paperColor = new Color(0.86f, 0.82f, 0.70f, 0.97f);
-    [Tooltip("글자 색")]
-    public Color textColor = new Color(0.15f, 0.12f, 0.10f, 1f);
+    [Tooltip("글자 색 (UIStyle.paper = 진한 갈색)")]
+    public Color textColor = new Color(0.20f, 0.17f, 0.13f, 1f);
 
     [Header("소리 (없어도 됨)")]
     [Tooltip("종이 넘기는 소리")]
@@ -47,9 +47,6 @@ public class ClueReader : MonoBehaviour
     private ClueItem current;      // 지금 읽고 있는 단서
     private int pageIndex;         // 몇 번째 장
     private Texture2D whiteTexture;
-    private GUIStyle textStyle;
-    private GUIStyle titleStyle;
-    private GUIStyle hintStyle;
 
     private void Start()
     {
@@ -178,22 +175,24 @@ public class ClueReader : MonoBehaviour
         }
     }
 
-    // 강의 04장 OnGUI
+    // 강의 04장 OnGUI. 글꼴·색은 A·B 공통 스타일 UIStyle.cs (본명조, 1080p 기준 크기 → 화면에 맞춰 바뀜)
     private void OnGUI()
     {
-        this.MakeStyles();
-
-        // 바라보는 중: 화면 가운데 아래 안내
+        // 바라보는 중: 조준점 아래 가운데 안내 ("[E]"는 노란색)
         if (this.current == null)
         {
             if (this.lookClue != null)
             {
-                GUI.color = Color.white;
-                GUI.Label(new Rect(Screen.width / 2f - 60f, Screen.height / 2f + 20f, 300f, 25f),
-                          "[E] " + this.lookClue.title + " " + this.lookClue.ActionName);
+                UIStyle.Prompt("[E] " + this.lookClue.title + " " + this.lookClue.ActionName);
             }
             return;
         }
+
+        // 화면 크기가 바뀔 수 있어 글자 모양은 매번 만든다 (Floor2Event "숨어라"와 같은 방식)
+        GUIStyle titleStyle = UIStyle.Title(this.fontSize + 8);
+        GUIStyle textStyle = UIStyle.Body(this.fontSize, this.textColor);
+        GUIStyle hintStyle = UIStyle.Make(UIStyle.regular, this.fontSize - 4, this.textColor, TextAnchor.MiddleRight);
+        float margin = UIStyle.Size(40);
 
         // 1) 화면 전체를 어둡게
         GUI.color = new Color(0f, 0f, 0f, 0.75f);
@@ -205,26 +204,26 @@ public class ClueReader : MonoBehaviour
         Rect paper = new Rect((Screen.width - paperWidth) / 2f, (Screen.height - paperHeight) / 2f, paperWidth, paperHeight);
         GUI.color = this.paperColor;
         GUI.DrawTexture(paper, this.whiteTexture);
-
-        // 3) 제목
         GUI.color = Color.white;
-        Rect titleRect = new Rect(paper.x + 30f, paper.y + 20f, paper.width - 60f, 40f);
-        GUI.Label(titleRect, this.current.title, this.titleStyle);
+
+        // 3) 제목 (본명조 Black, 빨간색 — 스프레이 색)
+        Rect titleRect = new Rect(paper.x + margin, paper.y + margin * 0.6f, paper.width - margin * 2f, UIStyle.Size(this.fontSize + 8) * 2f);
+        GUI.Label(titleRect, this.current.title, titleStyle);
 
         // 4) 사진 (있으면 종이 위쪽 절반)
-        float textTop = titleRect.yMax + 10f;
+        float textTop = titleRect.yMax + margin * 0.3f;
         if (this.current.image != null)
         {
-            Rect imageRect = new Rect(paper.x + 30f, textTop, paper.width - 60f, paper.height * 0.5f);
+            Rect imageRect = new Rect(paper.x + margin, textTop, paper.width - margin * 2f, paper.height * 0.5f);
             GUI.DrawTexture(imageRect, this.current.image, ScaleMode.ScaleToFit);
-            textTop = imageRect.yMax + 10f;
+            textTop = imageRect.yMax + margin * 0.3f;
         }
 
         // 5) 글 (지금 장)
         if (this.current.pages != null && this.current.pages.Length > 0)
         {
-            Rect textRect = new Rect(paper.x + 30f, textTop, paper.width - 60f, paper.yMax - textTop - 50f);
-            GUI.Label(textRect, this.current.pages[this.pageIndex], this.textStyle);
+            Rect textRect = new Rect(paper.x + margin, textTop, paper.width - margin * 2f, paper.yMax - textTop - margin * 1.5f);
+            GUI.Label(textRect, this.current.pages[this.pageIndex], textStyle);
         }
 
         // 6) 아래 안내: 쪽 번호와 E
@@ -234,28 +233,6 @@ public class ClueReader : MonoBehaviour
         {
             hint = (this.pageIndex + 1) + " / " + pageCount + "    " + hint;
         }
-        GUI.Label(new Rect(paper.x + 30f, paper.yMax - 40f, paper.width - 60f, 30f), hint, this.hintStyle);
-    }
-
-    // 글자 모양은 처음 한 번만 만든다 (GUI.skin은 OnGUI 안에서만 쓸 수 있음)
-    private void MakeStyles()
-    {
-        if (this.textStyle != null)
-        {
-            return;
-        }
-        this.textStyle = new GUIStyle(GUI.skin.label);
-        this.textStyle.fontSize = this.fontSize;
-        this.textStyle.wordWrap = true;
-        this.textStyle.normal.textColor = this.textColor;
-
-        this.titleStyle = new GUIStyle(this.textStyle);
-        this.titleStyle.fontSize = this.fontSize + 4;
-        this.titleStyle.fontStyle = FontStyle.Bold;
-        this.titleStyle.alignment = TextAnchor.MiddleCenter;
-
-        this.hintStyle = new GUIStyle(this.textStyle);
-        this.hintStyle.fontSize = this.fontSize - 4;
-        this.hintStyle.alignment = TextAnchor.MiddleRight;
+        GUI.Label(new Rect(paper.x + margin, paper.yMax - margin * 1.3f, paper.width - margin * 2f, margin), hint, hintStyle);
     }
 }

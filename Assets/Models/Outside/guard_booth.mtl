@@ -1,0 +1,20 @@
+newmtl booth_wall
+Kd 0.6 0.6 0.6
+
+newmtl metal_gray
+Kd 0.6 0.6 0.6
+
+newmtl glass_dark
+Kd 0.6 0.6 0.6
+
+newmtl hub
+Kd 0.6 0.6 0.6
+
+newmtl concrete
+Kd 0.6 0.6 0.6
+
+newmtl snow
+Kd 0.6 0.6 0.6
+
+newmtl wood
+Kd 0.6 0.6 0.6

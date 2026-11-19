@@ -1,0 +1,14 @@
+newmtl toy_red
+Kd 0.6 0.6 0.6
+
+newmtl toy_yellow
+Kd 0.6 0.6 0.6
+
+newmtl toy_blue
+Kd 0.6 0.6 0.6
+
+newmtl toy_wood
+Kd 0.6 0.6 0.6
+
+newmtl toy_black
+Kd 0.6 0.6 0.6

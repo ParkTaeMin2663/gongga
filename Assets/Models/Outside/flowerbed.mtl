@@ -1,0 +1,8 @@
+newmtl concrete
+Kd 0.6 0.6 0.6
+
+newmtl soil
+Kd 0.6 0.6 0.6
+
+newmtl bark
+Kd 0.6 0.6 0.6

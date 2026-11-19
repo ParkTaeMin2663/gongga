@@ -1,0 +1,11 @@
+newmtl brass
+Kd 0.6 0.6 0.6
+
+newmtl iron
+Kd 0.6 0.6 0.6
+
+newmtl key_tag
+Kd 0.6 0.6 0.6
+
+newmtl key_tag_side
+Kd 0.6 0.6 0.6

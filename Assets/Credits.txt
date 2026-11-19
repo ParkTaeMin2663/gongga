@@ -82,6 +82,13 @@
 - 출처 URL  : https://pixabay.com/sound-effects/ (각 제목으로 검색, ID 541145 / 541144 / 97413 / 102957 / 472380 / 45669 / 14890 / 323052 / 67634 / 345816)
 - 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
 
+- 이름      : 동생 오르골 자장가 (직접 제작)
+- 종류      : 사운드
+- 사용 위치 : Assets/Audio/Story/brother_musicbox.ogg (지하 동생 연출, BrotherEncounter)
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 만든 멜로디·음색, ffmpeg로 울림 추가, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
 [텍스처]
 - 이름      : Decrepit Wallpaper
 - 종류      : 텍스처
@@ -110,6 +117,76 @@
 - 출처 URL  : 팀 자체 제작 (글자 모양에 WenQuanYi Zen Hei 폰트 사용, http://wenq.org/)
 - 저작자    : 「공가」 팀 / 폰트: Qianqian Fang and The WenQuanYi Project
 - 라이선스  : 폰트는 GPL-2 with Font embedding exception (폰트로 만든 이미지는 자유롭게 사용 가능)
+
+- 이름      : "보일러실" 스프레이 글씨 (직접 제작)
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/Sprays/boiler_spray.png (재질 boiler_spray, 1층 지하 문)
+- 출처 URL  : 팀 자체 제작 (Python으로 획마다 스프레이 점을 찍어 그림, 폰트·외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 눈 바닥 텍스처 (직접 제작)
+- 종류      : 텍스처 (Base Map + Normal Map, 이어 붙여도 경계 없음)
+- 사용 위치 : Assets/Textures/Snow/snow_basecolor.png, snow_normal.png (재질 snow_ground, 단지 바깥 바닥)
+- 출처 URL  : 팀 자체 제작 (Python 노이즈로 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 함석 펜스 텍스처 (직접 제작)
+- 종류      : 텍스처 (Base Map + Normal Map, 골판 무늬·녹물 자국, 이어 붙여도 경계 없음)
+- 사용 위치 : Assets/Textures/Fence/fence_basecolor.png, fence_normal.png (재질 fence_metal, 철거 가림막)
+- 출처 URL  : 팀 자체 제작 (Python 노이즈로 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 펜스 스프레이 낙서 7종 (직접 제작)
+- 종류      : 텍스처 (투명 배경 PNG, 글꼴 없이 붓질로 그림)
+- 사용 위치 : Assets/Textures/Graffiti/graf_*.png (철거, 출입금지, 보상하라!, 302↑, 집주인 X, 나가라, 낙서)
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 그림, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 단지 바깥 3D 모델 14종 (직접 제작)
+- 종류      : 모델 (.obj) — 철문, 문 기둥, 경비실, 승용차, 1톤 트럭, 앙상한 나무 3종, 화단, 모래판, 그네, 미끄럼틀, 벤치, 가로등
+- 사용 위치 : Assets/Models/Outside/
+- 출처 URL  : 팀 자체 제작 (Python으로 점·면을 직접 계산해 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 단지 바깥 텍스처 (직접 제작)
+- 종류      : 텍스처 (Base Map + Normal Map) — 녹슨 페인트 철 5색, 주차장 아스팔트(주차선·균열·눈), 경비실 벽, 콘크리트, 언 흙, 모래, 나무껍질, 자동차 페인트 3색, "경비실" 간판, 눈송이 파티클
+- 사용 위치 : Assets/Textures/Outside/
+- 출처 URL  : 팀 자체 제작 (Python 노이즈·붓질로 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 아이 신발 2켤레 (직접 제작)
+- 종류      : 모델 (.obj) — 남색 운동화(찍찍이), 흰 고무신
+- 사용 위치 : Assets/Models/Props/shoes_sneaker.obj, shoes_gomusin.obj (302호 현관)
+- 출처 URL  : 팀 자체 제작 (Python으로 점·면을 직접 계산해 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 302호 소품 (직접 제작)
+- 종류      : 모델 (.obj) — 아이 이부자리(요·이불·베개), 장난감 묶음(블록·팽이·공·크레파스·딱지), 보일러실 열쇠(꼬리표 포함), 그림 종이 / 텍스처 — 꽃무늬 솜이불, 줄무늬 요, 크레파스 그림, "보일러실" 꼬리표
+- 사용 위치 : Assets/Models/Props/Room302/, Assets/Textures/Room302/
+- 출처 URL  : 팀 자체 제작 (Python으로 생성, 그림·글씨도 직접 그림, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 환경음·효과음 5종 (직접 제작)
+- 종류      : 사운드 — 겨울바람(wind_loop), 보일러 웅웅(boiler_hum), 건물 삐걱임(building_creak), 방화 셔터 끼이익(shutter_screech), 엔딩 피아노(ending_piano)
+- 사용 위치 : Assets/Audio/Ambience/
+- 출처 URL  : 팀 자체 제작 (Python으로 소리를 합성하고 ffmpeg로 울림·크기 조절, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 축문 한지 텍스처 (직접 제작)
+- 종류      : 텍스처
+- 사용 위치 : Assets/Models/Props/chukmun_paper.png (재질 chukmun_material)
+- 출처 URL  : 팀 자체 제작 (Python으로 한지 결·붓 자국 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
 
 [모델]
 - 이름      : Plastic Torch 6V — 손전등 (관리사무소에서 줍기, 왼손에 들기)
@@ -153,6 +230,20 @@
 - 출처 URL  : https://www.mixamo.com
 - 저작자    : Adobe Mixamo
 - 라이선스  : Mixamo 이용약관 — 개인·상업 프로젝트에 무료 사용 가능 (로열티 없음)
+
+- 이름      : 제기 그릇·접시, 축문 두루마리 (직접 제작)
+- 종류      : 모델 (.obj)
+- 사용 위치 : Assets/Models/Props/jegi_bowl.obj, jegi_plate.obj, chukmun_scroll.obj (지하 제사상)
+- 출처 URL  : 팀 자체 제작 (Python으로 회전체·곡면을 직접 계산해 만듦, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : Boy Finnigon Lowpoly Gamecharacter (지하의 동생, 검은 실루엣 재질로 사용)
+- 종류      : 모델 (glTF → Blender로 FBX 변환, 카메라·조명·눈 부품 끔)
+- 사용 위치 : Assets/Models/Brother/brother.fbx, Assets/Models/Brother/Texture/
+- 출처 URL  : https://sketchfab.com/3d-models/boy-finnigon-lowpoly-gamecharacter-990be0ecf1634d3b94c6e3b529cef211
+- 저작자    : Fion Noir (@fionnoir)
+- 라이선스  : CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 [폰트]
 - 이름      : Noto Serif KR (본명조) Regular / Bold / Black

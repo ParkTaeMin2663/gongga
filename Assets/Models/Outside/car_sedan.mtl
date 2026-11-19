@@ -1,0 +1,26 @@
+newmtl car_body
+Kd 0.6 0.6 0.6
+
+newmtl glass_dark
+Kd 0.6 0.6 0.6
+
+newmtl trim
+Kd 0.6 0.6 0.6
+
+newmtl headlight
+Kd 0.6 0.6 0.6
+
+newmtl taillight
+Kd 0.6 0.6 0.6
+
+newmtl plate
+Kd 0.6 0.6 0.6
+
+newmtl tire
+Kd 0.6 0.6 0.6
+
+newmtl hub
+Kd 0.6 0.6 0.6
+
+newmtl snow
+Kd 0.6 0.6 0.6

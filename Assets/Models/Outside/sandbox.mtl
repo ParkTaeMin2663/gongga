@@ -1,0 +1,5 @@
+newmtl concrete
+Kd 0.6 0.6 0.6
+
+newmtl sand
+Kd 0.6 0.6 0.6

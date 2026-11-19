@@ -1,0 +1,5 @@
+newmtl gate_paint
+Kd 0.6 0.6 0.6
+
+newmtl metal_gray
+Kd 0.6 0.6 0.6

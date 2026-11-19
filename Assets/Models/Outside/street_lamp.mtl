@@ -1,0 +1,8 @@
+newmtl concrete
+Kd 0.6 0.6 0.6
+
+newmtl metal_gray
+Kd 0.6 0.6 0.6
+
+newmtl lamp_glass
+Kd 0.6 0.6 0.6
