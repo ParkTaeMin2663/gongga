@@ -268,6 +268,6 @@
   - 강의에서 직접 다루진 않았지만 강의 기능을 보조하는 작은 API (설명하면서 사용):
     `GetComponentInParent/InChildren`(계층구조에서 찾기), `Mathf.Lerp/LerpAngle/MoveTowards/Clamp/Atan2`,
     `Vector3.Lerp/MoveTowards/Distance`, `Quaternion` 회전 곱하기, `GUIStyle`·`Font`·`GUI.Button`·`Rect.Contains`·`Event.current`(OnGUI 꾸미기, UIStyle),
-    `ColorUtility`(글자 색), `[TextArea]`(단서·자막 여러 줄 입력), `GUI.DrawTexture`+`Texture2D.whiteTexture`(화면 어둡게·까맣게), `AudioSource.clip/time/isPlaying/volume`(괴물 목소리 바꾸기, BGM 서서히 줄이기), `NavMeshAgent.velocity/remainingDistance/isStopped/ResetPath/enabled`,
+    `ColorUtility`(글자 색), `List<string>`(PlayerKeys 열쇠 목록, 11/20), `[TextArea]`(단서·자막 여러 줄 입력), `GUI.DrawTexture`+`Texture2D.whiteTexture`(화면 어둡게·까맣게), `AudioSource.clip/time/isPlaying/volume`(괴물 목소리 바꾸기, BGM 서서히 줄이기), `NavMeshAgent.velocity/remainingDistance/isStopped/ResetPath/enabled`,
     `#if UNITY_EDITOR`, `FindFirstObjectByType`(RoarScare가 3분에 한 번 괴물 찾기), Unity 외부 도구(Blender로 GLB→FBX 변환, Mixamo 동작, ffmpeg로 소리 가공)
 - 아직 강의에 없는 것: `CharacterController`, UI(Canvas/TextMeshPro), Timeline

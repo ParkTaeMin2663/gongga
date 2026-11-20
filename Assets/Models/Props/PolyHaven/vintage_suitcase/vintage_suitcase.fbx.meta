@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 0556b03e72b1428a857eaf3f6a2019a9
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vintage_suitcase_01
+    second: {fileID: 2100000, guid: c465d375d8484fb08ca0bcb6e724f6d1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vintage_suitcase_02
+    second: {fileID: 2100000, guid: 7bc3016fd1a74c66a5c0610fa2dc0719, type: 2}
+  materials:
+    materialImportMode: 2

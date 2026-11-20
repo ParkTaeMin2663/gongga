@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 90c4ef949682493bae9b6ab4b4696646
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pull_chain_light_socket
+    second: {fileID: 2100000, guid: 6f1a746086cb460b8b96e33961609b22, type: 2}
+  materials:
+    materialImportMode: 2

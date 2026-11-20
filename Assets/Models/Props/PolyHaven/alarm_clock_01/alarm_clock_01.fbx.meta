@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5004c25eca5e420aac1f452ddf897cc0
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: alarm_clock_01
+    second: {fileID: 2100000, guid: cd2f5996ab4a496fa64d55a05b351257, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: alarm_clock_01_glass
+    second: {fileID: 2100000, guid: 31128f8d474e42ba831e759346f79622, type: 2}
+  materials:
+    materialImportMode: 2

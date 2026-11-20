@@ -24,8 +24,14 @@ public class DraggableDoor : MonoBehaviour, IInteractable
     public float pushStrength = 0.4f;
 
     [Header("잠금")]
-    [Tooltip("체크하면 잠긴 문. 잡아도 열리지 않는다. (나중에 열쇠로 풀 예정)")]
+    [Tooltip("체크하면 잠긴 문. 잡아도 열리지 않는다.")]
     public bool isLocked = false;
+
+    [Tooltip("(11/20) 이 열쇠를 가지고 잡으면 잠금이 풀린다. 비워 두면 열쇠로 못 여는 문. 줍는 열쇠(ItemPickup)의 Key Name과 똑같이. 예: 보일러실 열쇠")]
+    public string requiredKey = "";
+
+    [Tooltip("열쇠로 열 때 찰칵 소리 (없어도 됨). 예: Assets/Audio/Furniture/metalLatch")]
+    public AudioClip unlockClip;
 
     [Header("소리 (없어도 됨)")]
     [Tooltip("닫힌 문이 열리기 시작할 때 끼이익. 문에 Audio Source를 붙이고 여기로 드래그")]
@@ -119,10 +125,22 @@ public class DraggableDoor : MonoBehaviour, IInteractable
 
         this.cameraTransform = cameraTransform;
 
+        // (11/20) 맞는 열쇠를 가졌으면 잠금을 풀고 바로 잡는다
+        if (this.isLocked && this.requiredKey != "" && PlayerKeys.Has(this.requiredKey))
+        {
+            this.isLocked = false;
+            PlayerKeys.ShowMessage(this.requiredKey + "로 문을 열었다");
+            if (this.unlockClip != null)
+            {
+                AudioSource.PlayClipAtPoint(this.unlockClip, this.transform.position);   // 강의 07장
+            }
+        }
+
         if (this.isLocked)
         {
-            Debug.Log(this.name + " : 잠겨 있다.");
             this.PlaySound(this.lockedSound);
+            // 열쇠로 열 수 있는 문이면 무슨 열쇠가 필요한지 알려 준다
+            PlayerKeys.ShowMessage(this.requiredKey != "" ? "잠겨 있다. " + this.requiredKey + "가 필요하다" : "잠겨 있다");
             return;
         }
 

@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 2cf449fd44614840b3cca20ca7524383
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: steel_frame_shelves_01
+    second: {fileID: 2100000, guid: 8eeae351c9a644d886295c140e7732b9, type: 2}
+  materials:
+    materialImportMode: 2

@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 6a87347f27034cb78f7635394345e7f6
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: trashbag
+    second: {fileID: 2100000, guid: 3f5fa7882fc942c7acfdf64412604eb0, type: 2}
+  materials:
+    materialImportMode: 2

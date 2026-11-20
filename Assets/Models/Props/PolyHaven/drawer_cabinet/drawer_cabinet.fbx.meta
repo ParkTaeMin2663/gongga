@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 1ea1e220be414873a689d01859bc3756
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: drawer_cabinet
+    second: {fileID: 2100000, guid: a91816f9a0994099a59e540d81e7a61e, type: 2}
+  materials:
+    materialImportMode: 2

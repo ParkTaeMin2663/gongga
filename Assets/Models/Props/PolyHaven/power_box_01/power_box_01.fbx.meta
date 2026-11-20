@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 15dd5f25e2ec4c45babf24f46210f01a
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: power_box_01
+    second: {fileID: 2100000, guid: bf67a290d0a2412ab486cfb1b459eafb, type: 2}
+  materials:
+    materialImportMode: 2

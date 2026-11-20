@@ -3,7 +3,7 @@ using UnityEngine.InputSystem; // Input System Package (강의 03장)
 
 /// <summary>
 /// 단서(ClueItem) 읽기 화면. 단서를 바라보면 "[E] 읽기"가 뜨고, E를 누르면 화면 가운데에 종이·사진을 보여 준다.
-/// 읽는 동안 플레이어는 걷기·시점·잡기가 멈춘다. E를 누르면 다음 장, 마지막 장에서 E를 누르면 닫힌다.
+/// 읽는 동안 플레이어는 걷기·시점·잡기가 멈춘다. E를 누르면 다음 장, 마지막 장에서 E를 누르면 닫힌다. Q = 이전 장 (11/20 A 추가).
 ///
 /// [붙이는 곳] SampleScene의 빈 오브젝트 "ClueReader" (1개)
 /// [같이 필요한 컴포넌트] Audio Source (Play On Awake 끔) — 카세트 소리를 튼다. Spatial Blend 0(2D)
@@ -78,13 +78,18 @@ public class ClueReader : MonoBehaviour
         }
 
         bool ePressed = Keyboard.current.eKey.wasPressedThisFrame;
+        bool qPressed = Keyboard.current.qKey.wasPressedThisFrame;   // (11/20 A 추가) 이전 장
 
-        // 1) 읽는 중: E = 다음 장 / 마지막 장이면 닫기
+        // 1) 읽는 중: E = 다음 장 / 마지막 장이면 닫기, Q = 이전 장
         if (this.current != null)
         {
             if (ePressed)
             {
                 this.NextPage();
+            }
+            else if (qPressed)
+            {
+                this.PrevPage();
             }
             return;
         }
@@ -136,6 +141,16 @@ public class ClueReader : MonoBehaviour
             return;
         }
         this.Close();
+    }
+
+    // (11/20 A 추가) Q: 이전 장. 첫 장이면 아무 일도 없다
+    private void PrevPage()
+    {
+        if (this.pageIndex > 0)
+        {
+            this.pageIndex = this.pageIndex - 1;
+            this.PlayPageSound();
+        }
     }
 
     private void Close()
@@ -229,6 +244,10 @@ public class ClueReader : MonoBehaviour
         // 6) 아래 안내: 쪽 번호와 E
         int pageCount = this.current.pages != null ? this.current.pages.Length : 0;
         string hint = this.pageIndex < pageCount - 1 ? "[E] 다음" : "[E] 닫기";
+        if (this.pageIndex > 0)
+        {
+            hint = "[Q] 이전    " + hint;
+        }
         if (pageCount > 1)
         {
             hint = (this.pageIndex + 1) + " / " + pageCount + "    " + hint;

@@ -74,6 +74,7 @@ public class Checkpoint : MonoBehaviour
             savedHasFlashlight = flashlight.hasFlashlight;
             savedBattery = flashlight.battery;
         }
+        PlayerKeys.SaveForCheckpoint();   // (11/20) 가진 열쇠도 기억
         lastSaveShowsMessage = this.showSavedMessage;
         Debug.Log("[체크포인트] " + this.order + "번 저장: " + savedPosition);
     }

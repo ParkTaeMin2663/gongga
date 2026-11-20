@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 98b7fc9e1e0044a4a8650662169088e2
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubber_duck_toy
+    second: {fileID: 2100000, guid: 886f48c74fdd482599a9fe490f7e4c72, type: 2}
+  materials:
+    materialImportMode: 2

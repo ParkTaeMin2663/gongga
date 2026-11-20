@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: d935aaa9670a408c87e5788fa7cf44bd
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_office_desk
+    second: {fileID: 2100000, guid: 4c427cf20d624ab0beee9ececcf38c26, type: 2}
+  materials:
+    materialImportMode: 2

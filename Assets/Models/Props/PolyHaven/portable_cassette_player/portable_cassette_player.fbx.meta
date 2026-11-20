@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 42799088e3dd465ea46f21786669e6bd
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: portable_cassette_player
+    second: {fileID: 2100000, guid: 32152c21af3b446a86fbbf8558fd16ff, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: portable_cassette_player_glass
+    second: {fileID: 2100000, guid: 31128f8d474e42ba831e759346f79622, type: 2}
+  materials:
+    materialImportMode: 2

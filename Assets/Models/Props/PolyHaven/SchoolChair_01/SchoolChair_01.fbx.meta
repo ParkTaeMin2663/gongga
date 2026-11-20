@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: ce90661e4cfc46e5a068b61e777c04cf
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SchoolChair_01
+    second: {fileID: 2100000, guid: 0372f4fdc9324cd394999bed50443cec, type: 2}
+  materials:
+    materialImportMode: 2

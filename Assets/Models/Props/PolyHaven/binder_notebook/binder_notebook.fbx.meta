@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 7c15d074a06245d9a09a3aff00a4416f
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: binder_notebook
+    second: {fileID: 2100000, guid: 1a180b9e0b62478bb08e67fefc30bc00, type: 2}
+  materials:
+    materialImportMode: 2

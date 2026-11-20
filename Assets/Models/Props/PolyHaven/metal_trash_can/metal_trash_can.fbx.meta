@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 4fbd6566bbc043d2ba7e6cc50ece51b6
+ModelImporter:
+  serializedVersion: 22200
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_trash_can
+    second: {fileID: 2100000, guid: c9d14d3374354c5ea078b81bd75e19b3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_trash_can_rust
+    second: {fileID: 2100000, guid: c9d14d3374354c5ea078b81bd75e19b3, type: 2}
+  materials:
+    materialImportMode: 2
