@@ -25,11 +25,11 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 | 9 | 사망 점프스케어 + "다시 시작/그만하기" | 목표 | 🟡 스크립트 완료(11/18), A 테스트 전 | `PlayerDeath`: 잡히면 괴물 쪽으로 0.15초에 고개 → **괴물이 얼굴 앞 0.55m로 덮침**(NavMeshAgent 잠깐 끔, MonsterAI가 Scream 동작) + 화면 흔들림 1초 → 뚝 까매짐 → **"잡혔다" + 다시 시작 / 그만하기**(UIStyle, 마우스 커서 보임, 올리면 노란색). 다시 시작 = 체크포인트, 그만하기 = 종료(에디터는 Play 멈춤). 비명 소리 칸 `jumpscareSound`는 10번에서 채움. Use Jumpscare 끄면 예전 방식. 2층 괴물은 레버를 올리는 순간부터 복도 끝에 서 있음(11/18) |
 | 10 | 배경음·긴장 음악 + 괴물 소리 | 목표 | 🟡 3차 수정(11/18), A 테스트 전 | ① **`Core/TensionMusic.cs`**(Player 프리팹 + 2D Loop Audio Source 2개): **배경음 `ambient_loop`(게임 시작부터 계속, 0.35)**, **"숨어라" = 긴박한 음악 + 심장 소리를 섞은 `hide_heartbeat_loop`(1분 42초, 11/18 교체)**(Floor2Event `PlayHide/StopHide`), **추격 = `chase_loop`**(MonsterAI `PlayChase/StopChase`, 우선). 긴장 음악이 나오면 배경음은 0.08로 줄어듦. 서서히 켜짐 1.2초·꺼짐 4초. B: 배경음을 바꾸려면 Player 프리팹 TensionMusic의 Ambient Clip ② **괴물 소리**(Monster 프리팹 `voiceSource`, 3D Loop): 숨소리 `monster_breath_loop`(0.7), **킁킁 `monster_sniff_loop`(1.0, 무음 구간 잘라냄, 처음부터 재생 — 장롱 앞에서 안 들리던 문제)**, 추격 포효 `monster_roar`, 문 부수기 으르렁 `monster_growl`, 점프스케어 비명 `monster_scream`. 모두 Pixabay(Credits). ③ **`Core/RoarScare.cs`**(Player 프리팹): "숨어라" 순간 괴물 쪽에서 포효 → 그 뒤 **약 3분(180±40초)마다 깜짝 포효**(괴물 방향, 없으면 아래층 어딘가, 플레이어 7m 안으로 당겨 재생, 추격 중엔 건너뜀, 다시 시작해도 계속) `monster_roar`·`monster_roar_far` |
 | 11 | 아파트 내부 재질 (벽지·장판·천장·문·선반) | 목표 | 🟡 재질 완료(11/20), 씬 적용 전 | **Poly Haven(CC0) 2K 텍스처 → `Assets/Materials/Interior/`**: `Interior_Wallpaper`(낡은 벽지)·`_Yellow`, `Interior_Jangpan`(노란 장판)·`Interior_Linoleum`, `Interior_Ceiling`, `Corridor_Floor`(닳은 콘크리트), `Corridor_Railing`(페인트 벗겨진 벽), `Door_SteelPaint`(녹슨 페인트 철문), `Office_FloorTiles`, `Basement_Wall`, `Basement_Floor`. **`Unit` 프리팹(201·301~303)에 적용함**: 벽 5개 = **꽃무늬 벽지 `Interior_Wallpaper_Floral`(A 직접 제작, 11/20 — 흰 벽지가 천장과 구분이 안 돼서 교체)**, 천장은 차가운 회색으로, 새 자식 `Floor_Jangpan`(바닥 위 0.005 Quad)·`Ceiling_Room`(2.59 아래 보는 Quad) — 바닥·천장이 층 판(Slab) 하나라 따로 덧댐. **`Door` 프리팹 = Door_SteelPaint(모든 문)**. 씬에 직접 칠할 곳(Slab_Main·Railing·복도 Ceiling·304호·관리사무소·지하)은 아래 "재질 적용 안내" |
-| 12 | 기본 큐브 물건 → 진짜 모델로 교체 | 목표 | 🟡 Box 교체(11/20), A 테스트 전 | **`Box` = 큐브 렌더러 끄고 자식 `Model`(cardboard_box_01, 실제 크기 0.39×0.52×0.34) + 콜라이더 맞춤**. **`Breaker` = 큐브 렌더러 끄고 자식 `Model_PowerBox`(power_box_01을 깊이만 0.24배로 눌러 0.4×0.5×0.1에 맞춤, 11/20)** — 레버·콜라이더·스크립트 그대로. `Door` = 재질 교체. `Dresser`(303 서랍장 큐브)는 아직 — Nightstand처럼 모델 서랍 분리 필요 |
+| 12 | 기본 큐브 물건 → 진짜 모델로 교체 | 목표 | 🟡 Box 교체(11/20), A 테스트 전 | **`Box` = 큐브 렌더러 끄고 자식 `Model`(cardboard_box_01, 실제 크기 0.39×0.52×0.34) + 콜라이더 맞춤**. **`Breaker` = 큐브 렌더러 끄고 자식 `Model_PowerBox`(power_box_01을 깊이만 0.24배로 눌러 0.4×0.5×0.1에 맞춤, 11/20)** — 레버·콜라이더·스크립트 그대로. `Door` = 재질 교체. ~~`Dresser`(303 서랍장 큐브)~~ → **B가 `Nightstand_303`(-4, 5.6, 7.9)으로 교체(11/22)**: `Clue_Note_303`을 서랍 자식으로 옮김, `Dresser`는 꺼 둠(지우지 않음), `Battery_303` (-4.1, 6.25, 7.85) |
 | 13 | 방 안 꾸미기용 소품 프리팹 | 목표 | 🟡 프리팹 22개 완료(11/20), 배치 전 | `Assets/Prefabs/Props/Prop_*.prefab` (Box Collider = 모델 실제 크기, 자식에 모델): CardboardBox, PowerBox, OfficeDesk, Chair, SteelShelves, DrawerCabinet, Binder, Clipboard, WallClock, TrashCan, TV(브라운관), BedFrame, Cabinet, Bookshelf, AlarmClock, Pot, Suitcase, TrashBag, LightBulbSocket, CassettePlayer, RubberDuck, Payphone(한국 공중전화). 모델 `Assets/Models/Props/PolyHaven/`, 재질 `Assets/Materials/Props/PolyHaven/`(FBX 재질 자동 연결). 큰 가구 배치 후 NavMesh 다시 Bake. 벽시계·전구는 원점이 가운데일 수 있어 콜라이더 위치 확인 |
 | 14 | 열쇠 기능 (보일러실 열쇠) | 필수 | 🟡 스크립트 완료(11/20), A 테스트 전 | **(11/20)** `Player/PlayerKeys.cs`(Player 프리팹, static 열쇠 목록 + 화면 아래 안내 문구 "~를 얻었다"/"잠겨 있다") + `ItemPickup` 종류 **Key**(Key Name) + `DraggableDoor`의 **Required Key**·Unlock Clip(맞는 열쇠가 있으면 잡는 순간 풀림) + Checkpoint가 열쇠 기억(다시 시작 시 이미 가진 열쇠 오브젝트는 사라짐). 씬 설정: `Key_Boiler`에 ItemPickup(Key, "보일러실 열쇠", metalClick), `Door_Basement`에 Is Locked 체크 + Required Key "보일러실 열쇠" + metalLatch (Door_Basement는 원래 잠금이 꺼져 있었음). 예전 메모: 지금 코드에 없음. `ItemPickup`에 Key 종류 + `DraggableDoor`에 필요한 열쇠 칸 → 없으면 "잠겨 있다", 있으면 열림. 체크포인트가 열쇠 기억. 302호에서 줍고 지하 문을 연다 (관리사무소 열쇠 꾸러미는 스토리용) |
-| 15 | 1장 조작 안내 + 위층 소리 | 필수 | ⬜ (A가 할 예정, B와 확인) | Trigger 구역마다 OnGUI 안내(WASD·Shift·F·문 끌기·E). 1층에 있을 때 위층에서 쿵쿵·긁는 소리(괴물 소리 재사용) |
-| 16 | 지하 최종 추격 + 체크포인트 4 + 탈출 → 엔딩 호출 | 필수 | ⬜ B 지하 맵 필요(11/20까지 요청) | `Monster_B1` 사본, 동생과 마주한 뒤 추격 시작, 비상구 Trigger → B 엔딩 |
+| 15 | 1장 조작 안내 + 위층 소리 | 필수 | 🟡 **B가 만들고 배치(11/22)**, A 확인 전: `UI/TutorialHint.cs`(Trigger 구역 안내 4개 `Hints/Hint_Move·Office·Door·Item`, 한 번만·타이틀 뒤·체크포인트 2 이후 안 뜸) + `Story/UpstairsNoise.cs`(오브젝트 `UpstairsNoise`, 1층에 있는 동안 10~20초마다 위층 괴물 발소리·으르렁) | Trigger 구역마다 OnGUI 안내(WASD·Shift·F·문 끌기·E). 1층에 있을 때 위층에서 쿵쿵·긁는 소리(괴물 소리 재사용) |
+| 16 | 지하 최종 추격 + 체크포인트 4 + 탈출 → 엔딩 호출 | 필수 | 🟡 **연결 완료, 통플레이 확인만 남음(11/22 B 확인)**: B의 `BrotherEncounter`가 연출 끝에 `Monster_B1`(계단 쪽 17.5, -2.8, 1)을 켜고 0.5초 뒤 플레이어 자리에서 40m 소리 → 괴물이 확인하러 옴(2.2m/s), 달리거나 2.5m 안이면 추격(3.5m/s). 순찰 B1_Patrol 4개, Checkpoint_4(재시작 시 2초 뒤 바로 추격), ExitTrigger → EndingScreen. **통플레이에서 볼 것**: 너무 쉬우면 Investigate Speed·noiseLoudness 올리기, 너무 어려우면 Monster_B1 시작 위치를 보일러 쪽으로 | `Monster_B1` 사본, 동생과 마주한 뒤 추격 시작, 비상구 Trigger → B 엔딩 |
 | 17 | 밀린 테스트 | 필수 | ⬜ | ① 301호 들어가면 3층 괴물이 아래 계단에서 올라오는지 ② 점프스케어(얼굴이 화면 가운데, 비명) ③ "다시 시작/그만하기" 버튼 ④ 깜짝 포효 간격(테스트 땐 interval 20) ⑤ 2층 연출 처음부터 끝까지 ⑥ 3층에서 상자 던져 괴물 유인 → 끝나면 7~10번 상태 갱신 |
 | 18 | (여유) 숨기 직전 소리 → 괴물이 그 장롱 확인 | 여유 | ⬜ | |
 | — | **동결 후(11/23~30) A** | | ⬜ | 밸런스(건전지 수·위치, 괴물 속도, 배터리 소모) / NoiseSystem·MonsterAI Show Debug 끄기 / 안 쓰는 소리 변형 파일 정리(`_001~004`, `door_knock_b`, `door_break_b`, `breath_calm_b`, `breath_heavy_a` 등) / 상자 튕김 버그 / 강의 외 기능 최종 목록 / Credits 점검 |
@@ -68,8 +68,8 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 ### 같이 (A + B)
 | 날짜 | 할 일 | 상태 |
 |---|---|---|
-| 11/20 | B 지하 맵 → A 지하 추격 붙이기 | 🟡 B 지하 맵 끝, A 추격 남음 |
-| **11/22** | 처음(바깥)부터 엔딩까지 통플레이 1회 → **기능 동결** | ⬜ |
+| 11/20 | B 지하 맵 → A 지하 추격 붙이기 | ✅ 지하 맵·추격 연결 끝 (B 11/20~22), 통플레이로 확인 |
+| **11/22** | 처음(바깥)부터 엔딩까지 통플레이 1회 → **기능 동결** | ⬜ A·B 만나서 같이 (A 17번 밀린 테스트 + 🟡 항목 확인을 이때 한 번에) |
 | 11/23~28 | 버그 수정 (고치면 여기에 기록) | ⬜ |
 | 11/29 | 교차 테스트 (서로의 컴퓨터에서 처음부터 끝까지) | ⬜ |
 | 11/30 | 발표 자료 + 시연 영상(약 5분: 2장 연출 + 3장 추격) → **밤에 미리 제출** | ⬜ |
@@ -86,6 +86,7 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 - [ ] 압축 시 `Library`·`Temp`·`Logs`·`obj` 제외 → 다른 폴더에 풀어서 열리는지 확인
 - [ ] 발표 자료 함께 제출
 - [ ] `TitleScreen`의 **Show Title 체크 켜짐** (테스트하느라 껐으면)
+- [ ] `Monster`·`NoiseSystem` 프리팹과 씬의 `Monster`·`Monster_2F`·`Monster_B1`에서 **Show Debug 꺼짐** (화면 왼쪽 위 빨간 글자가 안 보이는지)
 
 ---
 
@@ -147,6 +148,7 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 - 11/19: 지하 = 1층 계단실 열쇠 문 → 보일러실 한 칸(보일러 줄을 사이에 둔 두 길) → 서쪽 제사상·동생 → 북동쪽 비상구. 바깥 = 건물 남쪽 마당(x ±30, z -30~0), 남쪽 입구에서 시작. 타이틀은 SampleScene 위에 OnGUI로 그리고, 죽어서 다시 시작하면 안 뜸. 엔딩 "처음으로" → 타이틀
 
 ## B → A 알림 (11/19, 지하 좌표 — A 16번용)
+- **(11/22 B) A에게 알림** — ① **15번은 B가 만들고 배치함** (`UI/TutorialHint.cs` 안내 4개 + `Story/UpstairsNoise.cs` 위층 소리) → A는 같은 걸 만들지 말고 확인만 ② **16번은 BrotherEncounter로 이미 연결됨** → 통플레이 때 추격 난이도만 같이 보기 ③ 303호 `Dresser` → `Nightstand_303` 교체(A 12번 남은 것) ④ 그림자 경고("Reduced additional punctual light shadows…") 원인 = 그림자 켜진 Point Light 4개(`Corridor_Light` ×3, `Guard_Light`, 하나당 6장) → B가 No Shadows로, Shadow Atlas 4096 ⑤ **11/30 제출 직전 `Monster`·`NoiseSystem` 프리팹과 씬 Monster 3개의 Show Debug 끄기** (왼쪽 위 빨간 테스트 글자) ⑥ 강의 외 기능 최종 목록은 B가 정리함(CLAUDE.md 목록과 코드 `[강의 외]` 주석 일치 확인, 빠진 것 없음)
 - **(11/20) 지하 맵·동생 연출·엔딩 배치 끝 → A 16번(지하 추격) 붙여도 됨.** 302호 `Key_Boiler` 자리도 준비됨(아래). 바깥 발소리는 `Player/FootstepZone.cs`(B가 추가, Trigger로 Player Audio Source clip만 바꿈)
 - **Monster_B1**: (17.5, -2.8, 1) 지하 계단 아래(따라 내려온 것처럼), 꺼 둠. 순찰 `B1_Patrol_1~4` = (12, -2.8, 1.5) → (-12, -2.8, 1.5) → (-12, -2.8, 6.8) → (12, -2.8, 6.8) (보일러 줄을 빙 도는 고리)
 - **추격 시작 신호** = `BrotherEncounter`가 `activateAfter`의 Monster_B1을 켜고 0.5초 뒤 플레이어 자리에서 `noiseSystem.Emit(…, 40, "동생 울음")`. 다른 신호가 필요하면 `BrotherEncounter.finished`(static)를 보면 됨
