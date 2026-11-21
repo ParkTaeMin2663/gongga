@@ -1,0 +1,8 @@
+newmtl paper_edge
+Kd 0.6 0.6 0.6
+
+newmtl diary_cover
+Kd 0.6 0.6 0.6
+
+newmtl diary_ribbon
+Kd 0.6 0.6 0.6

@@ -1,0 +1,8 @@
+newmtl shutter_steel
+Kd 0.6 0.6 0.6
+
+newmtl rust_iron
+Kd 0.6 0.6 0.6
+
+newmtl shutter_sign
+Kd 0.6 0.6 0.6

@@ -1,0 +1,11 @@
+newmtl boiler_paint
+Kd 0.6 0.6 0.6
+
+newmtl rust_iron
+Kd 0.6 0.6 0.6
+
+newmtl brass
+Kd 0.6 0.6 0.6
+
+newmtl gauge
+Kd 0.6 0.6 0.6

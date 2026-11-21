@@ -1,0 +1,5 @@
+newmtl envelope
+Kd 0.6 0.6 0.6
+
+newmtl note_paper
+Kd 0.6 0.6 0.6

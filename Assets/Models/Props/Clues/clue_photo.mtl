@@ -1,0 +1,5 @@
+newmtl photo_front
+Kd 0.6 0.6 0.6
+
+newmtl photo_back
+Kd 0.6 0.6 0.6

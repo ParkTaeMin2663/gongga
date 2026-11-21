@@ -147,7 +147,7 @@
 - 라이선스  : 자체 제작
 
 - 이름      : 단지 바깥 3D 모델 14종 (직접 제작)
-- 종류      : 모델 (.obj) — 철문, 문 기둥, 경비실, 승용차, 1톤 트럭, 앙상한 나무 3종, 화단, 모래판, 그네, 미끄럼틀, 벤치, 가로등
+- 종류      : 모델 (.obj) — 철문, 문 기둥, 경비실, 승용차, 1톤 트럭(11/22 차대·앞부분 보강), 앙상한 나무 3종, 화단, 모래판, 그네, 미끄럼틀, 벤치, 가로등
 - 사용 위치 : Assets/Models/Outside/
 - 출처 URL  : 팀 자체 제작 (Python으로 점·면을 직접 계산해 생성, 외부 리소스 없음)
 - 저작자    : 「공가」 팀
@@ -235,6 +235,69 @@
 - 종류      : 모델 (.obj)
 - 사용 위치 : Assets/Models/Props/jegi_bowl.obj, jegi_plate.obj, chukmun_scroll.obj (지하 제사상)
 - 출처 URL  : 팀 자체 제작 (Python으로 회전체·곡면을 직접 계산해 만듦, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 지하 소품 모델 5종 (직접 제작) — 보일러, 제사상, 놋촛대와 초, 쌀가마니, 배관(밸브·압력계·보온재)
+- 종류      : 모델 (.obj)
+- 사용 위치 : Assets/Models/Props/Basement/old_boiler, altar_table, candle_holder, rice_sack, basement_pipes
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 모델링, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 지하 소품 텍스처 (직접 제작) — 짚 엮음, 새끼줄, 옻칠 나무, 압력계 눈금판, 배관 보온재
+- 종류      : 텍스처
+- 사용 위치 : Assets/Textures/Basement/straw_*, straw_rope_basecolor, altar_wood_*, gauge_face, insulation_basecolor
+- 출처 URL  : 팀 자체 제작 (Python 노이즈·그리기로 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 현관문 철문 모델 (직접 제작) — 손잡이, 보조 자물쇠, 도어스코프, 문패, 우유 투입구, 도어 클로저
+- 종류      : 모델 (.obj)
+- 사용 위치 : Assets/Models/Props/Door/door_steel (Door 프리팹)
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 모델링, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 알루미늄 미닫이 창문 + 방범창 모델, 뿌연 유리 텍스처 (직접 제작)
+- 종류      : 모델 (.obj) / 텍스처
+- 사용 위치 : Assets/Models/Props/Window/window_unit (Unit 프리팹, 302호 복도 창), Assets/Textures/Window/window_glass_dirty.png
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 모델링·노이즈 생성, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 계단 손잡이, 비상구 표지, 차단기 레버·이름판 (직접 제작)
+- 종류      : 모델 (.obj) / 텍스처
+- 사용 위치 : Assets/Models/Props/Misc/handrail_A, handrail_B, exit_sign, breaker_lever, breaker_plate / Assets/Textures/Misc/exit_sign_face.png, breaker_plate.png
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 모델링·그림, 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
+- 저작자    : 「공가」 팀 / 폰트: Qianqian Fang and The WenQuanYi Project
+- 라이선스  : 자체 제작 (폰트는 GPL-2 with Font embedding exception, 폰트로 만든 이미지는 자유롭게 사용 가능)
+
+- 이름      : 단서 모델 4종과 텍스처 (직접 제작) — 일기장, 사진(앞·뒷면), 카세트테이프, 관리비 봉투와 쪽지
+- 종류      : 모델 (.obj) / 텍스처
+- 사용 위치 : Assets/Models/Props/Clues/clue_diary, clue_photo, clue_cassette, clue_note / Assets/Textures/Clues/
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 모델링·그림, 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
+- 저작자    : 「공가」 팀 / 폰트: Qianqian Fang and The WenQuanYi Project
+- 라이선스  : 자체 제작 (폰트는 GPL-2 with Font embedding exception, 폰트로 만든 이미지는 자유롭게 사용 가능)
+
+- 이름      : 방화 셔터 모델과 경고판 텍스처 (직접 제작) — 셔터 막, 셔터함, 레일
+- 종류      : 모델 (.obj) / 텍스처
+- 사용 위치 : Assets/Models/Props/Shutter/shutter_curtain, shutter_frame / Assets/Textures/Shutter/shutter_sign.png
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 모델링·그림, 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
+- 저작자    : 「공가」 팀 / 폰트: Qianqian Fang and The WenQuanYi Project
+- 라이선스  : 자체 제작 (폰트는 GPL-2 with Font embedding exception, 폰트로 만든 이미지는 자유롭게 사용 가능)
+
+- 이름      : 천장 등 모델 3종 (방수등, 센서등, 형광등) + 등 유리 텍스처 (직접 제작)
+- 종류      : 모델 (.obj) / 텍스처
+- 사용 위치 : Assets/Models/Props/Lamps/lamp_bulkhead, lamp_sensor, lamp_fluorescent / Assets/Textures/Props/lamp_glass_basecolor.png
+- 출처 URL  : 팀 자체 제작 (Python으로 직접 모델링·그림, 외부 리소스 없음)
+- 저작자    : 「공가」 팀
+- 라이선스  : 자체 제작
+
+- 이름      : 복도 벽·바닥 모서리 때 띠 모델과 텍스처 (직접 제작)
+- 종류      : 모델 (.obj) / 텍스처 (투명)
+- 사용 위치 : Assets/Models/Props/Grime/grime_corridor / Assets/Textures/Props/grime_edge.png
+- 출처 URL  : 팀 자체 제작 (Python으로 노이즈를 직접 생성, 외부 리소스 없음)
 - 저작자    : 「공가」 팀
 - 라이선스  : 자체 제작
 

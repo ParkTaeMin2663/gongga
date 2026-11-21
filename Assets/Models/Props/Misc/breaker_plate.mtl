@@ -1,0 +1,8 @@
+newmtl rust_iron
+Kd 0.6 0.6 0.6
+
+newmtl breaker_plate
+Kd 0.6 0.6 0.6
+
+newmtl brass
+Kd 0.6 0.6 0.6

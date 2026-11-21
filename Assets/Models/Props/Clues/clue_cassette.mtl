@@ -1,0 +1,14 @@
+newmtl cassette_shell
+Kd 0.6 0.6 0.6
+
+newmtl cassette_label
+Kd 0.6 0.6 0.6
+
+newmtl cassette_hub
+Kd 0.6 0.6 0.6
+
+newmtl tape_brown
+Kd 0.6 0.6 0.6
+
+newmtl cassette_window
+Kd 0.6 0.6 0.6

@@ -1,0 +1,8 @@
+newmtl lamp_plastic
+Kd 0.6 0.6 0.6
+
+newmtl lamp_glass
+Kd 0.6 0.6 0.6
+
+newmtl lamp_sensor
+Kd 0.6 0.6 0.6

@@ -1,0 +1,14 @@
+newmtl rust_iron
+Kd 0.6 0.6 0.6
+
+newmtl insulation
+Kd 0.6 0.6 0.6
+
+newmtl valve_red
+Kd 0.6 0.6 0.6
+
+newmtl brass
+Kd 0.6 0.6 0.6
+
+newmtl gauge
+Kd 0.6 0.6 0.6

@@ -1,0 +1,8 @@
+newmtl exit_housing
+Kd 0.6 0.6 0.6
+
+newmtl exit_face
+Kd 0.6 0.6 0.6
+
+newmtl rust_iron
+Kd 0.6 0.6 0.6

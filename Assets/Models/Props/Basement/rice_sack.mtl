@@ -1,0 +1,5 @@
+newmtl straw
+Kd 0.6 0.6 0.6
+
+newmtl straw_rope
+Kd 0.6 0.6 0.6

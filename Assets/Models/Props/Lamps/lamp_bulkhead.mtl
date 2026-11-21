@@ -1,0 +1,5 @@
+newmtl lamp_metal
+Kd 0.6 0.6 0.6
+
+newmtl lamp_glass
+Kd 0.6 0.6 0.6

@@ -1,0 +1,8 @@
+newmtl alu_frame
+Kd 0.6 0.6 0.6
+
+newmtl window_glass
+Kd 0.6 0.6 0.6
+
+newmtl rust_iron
+Kd 0.6 0.6 0.6

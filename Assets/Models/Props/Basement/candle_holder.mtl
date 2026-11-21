@@ -1,0 +1,8 @@
+newmtl brass
+Kd 0.6 0.6 0.6
+
+newmtl candle_wax
+Kd 0.6 0.6 0.6
+
+newmtl wick
+Kd 0.6 0.6 0.6
