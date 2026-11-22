@@ -6636,6 +6636,8 @@ MonoBehaviour:
   monster: {fileID: 767411940}
   monsterBashesDoors: 1
   silhouette: {fileID: 0}
+  stairBlockers:
+  - {fileID: 2031743305}
   flickerTime: 2.5
   hideHint: "\uC228\uC5B4\uB77C"
   hideHintSize: 120
@@ -18645,6 +18647,14 @@ PrefabInstance:
     - target: {fileID: 3824054026538755316, guid: 749f9022b45829c4898c7a8575db76dc, type: 3}
       propertyPath: m_Name
       value: Breaker
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694298261578647283, guid: 749f9022b45829c4898c7a8575db76dc, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606858963067780105, guid: 749f9022b45829c4898c7a8575db76dc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8542372007079796058, guid: 749f9022b45829c4898c7a8575db76dc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38712,6 +38722,7 @@ Transform:
   - {fileID: 1776956132}
   - {fileID: 938795773}
   - {fileID: 1926418495}
+  - {fileID: 2031743306}
   m_Father: {fileID: 790332677}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1828987167
@@ -43352,6 +43363,75 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2031727564}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2031743305
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2031743306}
+  - component: {fileID: 2031743308}
+  - component: {fileID: 2031743307}
+  m_Layer: 0
+  m_Name: StairBlock_2F
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2031743306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031743305}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.05, y: 1.3, z: 2.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1824290360}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2031743307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031743305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bd50d3fa2274e109e37fa5234a7ff39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockedMessage
+  message: "\uC9C0\uAE08\uC740 \uB0B4\uB824\uAC08 \uC218 \uC5C6\uB2E4. \uC5B4\uB518\uAC00\uC5D0
+    \uC228\uC5B4\uC57C \uD55C\uB2E4"
+  cooldown: 3
+--- !u!65 &2031743308
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031743305}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.95, y: 2.6, z: 0.1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2035371740
 GameObject:
   m_ObjectHideFlags: 0

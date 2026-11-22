@@ -357,5 +357,6 @@
 - 사용 위치 : Assets/Textures/Interior/floral_wallpaper/floral_wallpaper_diff.jpg (재질 Interior_Wallpaper_Floral, 노멀 맵은 Poly Haven decrepit_wallpaper)
 - 제작 방법 : Python(PIL)으로 그린 반복 무늬 (외부 이미지 사용 안 함)
 
+
 [스크립트 — Assets/OtherScripts/]
 (아직 없음)

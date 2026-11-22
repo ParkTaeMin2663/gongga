@@ -66,7 +66,7 @@ public class RoarScare : MonoBehaviour
         }
 
         // 켜져 있는 괴물 찾기 (3분에 한 번만 찾으므로 괜찮다)
-        MonsterAI monster = FindFirstObjectByType<MonsterAI>();
+        MonsterAI monster = FindAnyObjectByType<MonsterAI>();   // (11/22) Unity 6.5에서 FindFirstObjectByType이 사라질 예정이라 교체
         if (monster != null && monster.enabled && monster.CurrentState == MonsterAI.State.Chase)
         {
             this.timer = 20f;   // 쫓기는 중이면 조금 뒤에 다시

@@ -65,6 +65,10 @@ public class Floor2Event : MonoBehaviour
     [Tooltip("(예전 방식, 비워 두기) 움직이지 않는 실루엣. monster가 비어 있을 때만 잠깐 보였다가 사라진다")]
     public Transform silhouette;
 
+    [Header("연출 중 1층으로 못 내려가게 (11/22)")]
+    [Tooltip("레버를 올린 순간 켜지고, 괴물이 지나가 셔터가 열릴 때 꺼지는 투명 벽들. 1층으로 내려가는 계단 입구에 Box Collider만 있는 빈 오브젝트(StairBlock_2F)를 처음엔 꺼 두고 여기에 드래그")]
+    public GameObject[] stairBlockers;
+
     [Header("손전등")]
     [Tooltip("손전등이 깜빡이다 꺼지는 시간(초)")]
     public float flickerTime = 2.5f;
@@ -144,8 +148,9 @@ public class Floor2Event : MonoBehaviour
             this.shutterClosedScale = this.shutter.localScale;
         }
 
-        // 처음 상태: 센서등 꺼짐, 괴물·실루엣 숨김
+        // 처음 상태: 센서등 꺼짐, 괴물·실루엣 숨김, 계단 막이 꺼짐
         this.SetLights(false);
+        this.SetBlockers(false);
         if (this.monster != null)
         {
             this.monster.gameObject.SetActive(false);
@@ -184,6 +189,7 @@ public class Floor2Event : MonoBehaviour
     // 다시 시작: 괴물이 204호 앞에 서 있고, 잠깐 뒤 "숨어라" + 출발
     private IEnumerator RetryRoutine()
     {
+        this.SetBlockers(true);   // 다시 시작해도 1층 계단은 막혀 있다
         this.ShowMonster();
         yield return new WaitForSeconds(this.retryDelay);
         this.StartMonsterMove();
@@ -210,6 +216,7 @@ public class Floor2Event : MonoBehaviour
     {
         // 1-1) 레버를 올린 순간 괴물이 복도 끝 어둠 속에 이미 서 있다 (센서등이 켜지며 드러남, 11/18)
         this.ShowMonster();
+        this.SetBlockers(true);   // (11/22) 연출이 끝날 때까지 1층으로 못 내려간다 → 2층에서 숨어야 함
 
         // 2) 셔터가 올라가다 걸린다
         if (this.shutter != null)
@@ -284,6 +291,7 @@ public class Floor2Event : MonoBehaviour
 
         // 6) 괴물이 사라지면 셔터가 끝까지 열린다
         this.showHint = false;
+        this.SetBlockers(false);   // 1층 계단도 다시 열림
         if (this.tensionMusic != null)
         {
             this.tensionMusic.StopHide();   // 긴장 음악이 서서히 줄어든다 → "갔나?"
@@ -297,6 +305,22 @@ public class Floor2Event : MonoBehaviour
             this.StopShutterSound();
         }
         this.IsFinished = true;
+    }
+
+    // 투명 벽 켜기/끄기 (강의 04장 SetActive)
+    private void SetBlockers(bool on)
+    {
+        if (this.stairBlockers == null)
+        {
+            return;
+        }
+        for (int i = 0; i < this.stairBlockers.Length; i++)
+        {
+            if (this.stairBlockers[i] != null)
+            {
+                this.stairBlockers[i].SetActive(on);
+            }
+        }
     }
 
     // 셔터 아래쪽을 height(m)만큼 말아 올린다. 위쪽 끝은 그대로 두고 세로 크기(localScale.y)만 줄인다
