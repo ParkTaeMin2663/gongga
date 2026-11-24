@@ -42,7 +42,7 @@
 1. **A:** 위 🟡 전부 Unity에서 테스트 (2층 연출 → 3층 추격 → 지하 추격 → 엔딩, 타이틀·사망 화면도 한 번 보기)
 2. **A (씬, B 작업 끝난 뒤):** `Floor2Event` Flicker Start Delay 0.7 / Flicker Time 1.5 (표 2-1)
 3. **A:** 장롱 안 괴물 발소리(표 3), "발소리가 멀어졌다" 표시(표 4)
-4. **A·B:** 관리사무소 눕혀진 선반·의자 콜라이더 고치기(표 1) / UI 고퀄리티(표 10)
+4. **A·B:** 관리사무소 눕혀진 선반·의자 콜라이더 고치기(표 1) / UI 고퀄리티(표 11)
 5. **A·B:** 스토리 전달 결정(아래 "A·B 상의할 것") → 인트로 자막
 6. **A·B:** 안 쓰는 파일 정리(⚠️ 항목 B 확인), Credits의 "Python으로 직접 제작" 중 AI(Claude)로 만든 것 확인
 7. 11/27 영상·캡처 → 11/28 PPT → 11/29 교차 테스트·리허설 → 11/30 제출 점검·미리 제출
@@ -252,11 +252,8 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 | 7 | 마지막(지하) 도망쳐 나올 때 쫓기는 배경음 추가 | A | 🟡 **A 완료(11/24), 테스트 전**: `BrotherEncounter` 새 칸 **Chase Music Until End**(켜짐) — "도망쳐"와 함께 추격 음악이 켜져 엔딩까지 계속(괴물이 놓쳐도 안 꺼짐), 체크포인트 4 재시작도 같음. 엔딩 화면이 줄여 끔 (B 파일이지만 칸 하나만 추가) |
 | 8 | 타이틀 화면이 반투명이라 허술해 보임 | B | 🟡 B(11/24) 코드 완료, Unity 확인 전: 불투명 + 배경 그림 `title_background`(게임 시작 지점 캡처를 보정, 302호 불빛, 은은하게 천천히 확대) + 버튼 3개 "시작하기 / 조작법 / 그만하기", 조작법 표(키·설명은 Inspector 배열). Background Brightness 0.85. 글꼴은 후보만 정함(제목 동해독도 + 본문 송명 추천) |
 | 9 | 2층 도착 "레버를 올려야 한다", 3층 체크포인트 "302호 열쇠 → 보일러실" 안내 | B | 🟡 B(11/24) 배치: TutorialHint 복사 — `Hint_Lever`(17.6, 4.0, 0.9) Size (3.6, 2.4, 2), Skip 2 / `Hint_Key`(15, 6.8, 1) Size (2, 2.4, 2), Skip 4 |
-<<<<<<< HEAD
 | 10 | 글꼴 바꾸기: 경고 문구 = 검은고딕, 나머지 = 동해독도 | B (A 파일 2개 한 줄씩) | 🟡 B(11/24) 코드 완료, Unity 확인 전: `UIStyle`에 **Warning Font**(경고)·**Hanja Font**(空家, 동해독도·검은고딕에 한자가 없음) 칸 + `UIStyle.Warning(크기)`·`UIStyle.Hanja(크기, 색)` 추가. "숨어라"(**A의 `Floor2Event` 518줄**)·"잡혔다"(**A의 `PlayerDeath` 310줄**)·"도망쳐"(`BrotherEncounter`)를 `Title` → `Warning`으로 바꿈, 타이틀·엔딩 "空家"는 `Hanja`. Player 프리팹 UIStyle: Regular·Bold·Black = `EastSeaDokdo-Regular`, Warning = `BlackHanSans-Regular`, Hanja = `NotoSerifKR-Regular`. 지하 축문 단서 제목 "축문(祝文)" → "축문"(한자 없음). 글자 크기는 화면 보고 조절 |
-=======
-| 10 | UI 고퀄리티로 만들기 | A | ⬜ 해야 함 |
->>>>>>> 75390770a38e9658feb3a10fffdf62bb016f09e3
+| 11 | UI 고퀄리티로 만들기 | A | ⬜ 해야 함 |
 
 - (11/22 A) **분전함이 두 겹으로 보임** → A의 `Model_PowerBox`와 B의 `breaker_plate`가 겹침 → `Breaker` 프리팹에서 A 모델 뺌
 - (11/22 A) **분전함 레버가 안 잡힘** → ① 씬에서 `Handle` 오브젝트가 통째로 꺼져 있어 Box Collider도 꺼짐 → `Handle`은 켜고 **Mesh Renderer만 끔**(사용자가 씬에서 고침) ② `Breaker` 프리팹 Handle Box Collider를 Size (2.5, 2.5, 1.3), Center z -0.05로 키움(B 레버 모델을 감쌈)
