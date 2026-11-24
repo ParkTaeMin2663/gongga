@@ -6720,7 +6720,7 @@ MonoBehaviour:
   waitBeforeFlicker: 2.5
   waitBeforeCrawl: 1.5
   monsterStartDelay: 0.3
-  flickerStartDelay: 1.5
+  flickerStartDelay: 0.7
 --- !u!4 &392805293
 Transform:
   m_ObjectHideFlags: 0
@@ -38137,7 +38137,7 @@ MonoBehaviour:
   - "\uB2E8\uC11C \uC77D\uC744 \uB54C \uC774\uC804 \uC7A5 / \uB2E4\uC74C \uC7A5"
   backgroundImage: {fileID: 2800000, guid: 9b8e84b5bc15dd142b4920861da94d0b, type: 3}
   backgroundBrightness: 0.85
-  zoomAmount: 0.04
+  zoomAmount: 0
   zoomTime: 40
   titleSize: 150
   buttonSize: 40
