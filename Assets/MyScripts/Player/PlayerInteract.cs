@@ -186,6 +186,12 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
+    /// <summary>잡고 있던 물체를 강제로 놓는다 (11/24, 2층 연출이 시작될 때 레버를 놓게 Floor2Event가 부른다)</summary>
+    public void ReleaseGrab()
+    {
+        this.EndGrab();
+    }
+
     private void EndGrab()
     {
         if (this.heldTarget != null)

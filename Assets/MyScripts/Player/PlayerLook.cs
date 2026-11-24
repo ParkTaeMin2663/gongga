@@ -63,8 +63,17 @@ public class PlayerLook : MonoBehaviour
     /// </summary>
     public void SetYaw(float angle)
     {
-        this.yaw = angle;
-        this.pitch = 0f;
+        this.SetLook(angle, 0f);
+    }
+
+    /// <summary>
+    /// 바라보는 좌우(yawAngle)·위아래(pitchAngle) 각도를 강제로 정한다. (11/24, 2층 연출에서 괴물 쪽으로 고개를 돌릴 때 Floor2Event가 부른다)
+    /// pitchAngle: 음수 = 위, 양수 = 아래 (minPitch~maxPitch로 제한)
+    /// </summary>
+    public void SetLook(float yawAngle, float pitchAngle)
+    {
+        this.yaw = yawAngle;
+        this.pitch = Mathf.Clamp(pitchAngle, this.minPitch, this.maxPitch);
         this.lookDelta = Vector2.zero;
 
         // 시점이 잠겨 있어도(IsLocked) 바로 보이도록 카메라를 직접 돌린다. (강의 03장 rotation + Quaternion.Euler)
@@ -76,6 +85,9 @@ public class PlayerLook : MonoBehaviour
 
     /// <summary>지금 바라보는 좌우 각도(도)</summary>
     public float Yaw { get { return this.yaw; } }
+
+    /// <summary>지금 바라보는 위아래 각도(도)</summary>
+    public float Pitch { get { return this.pitch; } }
 
     // 한 프레임에 여러 번 불릴 수 있어서 더해서(+=) 모아 둔다.
     private void OnLook(InputValue value)

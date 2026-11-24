@@ -6,6 +6,7 @@ using UnityEngine;
 /// (11/17 A 수정) 검은 실루엣 대신 **진짜 Monster 프리팹 사본(Monster_2F)** 이 정해진 길을 한 번 지나간다.
 ///
 ///   1) 차단기 레버(DraggableLever.IsOn)가 올라감
+///      (11/24) 이때부터 "숨어라"까지 걷기·마우스가 멈추고 고개가 괴물 쪽으로 돌아가 고정된다 (lockViewDuringEvent)
 ///   2) 방화 셔터가 "끼이익" 올라가다가 중간에 걸려 멈춘다 (아직 못 지나감)
 ///   3) 센서등이 계단 쪽부터 복도 끝 쪽으로 하나씩 켜짐 → 복도 끝(204호 앞)에 집주인(Monster_2F)이 서 있다 (AI 꺼짐)
 ///   4) 손전등이 깜빡이다 꺼지고(PlayerFlashlight.FlickerOut) 센서등도 꺼짐
@@ -69,6 +70,16 @@ public class Floor2Event : MonoBehaviour
     [Tooltip("레버를 올린 순간 켜지고, 괴물이 지나가 셔터가 열릴 때 꺼지는 투명 벽들. 1층으로 내려가는 계단 입구에 Box Collider만 있는 빈 오브젝트(StairBlock_2F)를 처음엔 꺼 두고 여기에 드래그")]
     public GameObject[] stairBlockers;
 
+    [Header("레버를 올린 뒤 시점 고정 (11/24)")]
+    [Tooltip("체크하면 레버를 올린 순간부터 \"숨어라\"까지 걷기·마우스가 멈추고, 고개가 괴물 쪽으로 돌아가 고정된다 (지하 동생 연출과 같은 방식)")]
+    public bool lockViewDuringEvent = true;
+    [Tooltip("바라볼 곳. 비워 두면 2층 괴물(Monster_2F)을 본다")]
+    public Transform viewTarget;
+    [Tooltip("바라볼 높이(m). 바라볼 곳의 발밑에서 이만큼 위 (괴물 가슴 높이)")]
+    public float viewHeight = 1.3f;
+    [Tooltip("고개가 괴물 쪽으로 돌아가는 시간(초)")]
+    public float viewTurnTime = 1.2f;
+
     [Header("손전등")]
     [Tooltip("손전등이 깜빡이다 꺼지는 시간(초)")]
     public float flickerTime = 2.5f;
@@ -112,6 +123,11 @@ public class Floor2Event : MonoBehaviour
     private TensionMusic tensionMusic; // "숨어라" 동안 긴장 BGM (Player 프리팹)
     private RoarScare roarScare;       // "숨어라" 때 포효 + 그 뒤 3분마다 포효 (Player 프리팹)
     private NoiseSystem noiseSystem;
+    private PlayerMovement playerMovement;   // 시점 고정 동안 걷기 멈춤 (11/24)
+    private PlayerLook playerLook;
+    private PlayerInteract playerInteract;
+    private Rigidbody playerBody;
+    private bool isViewLocked;               // 시점 고정 중인지
 
     // 강의 05장 실행 순서: Awake는 모든 Start보다 먼저 불린다.
     // PlayerDeath.Start가 Checkpoint.isRespawning을 false로 되돌리기 전에 읽어 둔다.
@@ -135,6 +151,10 @@ public class Floor2Event : MonoBehaviour
             this.playerDeath = playerObject.GetComponent<PlayerDeath>();
             this.tensionMusic = playerObject.GetComponent<TensionMusic>();
             this.roarScare = playerObject.GetComponent<RoarScare>();
+            this.playerMovement = playerObject.GetComponent<PlayerMovement>();
+            this.playerLook = playerObject.GetComponent<PlayerLook>();
+            this.playerInteract = playerObject.GetComponent<PlayerInteract>();
+            this.playerBody = playerObject.GetComponent<Rigidbody>();
         }
         GameObject noiseObject = GameObject.Find("NoiseSystem");
         if (noiseObject != null)
@@ -191,6 +211,7 @@ public class Floor2Event : MonoBehaviour
     {
         this.SetBlockers(true);   // 다시 시작해도 1층 계단은 막혀 있다
         this.ShowMonster();
+        this.StartViewLock();     // (11/24) 다시 시작해도 "숨어라"까지 괴물 쪽을 본다
         yield return new WaitForSeconds(this.retryDelay);
         this.StartMonsterMove();
         yield return this.StartCoroutine(this.HideRoutine());
@@ -217,6 +238,7 @@ public class Floor2Event : MonoBehaviour
         // 1-1) 레버를 올린 순간 괴물이 복도 끝 어둠 속에 이미 서 있다 (센서등이 켜지며 드러남, 11/18)
         this.ShowMonster();
         this.SetBlockers(true);   // (11/22) 연출이 끝날 때까지 1층으로 못 내려간다 → 2층에서 숨어야 함
+        this.StartViewLock();     // (11/24) "숨어라"까지 걷기·마우스 멈춤 + 괴물 쪽으로 고개 고정
 
         // 2) 셔터가 올라가다 걸린다
         if (this.shutter != null)
@@ -271,6 +293,7 @@ public class Floor2Event : MonoBehaviour
     {
         // 5) "숨어라" + 괴물 AI가 켜져 정해진 길을 한 번 지나간다
         reachedHidePhase = true;   // 여기서 잡히면 다음엔 바로 여기부터
+        this.isViewLocked = false; // (11/24) "숨어라"와 동시에 다시 움직일 수 있다 (ViewLockRoutine이 풀어 줌)
         this.showHint = true;
         if (this.tensionMusic != null)
         {
@@ -305,6 +328,78 @@ public class Floor2Event : MonoBehaviour
             this.StopShutterSound();
         }
         this.IsFinished = true;
+    }
+
+    // (11/24) 시점 고정 시작. "숨어라"(HideRoutine)에서 isViewLocked = false가 되면 풀린다
+    private void StartViewLock()
+    {
+        if (this.lockViewDuringEvent == false || this.isViewLocked)
+        {
+            return;
+        }
+        this.isViewLocked = true;
+        this.StartCoroutine(this.ViewLockRoutine());   // 강의 05장
+    }
+
+    // 걷기·마우스를 멈추고 고개를 괴물 쪽으로 천천히 돌린 뒤, "숨어라"까지 괴물을 계속 바라본다.
+    // (BrotherEncounter의 동생 쪽으로 고개 돌리기와 같은 방식: Mathf.Atan2로 각도 → Mathf.LerpAngle로 천천히)
+    private IEnumerator ViewLockRoutine()
+    {
+        this.SetPlayerFrozen(true);
+        yield return null;   // 다시 시작한 경우 플레이어 위치·방향이 먼저 정해지도록 한 프레임 기다린다
+
+        Transform target = this.viewTarget;
+        if (target == null && this.monster != null)
+        {
+            target = this.monster.transform;
+        }
+        bool canTurn = target != null && this.playerLook != null && this.playerLook.cameraTransform != null;
+        float startYaw = canTurn ? this.playerLook.Yaw : 0f;
+        float startPitch = canTurn ? this.playerLook.Pitch : 0f;
+        float t = 0f;
+
+        while (this.isViewLocked)
+        {
+            if (this.playerDeath != null && this.playerDeath.IsDead)
+            {
+                yield break;   // 잡혔으면 PlayerDeath가 시점을 맡는다
+            }
+
+            if (canTurn)
+            {
+                // 괴물 가슴 쪽을 향하는 좌우·위아래 각도 (괴물이 걸어와도 계속 따라 본다)
+                Vector3 dir = target.position + Vector3.up * this.viewHeight - this.playerLook.cameraTransform.position;
+                float endYaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+                float flat = Mathf.Sqrt(dir.x * dir.x + dir.z * dir.z);   // 강의 06장 Mathf.Sqrt
+                float endPitch = -Mathf.Atan2(dir.y, flat) * Mathf.Rad2Deg;   // 아래에 있으면 양수(아래를 봄)
+
+                t = Mathf.Min(1f, t + Time.deltaTime / this.viewTurnTime);
+                this.playerLook.IsLocked = true;   // 다른 스크립트가 풀어도 다시 잠근다
+                this.playerLook.SetLook(Mathf.LerpAngle(startYaw, endYaw, t), Mathf.Lerp(startPitch, endPitch, t));
+            }
+
+            // 미끄러지지 않게 좌우 속도만 0 (떨어지는 속도는 그대로)
+            if (this.playerBody != null)
+            {
+                Vector3 v = this.playerBody.linearVelocity;
+                this.playerBody.linearVelocity = new Vector3(0f, v.y, 0f);
+            }
+            yield return null;
+        }
+
+        this.SetPlayerFrozen(false);
+    }
+
+    // 플레이어 걷기·잡기·시점을 멈추거나 다시 켠다 (강의 04장 enabled, BrotherEncounter와 같은 방식)
+    private void SetPlayerFrozen(bool frozen)
+    {
+        if (frozen && this.playerInteract != null)
+        {
+            this.playerInteract.ReleaseGrab();   // 레버를 잡고 있었다면 놓는다
+        }
+        if (this.playerMovement != null) this.playerMovement.enabled = !frozen;
+        if (this.playerInteract != null) this.playerInteract.enabled = !frozen;
+        if (this.playerLook != null) this.playerLook.IsLocked = frozen;
     }
 
     // 투명 벽 켜기/끄기 (강의 04장 SetActive)
