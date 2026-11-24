@@ -256,6 +256,7 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 | 11 | UI 고퀄리티로 만들기 | A | ⬜ 해야 함 |
 | 12 | 인트로 자막 (스토리 전달 ① 안) | B | ✅ **B 완료(11/24, 사용자 확인)**: `UI/IntroScreen.cs`(빈 오브젝트 `IntroScreen`). 타이틀 "시작하기" → 검은 화면에 6줄이 한 줄씩(2024년 12월 / 철거 일주일 전 복도식 아파트 / 빈집 확인 용역 / 주민·전기 없음 / 어릴 때 와 본 것 같다 / **302호에 불**(빨강)) → 밝아지며 시작. 아무 키·클릭 건너뛰기, 죽어서 다시 시작하면 안 나옴, Show Title 끄면 같이 안 나옴. `TutorialHint`가 인트로 중엔 기다리게 한 줄 수정(`IntroScreen.isPlaying`). 기억 설정은 안 A(7살 기억이라 흐릿)로 — 인트로에 한 줄만 |
 
+- (11/24 A) **노란 키 글자([E], [마우스 왼쪽])가 노랗게 번져 뭉개짐** → B가 강화한 테두리·그림자(5번 겹쳐 그림)에서 `<color>` 태그로 칠한 부분은 검은색이 안 곱해져 노란 테두리가 됨 → `UIStyle.Label`이 테두리·그림자에는 색 태그를 뺀 글을 쓰게 고침 (`StripColorTags`)
 - (11/22 A) **분전함이 두 겹으로 보임** → A의 `Model_PowerBox`와 B의 `breaker_plate`가 겹침 → `Breaker` 프리팹에서 A 모델 뺌
 - (11/22 A) **분전함 레버가 안 잡힘** → ① 씬에서 `Handle` 오브젝트가 통째로 꺼져 있어 Box Collider도 꺼짐 → `Handle`은 켜고 **Mesh Renderer만 끔**(사용자가 씬에서 고침) ② `Breaker` 프리팹 Handle Box Collider를 Size (2.5, 2.5, 1.3), Center z -0.05로 키움(B 레버 모델을 감쌈)
 - (11/22 A) **2층 "숨어라" 중에 1층으로 내려가면 연출이 꼬임** → `Floor2Event`에 **Stair Blockers** 추가: 레버를 올리는 순간(다시 시작 포함) 1층 내려가는 계단 입구의 투명 벽 `StairBlock_2F`를 켜고, 괴물이 지나가 셔터가 열릴 때 끔. 부딪히면 `Story/BlockedMessage.cs`가 "지금은 내려갈 수 없다. 어딘가에 숨어야 한다". 벽은 Mesh Renderer 없는 Box Collider라 괴물(NavMesh·Kinematic)은 통과·Bake에도 안 들어감. 씬 배치: `Floor2/Stairwell/StairBlock_2F` 로컬 (19.05, 1.3, 2.05), Box Collider Size (1.95, 2.6, 0.1), 처음엔 꺼 두고 Floor2Event Stair Blockers에 연결

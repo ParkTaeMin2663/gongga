@@ -129,22 +129,48 @@ public class UIStyle : MonoBehaviour
         float offset = Mathf.Max(2f, style.fontSize / 14f);    // 그림자가 떨어진 거리
 
         // GUI.color는 글자 색에 곱해진다 → 검은색을 곱하면 어떤 글자든 그림자가 된다
+        // (11/24 A) 단, <color=#..>로 색을 정한 부분([E] 같은 노란 키)은 검은색이 안 곱해져서 테두리·그림자까지 노랗게 번졌다
+        //           → 테두리·그림자에는 색 태그를 뺀 글을 쓴다 (글자 모양은 같고 색만 기본색 → 검게 곱해짐)
+        string plain = StripColorTags(text);
+
         // ① 테두리: 4방향 대각선으로 조금씩 밀어서 그림
         GUI.color = new Color(0f, 0f, 0f, 0.8f * alpha);
-        GUI.Label(new Rect(rect.x - outline, rect.y - outline, rect.width, rect.height), text, style);
-        GUI.Label(new Rect(rect.x + outline, rect.y - outline, rect.width, rect.height), text, style);
-        GUI.Label(new Rect(rect.x - outline, rect.y + outline, rect.width, rect.height), text, style);
-        GUI.Label(new Rect(rect.x + outline, rect.y + outline, rect.width, rect.height), text, style);
+        GUI.Label(new Rect(rect.x - outline, rect.y - outline, rect.width, rect.height), plain, style);
+        GUI.Label(new Rect(rect.x + outline, rect.y - outline, rect.width, rect.height), plain, style);
+        GUI.Label(new Rect(rect.x - outline, rect.y + outline, rect.width, rect.height), plain, style);
+        GUI.Label(new Rect(rect.x + outline, rect.y + outline, rect.width, rect.height), plain, style);
 
         // ② 오른쪽 아래 그림자
         GUI.color = new Color(0f, 0f, 0f, shadow.a * alpha);
-        GUI.Label(new Rect(rect.x + offset, rect.y + offset, rect.width, rect.height), text, style);
+        GUI.Label(new Rect(rect.x + offset, rect.y + offset, rect.width, rect.height), plain, style);
 
         // ③ 원래 글자
         GUI.color = new Color(1f, 1f, 1f, alpha);
         GUI.Label(rect, text, style);
 
         GUI.color = old;
+    }
+
+    /// <summary>(11/24 A) "&lt;color=#FFCC00&gt;[E]&lt;/color&gt; 줍기" → "[E] 줍기" (색 태그만 뺀다. 문자열 IndexOf·Substring)</summary>
+    private static string StripColorTags(string text)
+    {
+        if (text.IndexOf("<color") < 0)
+        {
+            return text;   // 색 태그가 없으면 그대로
+        }
+        string result = text.Replace("</color>", "");
+        int start = result.IndexOf("<color");
+        while (start >= 0)
+        {
+            int end = result.IndexOf('>', start);
+            if (end < 0)
+            {
+                break;
+            }
+            result = result.Substring(0, start) + result.Substring(end + 1);
+            start = result.IndexOf("<color");
+        }
+        return result;
     }
 
     /// <summary>화면 가운데 조준점 바로 아래 안내 문구가 들어갈 자리</summary>
