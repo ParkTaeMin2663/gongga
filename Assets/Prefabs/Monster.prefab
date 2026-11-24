@@ -104,9 +104,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterAI
   patrolPoints: []
-  patrolSpeed: 1.2
-  investigateSpeed: 2.2
-  chaseSpeed: 3.5
+  patrolSpeed: 1.6
+  investigateSpeed: 3
+  chaseSpeed: 4.3
   senseDistance: 2.5
   loseDistance: 8
   catchDistance: 1.1

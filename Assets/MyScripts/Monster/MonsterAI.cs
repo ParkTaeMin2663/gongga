@@ -52,6 +52,8 @@ public class MonsterAI : MonoBehaviour
     public float catchDistance = 1.1f;
     [Tooltip("같은 층으로 볼 높이 차이(m). 층 높이가 2.8이라 그보다 작게")]
     public float sameFloorHeight = 1.5f;
+    [Tooltip("(11/24) 귀 밝기. 소리 크기(들리는 거리)에 이 값을 곱한 거리까지 듣는다. 1 = 소리 크기 그대로, 1.5 = 1.5배 멀리서도 들음 (예: 달리기 6m → 9m)")]
+    public float hearingMultiplier = 1.5f;
 
     [Header("수색")]
     [Tooltip("도착한 뒤 두리번거리는 시간(초)")]
@@ -559,7 +561,10 @@ public class MonsterAI : MonoBehaviour
         }
 
         // 다른 층에서 난 소리는 무시한다 (괴물은 자기 층에서만 움직인다)
-        if (this.noiseSystem.CanHear(this.transform.position) == false || this.IsSameFloor(this.noiseSystem.LastPosition) == false)
+        // (11/24) 소리 크기 × 귀 밝기(hearingMultiplier) 안이면 들린다 (강의 03장 Vector3 거리)
+        float hearDistance = this.noiseSystem.LastLoudness * this.hearingMultiplier;
+        bool canHear = Vector3.Distance(this.transform.position, this.noiseSystem.LastPosition) <= hearDistance;
+        if (canHear == false || this.IsSameFloor(this.noiseSystem.LastPosition) == false)
         {
             return;
         }

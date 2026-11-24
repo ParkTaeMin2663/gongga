@@ -226,11 +226,12 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 |---|---|---|---|
 | 1 | 1층 관리사무소 안에서 앞으로 안 움직이는 곳 없애기 | A·B | 원인 아직 모름 (보이지 않는 콜라이더 / 소품 콜라이더 의심) |
 | 2 | 2층에 올라오자마자 "레버를 올려야 한다" 안내 띄우기 + 레버를 올리면 화면 고정 | B(안내)·A(화면 고정) | 🟡 **화면 고정 A 스크립트 완료(11/24), 테스트 전**: `Floor2Event` 새 칸 `Lock View During Event`(켜짐) — 레버를 올린 순간 레버를 놓고 걷기·마우스 멈춤 → 1.2초 동안 고개가 괴물(Monster_2F) 가슴 쪽으로 돌아감 → 괴물이 걸어와도 계속 따라 봄 → "숨어라"와 동시에 다시 움직임. 체크포인트 2에서 다시 시작할 때도 같음. `PlayerLook.SetLook/Pitch`, `PlayerInteract.ReleaseGrab` 추가. 안내 문구는 B |
+| 2-1 | 불이 다 켜진 뒤 "숨어라"까지 너무 김 (약 4.7초) | A (씬 값) | ⏸ **B가 씬 작업을 끝내고 push한 뒤** A가 pull → `Floor2Event` **Flicker Start Delay 1.5 → 0.7**, **Flicker Time 2.5 → 1.5** (약 2.9초) → 커밋·push. 씬 동시 수정 충돌 방지 |
 | 3 | 장롱 안에 숨었을 때 괴물 발소리가 들리게 | A | Monster 발소리 Audio Source 거리·볼륨 확인 |
 | 4 | 장롱에 숨었을 때 괴물이 갔는지 화면에 띄우기 | A | 예: "발소리가 멀어졌다" |
-| 5 | 괴물이 너무 느림 | A | Monster 프리팹 Patrol / Investigate / Chase Speed 올리기 |
-| 6 | 괴물이 소리를 듣는 범위가 너무 작음 | A | NoiseSystem·발생 소리 loudness 올리기 |
-| 7 | 마지막(지하) 도망쳐 나올 때 쫓기는 배경음 추가 | A | TensionMusic chase_loop가 Monster_B1에서도 나오게 |
+| 5 | 괴물이 너무 느림 | A | 🟡 **A 완료(11/24), 테스트 전**: `Monster` 프리팹 Patrol 1.2 → **1.6**, Investigate 2.2 → **3**, Chase 3.5 → **4.3** (플레이어 걷기 3 < 추격 4.3 < 달리기 5.5 → 걸으면 잡히고 뛰면 도망). 씬의 Monster·Monster_2F·Monster_B1에 속도 덮어쓰기 없음 → 셋 다 바뀜 |
+| 6 | 괴물이 소리를 듣는 범위가 너무 작음 | A | 🟡 **A 완료(11/24), 테스트 전**: `MonsterAI` 새 칸 **Hearing Multiplier = 1.5** (소리 크기 × 1.5 거리까지 들음: 달리기 6 → 9m, 물건 떨어짐 8 → 12m, 셔터 20 → 30m). 다른 층 소리는 그대로 무시 |
+| 7 | 마지막(지하) 도망쳐 나올 때 쫓기는 배경음 추가 | A | 🟡 **A 완료(11/24), 테스트 전**: `BrotherEncounter` 새 칸 **Chase Music Until End**(켜짐) — "도망쳐"와 함께 추격 음악이 켜져 엔딩까지 계속(괴물이 놓쳐도 안 꺼짐), 체크포인트 4 재시작도 같음. 엔딩 화면이 줄여 끔 (B 파일이지만 칸 하나만 추가) |
 
 - (11/22 A) **분전함이 두 겹으로 보임** → A의 `Model_PowerBox`와 B의 `breaker_plate`가 겹침 → `Breaker` 프리팹에서 A 모델 뺌
 - (11/22 A) **분전함 레버가 안 잡힘** → ① 씬에서 `Handle` 오브젝트가 통째로 꺼져 있어 Box Collider도 꺼짐 → `Handle`은 켜고 **Mesh Renderer만 끔**(사용자가 씬에서 고침) ② `Breaker` 프리팹 Handle Box Collider를 Size (2.5, 2.5, 1.3), Center z -0.05로 키움(B 레버 모델을 감쌈)

@@ -56,6 +56,8 @@ public class BrotherEncounter : MonoBehaviour
     public GameObject[] activateAfter;
     [Tooltip("괴물을 켠 뒤 플레이어 자리에서 나는 소리의 크기 = 들리는 거리(m). 지하 전체에 들리게 크게")]
     public float noiseLoudness = 40f;
+    [Tooltip("(11/24) 체크하면 추격이 시작될 때부터 엔딩까지 쫓기는 음악(TensionMusic 추격 음악)이 계속 나온다. 괴물이 잠깐 놓쳐도 안 꺼짐")]
+    public bool chaseMusicUntilEnd = true;
 
     [Header("다시 시작")]
     [Tooltip("이 번호 이상의 체크포인트에서 다시 시작하면 자막 없이 바로 추격 (4 = 지하 체크포인트)")]
@@ -205,6 +207,16 @@ public class BrotherEncounter : MonoBehaviour
             if (this.activateAfter[i] != null)
             {
                 this.activateAfter[i].SetActive(true);
+            }
+        }
+        // (11/24) 지하 탈출 내내 쫓기는 음악. TensionMusic은 "원하는 곳 수"를 세므로 여기서 한 번 켜 두면
+        // 괴물이 놓쳤다가 다시 쫓아도(괴물 쪽 PlayChase/StopChase) 꺼지지 않는다. 엔딩 화면(EndingScreen)이 음악을 줄여 끈다.
+        if (this.chaseMusicUntilEnd && this.player != null)
+        {
+            TensionMusic music = this.player.GetComponent<TensionMusic>();
+            if (music != null)
+            {
+                music.PlayChase();
             }
         }
         yield return new WaitForSeconds(0.5f);
