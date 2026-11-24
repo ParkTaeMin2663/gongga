@@ -118,18 +118,29 @@ public class UIStyle : MonoBehaviour
     }
 
     /// <summary>
-    /// 그림자 있는 글자. 밝은 곳(눈, 손전등 불빛)에서도 읽히게 1px 아래 오른쪽에 검은 글자를 먼저 그린다.
+    /// 그림자 있는 글자. 밝은 곳(눈, 손전등 불빛)이나 가는 손글씨 글꼴(동해독도)에서도 읽히게
+    /// ① 글자 둘레에 얇은 검은 테두리(상하좌우 대각선 4방향) ② 오른쪽 아래로 진한 그림자를 먼저 그리고 그 위에 글자를 그린다. (11/24 강화)
     /// alpha로 서서히 나타나기/사라지기 (0~1).
     /// </summary>
     public static void Label(Rect rect, string text, GUIStyle style, float alpha = 1f)
     {
         Color old = GUI.color;
-        float offset = Mathf.Max(1f, style.fontSize / 18f);
+        float outline = Mathf.Max(1f, style.fontSize / 30f);   // 테두리 두께
+        float offset = Mathf.Max(2f, style.fontSize / 14f);    // 그림자가 떨어진 거리
 
         // GUI.color는 글자 색에 곱해진다 → 검은색을 곱하면 어떤 글자든 그림자가 된다
+        // ① 테두리: 4방향 대각선으로 조금씩 밀어서 그림
+        GUI.color = new Color(0f, 0f, 0f, 0.8f * alpha);
+        GUI.Label(new Rect(rect.x - outline, rect.y - outline, rect.width, rect.height), text, style);
+        GUI.Label(new Rect(rect.x + outline, rect.y - outline, rect.width, rect.height), text, style);
+        GUI.Label(new Rect(rect.x - outline, rect.y + outline, rect.width, rect.height), text, style);
+        GUI.Label(new Rect(rect.x + outline, rect.y + outline, rect.width, rect.height), text, style);
+
+        // ② 오른쪽 아래 그림자
         GUI.color = new Color(0f, 0f, 0f, shadow.a * alpha);
         GUI.Label(new Rect(rect.x + offset, rect.y + offset, rect.width, rect.height), text, style);
 
+        // ③ 원래 글자
         GUI.color = new Color(1f, 1f, 1f, alpha);
         GUI.Label(rect, text, style);
 

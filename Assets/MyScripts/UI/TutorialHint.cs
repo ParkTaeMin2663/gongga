@@ -65,8 +65,8 @@ public class TutorialHint : MonoBehaviour
             return;
         }
 
-        // 타이틀 화면이 떠 있으면 기다린다 (시작 지점 안내가 타이틀 뒤에서 지나가 버리지 않게)
-        if (TitleScreen.hasStarted == false)
+        // 타이틀 화면이나 인트로 자막이 떠 있으면 기다린다 (시작 지점 안내가 그 뒤에서 지나가 버리지 않게)
+        if (TitleScreen.hasStarted == false || IntroScreen.isPlaying)
         {
             return;
         }
