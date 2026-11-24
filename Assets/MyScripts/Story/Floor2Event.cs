@@ -454,6 +454,7 @@ public class Floor2Event : MonoBehaviour
         if (this.monster != null)
         {
             this.SetMonsterAgent(true);    // (11/24) 꺼 뒀던 길찾기를 먼저 켜고
+            this.SetMonsterPose(false);    // (11/24) 멈춰 둔 동작도 다시 움직이게
             this.monster.enabled = true;   // AI를 켠다 (MonsterAI.Start가 Agent를 쓰므로 이 순서)
         }
     }
@@ -467,6 +468,7 @@ public class Floor2Event : MonoBehaviour
             this.monster.alwaysBashDoors = this.monsterBashesDoors;   // 201호 문을 부수고 들어오게
             this.SetMonsterAgent(false);                // (11/24) 길찾기도 꺼서 출발 전에 조금도 미끄러지지 않게
             this.monster.gameObject.SetActive(true);    // 강의 04장 SetActive
+            this.SetMonsterPose(true);                  // (11/24) 동작(Idle)도 멈춰 동상처럼 서 있게
         }
         else if (this.silhouette != null)
         {
@@ -482,6 +484,18 @@ public class Floor2Event : MonoBehaviour
         if (agent != null)
         {
             agent.enabled = on;
+        }
+    }
+
+    // (11/24) 괴물 동작 멈추기/다시 움직이기 ([강의 외] Animator, 11/18 허락 — Animator.speed)
+    // 괴물 모델의 기본 Idle 동작은 몸이 앞뒤로 조금 움직이는 동작이라, AI가 꺼져 있어도 걸어오다 멈추는 것처럼 보였다
+    // → 출발 전까지 Animator 재생 속도를 0으로 해서 첫 자세 그대로 서 있게 한다. 출발하면 MonsterAI가 속도를 다시 정한다
+    private void SetMonsterPose(bool freeze)
+    {
+        Animator animator = this.monster.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.speed = freeze ? 0f : 1f;
         }
     }
 

@@ -76,7 +76,7 @@
               Assets/Audio/Monster/monster_scream.ogg (Monster Scream 1 — freesound_community)
               Assets/Audio/Music/hide_heartbeat_loop.ogg (Intense horror music 01 — freesound_community + Sfx6 - Horror Suspense [Hiding - Heartbeat] (loop) — yarzur_ofc, 두 곡을 ffmpeg로 섞음)
               Assets/Audio/Monster/monster_roar_far.ogg (Monster Roar 02 — freesound_community)
-              Assets/Audio/Music/chase_loop.ogg (Horror Chase Music loop — freesound_community)
+              Assets/Audio/Music/chase_loop.ogg (Horror Chase Music loop — freesound_community) (11/24 끝 4초 무음을 ffmpeg로 잘라 끊김 없이 반복)
               Assets/Audio/Music/ambient_loop.ogg (Eerie Suspense Atmosphere — Universfield)
               (앞쪽 무음 자르기·크기 맞추기·ogg 변환은 ffmpeg로 직접 가공)
 - 출처 URL  : https://pixabay.com/sound-effects/ (각 제목으로 검색, ID 541145 / 541144 / 97413 / 102957 / 472380 / 45669 / 14890 / 323052 / 67634 / 345816)

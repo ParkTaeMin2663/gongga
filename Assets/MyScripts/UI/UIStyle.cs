@@ -30,12 +30,17 @@ public class UIStyle : MonoBehaviour
     [Tooltip("한자용: 타이틀·엔딩의 \"空家\" (비워 두면 본문 글꼴)")]
     public Font hanjaFont;
 
+    [Header("글자 크기 (11/24)")]
+    [Tooltip("본문·강조·제목 글꼴(동해독도) 글자 크기 배율. 손글씨 글꼴이라 작아 보여서 키운다. 1 = 그대로. 경고(검은고딕)·한자 글꼴에는 안 곱함")]
+    public float mainFontScale = 1.3f;
+
     // ----- 모두가 쓰는 값 (강의 07장 public static) -----
     public static Font regular;
     public static Font bold;
     public static Font black;
     public static Font warning;
     public static Font hanja;
+    public static float mainScale = 1.3f;
 
     // 색: 차가운 회색/남색 바탕에 빨간 "공가"와 노란 불빛만 튀게 (CLAUDE.md 4장 분위기)
     public static Color white  = new Color(0.86f, 0.85f, 0.82f);        // 기본 글자 (살짝 누런 흰색)
@@ -52,6 +57,7 @@ public class UIStyle : MonoBehaviour
         if (this.blackFont != null) black = this.blackFont;
         if (this.warningFont != null) warning = this.warningFont;
         if (this.hanjaFont != null) hanja = this.hanjaFont;
+        mainScale = this.mainFontScale;
     }
 
     /// <summary>화면 크기에 맞춘 글자 크기. 1080p 기준 크기를 넣으면 화면 높이에 비례해서 커지거나 작아진다.</summary>
@@ -65,7 +71,10 @@ public class UIStyle : MonoBehaviour
     {
         GUIStyle style = new GUIStyle();
         style.font = font;                    // null이면 Unity 기본 글꼴
-        style.fontSize = Size(sizeAt1080);
+        // (11/24) 본문·강조·제목 글꼴이면 배율을 곱한다 (경고·한자 글꼴은 그대로)
+        bool isMainFont = font != null && (font == regular || font == bold || font == black) && font != warning && font != hanja;
+        float scale = isMainFont ? mainScale : 1f;
+        style.fontSize = Size(Mathf.RoundToInt(sizeAt1080 * scale));
         style.normal.textColor = color;
         style.alignment = alignment;
         style.wordWrap = true;
