@@ -28,6 +28,14 @@ public class PlayerHide : MonoBehaviour
     [Tooltip("나오려면 E를 몇 초 누르고 있어야 하는지. 0이면 누르자마자 나온다")]
     public float exitHoldTime = 0f;
 
+    [Header("괴물이 멀어지면 알려 주기 (11/24)")]
+    [Tooltip("숨어 있는 동안 괴물이 가까이 왔다가 멀어지면 화면 아래에 띄울 글")]
+    public string goneMessage = "발소리가 멀어졌다. 이제 나가도 될 것 같다";
+    [Tooltip("괴물이 이 거리(m) 안으로 오면 \"가까이 왔다\"로 본다")]
+    public float monsterNearDistance = 8f;
+    [Tooltip("가까이 왔던 괴물이 이 거리(m)보다 멀어지거나 사라지면 글을 띄운다")]
+    public float monsterGoneDistance = 14f;
+
     [Header("연결 (비워 두면 자동으로 찾음)")]
     public PlayerInteract playerInteract;
     public PlayerMovement playerMovement;
@@ -51,6 +59,11 @@ public class PlayerHide : MonoBehaviour
     private bool isInteractHeld;    // E를 누르고 있는지
     private float holdTimer;        // E를 누르고 있은 시간(초)
     private Texture2D whiteTexture; // 화면 덮기·막대 그리기용
+
+    // (11/24) 괴물이 멀어졌는지 보기
+    private bool monsterWasNear;    // 숨어 있는 동안 괴물이 가까이 왔었나
+    private float watchTimer;       // 0.5초마다만 확인 (매 프레임 Find 하지 않기, 강의 04장)
+    private MonsterAI watchedMonster;
 
     private void Start()
     {
@@ -81,6 +94,8 @@ public class PlayerHide : MonoBehaviour
 
     private void Update()
     {
+        this.WatchMonster();   // (11/24) 숨어 있는 동안 괴물이 왔다가 멀어지면 알려 준다
+
         // 누르고 있지 않거나, 들어가고 나오는 동작 중이면 시간을 재지 않는다
         if (this.isInteractHeld == false || (this.currentSpot != null && this.currentSpot.IsBusy))
         {
@@ -112,6 +127,53 @@ public class PlayerHide : MonoBehaviour
         {
             // 장롱에서 눈을 돌리면 처음부터 다시
             this.holdTimer = 0f;
+        }
+    }
+
+    // (11/24) 숨어 있는 동안: 괴물이 가까이(monsterNearDistance) 왔다가 멀어지거나(monsterGoneDistance)
+    // 사라지면(2층 괴물이 계단으로 사라짐 등) "발소리가 멀어졌다"를 한 번 띄운다.
+    // 괴물은 0.5초마다 한 번만 찾는다 (켜져 있는 괴물만 찾음. 층마다 하나씩만 켜져 있다)
+    private void WatchMonster()
+    {
+        if (this.IsHidden == false)
+        {
+            this.monsterWasNear = false;   // 나오면 처음부터
+            this.watchedMonster = null;
+            return;
+        }
+
+        this.watchTimer = this.watchTimer - Time.deltaTime;   // 강의 03장 Time.deltaTime 타이머
+        if (this.watchTimer > 0f)
+        {
+            return;
+        }
+        this.watchTimer = 0.5f;
+
+        if (this.watchedMonster == null || this.watchedMonster.isActiveAndEnabled == false)
+        {
+            this.watchedMonster = FindAnyObjectByType<MonsterAI>();   // RoarScare와 같은 방식 (자주 부르지 않음)
+        }
+
+        bool found = this.watchedMonster != null && this.watchedMonster.isActiveAndEnabled;
+        float distance = 999f;
+        if (found)
+        {
+            Vector3 diff = this.watchedMonster.transform.position - this.transform.position;
+            if (Mathf.Abs(diff.y) < 1.5f)   // 같은 층일 때만 (다른 층이면 멀리 있는 것으로 본다)
+            {
+                diff.y = 0f;
+                distance = diff.magnitude;
+            }
+        }
+
+        if (distance < this.monsterNearDistance)
+        {
+            this.monsterWasNear = true;
+        }
+        else if (this.monsterWasNear && distance > this.monsterGoneDistance)
+        {
+            this.monsterWasNear = false;   // 다시 왔다가 가면 또 알려 준다
+            PlayerKeys.ShowMessage(this.goneMessage);
         }
     }
 

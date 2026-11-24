@@ -105,6 +105,8 @@ public class MonsterAI : MonoBehaviour
     public AudioSource footstepSound;
     [Tooltip("발소리 파일들 (Assets/Audio/Monster/monster_step_0~3). 걸음마다 무작위로 하나")]
     public AudioClip[] footstepClips;
+    [Tooltip("(11/24) 플레이어가 장롱에 숨어 있을 때 발소리 Min Distance(m). 크게 하면 멀리서도 또렷하게 들린다 (평소 값은 Audio Source의 Min Distance)")]
+    public float hiddenStepMinDistance = 10f;
     [Tooltip("몇 m 걸을 때마다 한 걸음 소리를 낼지 (클수록 느릿느릿 무거운 걸음)")]
     public float stepDistance = 1.1f;
     [Tooltip("천천히 걸을 때(순찰) 볼륨 / 달릴 때(추격) 볼륨")]
@@ -193,6 +195,7 @@ public class MonsterAI : MonoBehaviour
     private float lastRoarTime = -100f;
     private TensionMusic tensionMusic;
     private bool isChaseMusicOn;
+    private float normalStepMinDistance = -1f;   // 발소리 Audio Source의 원래 Min Distance (11/24)
 
     private void Start()
     {
@@ -718,6 +721,12 @@ public class MonsterAI : MonoBehaviour
         this.stepMoved = 0f;
 
         bool fast = this.CurrentState == State.Chase || this.CurrentState == State.Investigate;
+        // (11/24) 플레이어가 장롱 안에 숨어 있으면 발소리가 더 멀리서도 크게 들리게 (숨죽이고 듣는 긴장감)
+        if (this.normalStepMinDistance < 0f)
+        {
+            this.normalStepMinDistance = this.footstepSound.minDistance;   // 처음 한 번 원래 값 기억
+        }
+        this.footstepSound.minDistance = this.IsPlayerHidden() ? this.hiddenStepMinDistance : this.normalStepMinDistance;
         this.footstepSound.clip = this.footstepClips[Random.Range(0, this.footstepClips.Length)];
         this.footstepSound.volume = fast ? this.chaseStepVolume : this.walkStepVolume;
         this.footstepSound.pitch = Random.Range(0.9f, 1.1f);
