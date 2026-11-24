@@ -318,7 +318,7 @@
 [폰트]
 - 이름      : Noto Serif KR (본명조) Regular / Bold / Black
 - 종류      : 폰트 (OTF)
-- 사용 위치 : Assets/Fonts/ (UI 전체, MyScripts/UI/UIStyle.cs)
+- 사용 위치 : Assets/Fonts/ (11/24부터 타이틀·엔딩의 한자 "空家"만, MyScripts/UI/UIStyle.cs의 Hanja Font)
 - 출처 URL  : https://github.com/notofonts/noto-cjk (Serif/SubsetOTF/KR)
 - 저작자    : Adobe, Google (Noto CJK)
 - 라이선스  : SIL Open Font License 1.1 (라이선스 원문 Assets/Fonts/OFL.txt)
@@ -367,3 +367,17 @@
 
 [스크립트 — Assets/OtherScripts/]
 (아직 없음)
+
+- 이름      : East Sea Dokdo (동해독도) Regular
+- 종류      : 폰트 (TTF)
+- 사용 위치 : Assets/Fonts/EastSeaDokdo-Regular.ttf (UI 본문·강조·제목 전체, MyScripts/UI/UIStyle.cs)
+- 출처 URL  : https://fonts.google.com/specimen/East+Sea+Dokdo (파일: https://github.com/google/fonts/tree/main/ofl/eastseadokdo)
+- 저작자    : YoonDesign Inc.
+- 라이선스  : SIL Open Font License 1.1 (라이선스 원문 Assets/Fonts/OFL_EastSeaDokdo.txt)
+
+- 이름      : Black Han Sans (검은고딕) Regular
+- 종류      : 폰트 (TTF)
+- 사용 위치 : Assets/Fonts/BlackHanSans-Regular.ttf (경고 문구 "숨어라"·"잡혔다"·"도망쳐", UIStyle의 Warning Font)
+- 출처 URL  : https://fonts.google.com/specimen/Black+Han+Sans (파일: https://github.com/google/fonts/tree/main/ofl/blackhansans)
+- 저작자    : The Black Han Sans Project Authors (Zess Type)
+- 라이선스  : SIL Open Font License 1.1 (라이선스 원문 Assets/Fonts/OFL_BlackHanSans.txt)

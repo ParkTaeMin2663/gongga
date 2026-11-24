@@ -307,7 +307,7 @@ public class PlayerDeath : MonoBehaviour
 
         // 제목
         float titleHeight = UIStyle.Size(110);
-        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(200), Screen.width, titleHeight), "잡혔다", UIStyle.Title(90), this.menuAlpha);
+        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(200), Screen.width, titleHeight), "잡혔다", UIStyle.Warning(90), this.menuAlpha);
 
         // 체크포인트 안내 (흐린 글자)
         string where = Checkpoint.savedOrder > 0 ? "마지막 체크포인트에서 다시 시작합니다" : "처음부터 다시 시작합니다";

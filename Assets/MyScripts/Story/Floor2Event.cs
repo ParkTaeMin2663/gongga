@@ -514,8 +514,8 @@ public class Floor2Event : MonoBehaviour
             return;
         }
 
-        // 공통 UI 스타일 (UIStyle.cs): 제목 글꼴(본명조 Black) + 빨간색, 그림자. 화면 크기가 바뀔 수 있어 매번 만든다
-        this.hintStyle = UIStyle.Title(this.hideHintSize);
+        // 공통 UI 스타일 (UIStyle.cs): 경고 글꼴(검은고딕, 11/24) + 빨간색, 그림자. 화면 크기가 바뀔 수 있어 매번 만든다
+        this.hintStyle = UIStyle.Warning(this.hideHintSize);
         float height = UIStyle.Size(this.hideHintSize) * 1.6f;
         float alpha = 0.55f + 0.45f * Mathf.Sin(Time.time * 3f);
         UIStyle.Label(new Rect(0f, Screen.height * 0.3f - height / 2f, Screen.width, height), this.hideHint, this.hintStyle, alpha);

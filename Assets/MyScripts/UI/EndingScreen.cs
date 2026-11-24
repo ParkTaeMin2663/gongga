@@ -232,7 +232,7 @@ public class EndingScreen : MonoBehaviour
         float cx = Screen.width / 2f;
         float cy = Screen.height / 2f;
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(300), Screen.width, UIStyle.Size(180)), this.endTitle, UIStyle.Title(150), this.menuAlpha);
-        GUIStyle subStyle = UIStyle.Make(UIStyle.regular, 36, UIStyle.white, TextAnchor.MiddleCenter);
+        GUIStyle subStyle = UIStyle.Hanja(36, UIStyle.white);   // 空家: 동해독도에 한자가 없어 본명조 (11/24)
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(125), Screen.width, UIStyle.Size(50)), this.endSubTitle, subStyle, this.menuAlpha);
         GUIStyle small = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.MiddleCenter);
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(65), Screen.width, UIStyle.Size(40)), this.thanks, small, this.menuAlpha);

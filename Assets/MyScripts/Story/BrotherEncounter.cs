@@ -291,7 +291,7 @@ public class BrotherEncounter : MonoBehaviour
         if (this.showRunText)
         {
             Rect rect = new Rect(0f, Screen.height / 2f - UIStyle.Size(90), Screen.width, UIStyle.Size(180));
-            UIStyle.Label(rect, this.runText, UIStyle.Title(this.runTextSize), this.runAlpha);
+            UIStyle.Label(rect, this.runText, UIStyle.Warning(this.runTextSize), this.runAlpha);
         }
     }
 }

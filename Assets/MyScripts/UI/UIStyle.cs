@@ -4,7 +4,8 @@ using UnityEngine;
 /// 게임 전체가 같이 쓰는 UI 스타일 (글꼴·색·글자 크기). A·B 모두 OnGUI에서 이걸 가져다 쓴다.
 ///
 /// [붙이는 곳] Player 프리팹 (이미 붙어 있음, 글꼴 3개도 연결됨) → Player가 있는 씬이면 어디서나 사용 가능
-/// [글꼴] Noto Serif KR(본명조) Regular / Bold / Black — Assets/Fonts, SIL OFL 1.1 (Credits.txt)
+/// [글꼴] (11/24 변경) 본문·강조·제목 = East Sea Dokdo(동해독도), 경고 문구 = Black Han Sans(검은고딕),
+///        한자(空家) = Noto Serif KR(본명조, 동해독도에 한자가 없어서) — 모두 Assets/Fonts, SIL OFL 1.1 (Credits.txt)
 ///
 /// [방식] 강의 07장 public static: Awake에서 글꼴을 static 변수에 넣어 두면
 ///        다른 스크립트가 UIStyle.Prompt(...)처럼 오브젝트를 찾지 않고 바로 쓸 수 있다.
@@ -12,7 +13,7 @@ using UnityEngine;
 ///
 /// [사용 예] (OnGUI 안에서)
 ///   UIStyle.Prompt("[E] 일기장 읽기");                         // 화면 가운데 아래 안내 문구
-///   UIStyle.Label(rect, "숨어라", UIStyle.Title(40), UIStyle.red); // 원하는 곳에 그림자 있는 글자
+///   UIStyle.Label(rect, "숨어라", UIStyle.Warning(40));     // 원하는 곳에 그림자 있는 글자
 ///   GUIStyle s = UIStyle.Body(22, UIStyle.paper);              // 스타일만 받아서 GUI.Label에 직접
 /// </summary>
 public class UIStyle : MonoBehaviour
@@ -22,13 +23,19 @@ public class UIStyle : MonoBehaviour
     public Font regularFont;
     [Tooltip("강조용: 버튼, 단서 제목")]
     public Font boldFont;
-    [Tooltip("제목용: 타이틀 「공가」, \"숨어라\", 사망 화면")]
+    [Tooltip("제목용: 타이틀 「공가」, 단서 제목, 엔딩 제목")]
     public Font blackFont;
+    [Tooltip("경고 문구용: \"숨어라\", \"잡혔다\", \"도망쳐\" (비워 두면 제목 글꼴)")]
+    public Font warningFont;
+    [Tooltip("한자용: 타이틀·엔딩의 \"空家\" (비워 두면 본문 글꼴)")]
+    public Font hanjaFont;
 
     // ----- 모두가 쓰는 값 (강의 07장 public static) -----
     public static Font regular;
     public static Font bold;
     public static Font black;
+    public static Font warning;
+    public static Font hanja;
 
     // 색: 차가운 회색/남색 바탕에 빨간 "공가"와 노란 불빛만 튀게 (CLAUDE.md 4장 분위기)
     public static Color white  = new Color(0.86f, 0.85f, 0.82f);        // 기본 글자 (살짝 누런 흰색)
@@ -43,6 +50,8 @@ public class UIStyle : MonoBehaviour
         if (this.regularFont != null) regular = this.regularFont;
         if (this.boldFont != null) bold = this.boldFont;
         if (this.blackFont != null) black = this.blackFont;
+        if (this.warningFont != null) warning = this.warningFont;
+        if (this.hanjaFont != null) hanja = this.hanjaFont;
     }
 
     /// <summary>화면 크기에 맞춘 글자 크기. 1080p 기준 크기를 넣으면 화면 높이에 비례해서 커지거나 작아진다.</summary>
@@ -81,6 +90,22 @@ public class UIStyle : MonoBehaviour
     {
         Font font = black != null ? black : (bold != null ? bold : regular);
         return Make(font, sizeAt1080, red, TextAnchor.MiddleCenter);
+    }
+
+    /// <summary>경고 문구 (검은고딕, 빨간색, 가운데 정렬) — "숨어라", "잡혔다", "도망쳐"</summary>
+    public static GUIStyle Warning(int sizeAt1080)
+    {
+        if (warning == null)
+        {
+            return Title(sizeAt1080);   // 경고 글꼴이 없으면 예전처럼 제목 글꼴
+        }
+        return Make(warning, sizeAt1080, red, TextAnchor.MiddleCenter);
+    }
+
+    /// <summary>한자 글자 ("空家"). 한자 글꼴이 없으면 본문 글꼴</summary>
+    public static GUIStyle Hanja(int sizeAt1080, Color color)
+    {
+        return Make(hanja != null ? hanja : regular, sizeAt1080, color, TextAnchor.MiddleCenter);
     }
 
     /// <summary>
