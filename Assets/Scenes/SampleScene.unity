@@ -6709,6 +6709,10 @@ MonoBehaviour:
   silhouette: {fileID: 0}
   stairBlockers:
   - {fileID: 2031743305}
+  lockViewDuringEvent: 1
+  viewTarget: {fileID: 0}
+  viewHeight: 1.3
+  viewTurnTime: 1.2
   flickerTime: 2.5
   hideHint: "\uC228\uC5B4\uB77C"
   hideHintSize: 120
@@ -16761,6 +16765,7 @@ MonoBehaviour:
   activateAfter:
   - {fileID: 1284567301}
   noiseLoudness: 40
+  chaseMusicUntilEnd: 1
   retryFromCheckpoint: 4
   retryDelay: 2
 --- !u!65 &857713380
@@ -36898,7 +36903,7 @@ Transform:
   m_GameObject: {fileID: 1683795096}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.6, y: 4, z: 0.9}
+  m_LocalPosition: {x: 17.2, y: 4, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38110,12 +38115,33 @@ MonoBehaviour:
   subTitle: "\u7A7A\u5BB6"
   tagline: "\uCCA0\uAC70 \uC77C\uC8FC\uC77C \uC804, \uBAA8\uB450 \uBE44\uC5C8\uC5B4\uC57C
     \uD560 \uB2E8\uC9C0\uC5D0 \uBD88 \uCF1C\uC9C4 \uC9D1\uC774 \uD558\uB098 \uC788\uB2E4"
-  controls: "WASD \uC774\uB3D9   Shift \uB2EC\uB9AC\uAE30   F \uC190\uC804\uB4F1  
-    \uB9C8\uC6B0\uC2A4\uB85C \uBB38\xB7\uC11C\uB78D \uB04C\uAE30   E \uC870\uC0AC\xB7\uC228\uAE30"
+  controlKeys:
+  - W A S D
+  - Shift
+  - "\uB9C8\uC6B0\uC2A4"
+  - F
+  - E
+  - "E 1\uCD08 \uAFB9"
+  - "\uB9C8\uC6B0\uC2A4 \uC67C\uCABD (\uB204\uB978 \uCC44 \uB04C\uAE30)"
+  - "\uB9C8\uC6B0\uC2A4 \uC624\uB978\uCABD"
+  - Q / E
+  controlDescs:
+  - "\uC774\uB3D9"
+  - "\uB2EC\uB9AC\uAE30 (\uC18C\uB9AC\uAC00 \uCEE4\uC11C \uAD34\uBB3C\uC774 \uB4E3\uB294\uB2E4)"
+  - "\uB458\uB7EC\uBCF4\uAE30"
+  - "\uC190\uC804\uB4F1 \uCF1C\uAE30\xB7\uB044\uAE30 (\uBC30\uD130\uB9AC\uAC00 \uB2F3\uB294\uB2E4)"
+  - "\uC90D\uAE30 \xB7 \uB2E8\uC11C \uC77D\uAE30"
+  - "\uC7A5\uB871\uC5D0 \uC228\uAE30 / \uD55C \uBC88 \uB354 \uB204\uB974\uBA74 \uB098\uC624\uAE30"
+  - "\uBB38 \xB7 \uC11C\uB78D \xB7 \uB808\uBC84 \uB04C\uAE30, \uBB3C\uAC74 \uB4E4\uAE30"
+  - "\uB4E4\uACE0 \uC788\uB294 \uBB3C\uAC74 \uB358\uC9C0\uAE30 (\uAD34\uBB3C \uC720\uC778)"
+  - "\uB2E8\uC11C \uC77D\uC744 \uB54C \uC774\uC804 \uC7A5 / \uB2E4\uC74C \uC7A5"
+  backgroundImage: {fileID: 2800000, guid: 9b8e84b5bc15dd142b4920861da94d0b, type: 3}
+  backgroundBrightness: 0.85
+  zoomAmount: 0.04
+  zoomTime: 40
   titleSize: 150
   buttonSize: 40
   fadeTime: 1.5
-  darkness: 0.6
 --- !u!4 &1766786229
 Transform:
   m_ObjectHideFlags: 0
