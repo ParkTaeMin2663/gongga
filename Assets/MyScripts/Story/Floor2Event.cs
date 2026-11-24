@@ -1,5 +1,6 @@
 using System.Collections;          // 강의 05장: 코루틴
 using UnityEngine;
+using UnityEngine.AI;              // 강의 07장: NavMeshAgent
 
 /// <summary>
 /// 2장(2층) 연출. 차단기를 올리면 순서대로 진행된다.
@@ -452,7 +453,8 @@ public class Floor2Event : MonoBehaviour
     {
         if (this.monster != null)
         {
-            this.monster.enabled = true;
+            this.SetMonsterAgent(true);    // (11/24) 꺼 뒀던 길찾기를 먼저 켜고
+            this.monster.enabled = true;   // AI를 켠다 (MonsterAI.Start가 Agent를 쓰므로 이 순서)
         }
     }
 
@@ -463,11 +465,23 @@ public class Floor2Event : MonoBehaviour
         {
             this.monster.enabled = false;               // 컴포넌트 끄기 (켜지기 전이라 Start도 아직 안 불림)
             this.monster.alwaysBashDoors = this.monsterBashesDoors;   // 201호 문을 부수고 들어오게
+            this.SetMonsterAgent(false);                // (11/24) 길찾기도 꺼서 출발 전에 조금도 미끄러지지 않게
             this.monster.gameObject.SetActive(true);    // 강의 04장 SetActive
         }
         else if (this.silhouette != null)
         {
             this.silhouette.gameObject.SetActive(true);
+        }
+    }
+
+    // (11/24) 괴물의 NavMeshAgent 켜기/끄기 (강의 07장 NavMeshAgent, 04장 enabled)
+    // 레버를 올린 순간 AI는 꺼져 있어도 Agent가 켜져 있으면 바닥(NavMesh)에 맞추느라 조금 움직일 수 있다 → 출발 전까지 꺼 둔다
+    private void SetMonsterAgent(bool on)
+    {
+        NavMeshAgent agent = this.monster.GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.enabled = on;
         }
     }
 
