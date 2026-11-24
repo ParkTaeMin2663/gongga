@@ -36,15 +36,15 @@
 **끝난 것**
 - 모든 장(1~4장)·타이틀·엔딩까지 처음부터 끝까지 플레이 가능 (11/24 A·B 통플레이)
 - 11/24 통플레이 메모 중 A가 고친 것(테스트 전 🟡): 2층 레버 연출 시점 고정, 2층 괴물 출발 전 멈춤, 괴물 속도·귀 밝기, 지하 탈출 추격 음악 (아래 "알려진 문제" 표 2·2-2·5·6·7)
-- B: 2층 레버 안내 `Hint_Lever`, 302호 열쇠 안내 `Hint_Key`, 타이틀 화면 배경 그림·조작법 버튼(표 8·9), 관리사무소 막힘 원인 후보 찾음(표 1)
+- B: ✅ 2층 레버 안내 `Hint_Lever`, 302호 열쇠 안내 `Hint_Key`, 타이틀 화면 배경 그림·조작법 버튼(표 8·9), 관리사무소 선반·의자 콜라이더 세움(표 1) / 🟡 글꼴 동해독도 적용(경고·한자 칸 남음, 표 10)
 
 **남은 것 (순서대로)**
 1. **A:** 위 🟡 전부 Unity에서 테스트 (2층 연출 → 3층 추격 → 지하 추격 → 엔딩, 타이틀·사망 화면도 한 번 보기)
 2. **A (씬, B 작업 끝난 뒤):** `Floor2Event` Flicker Start Delay 0.7 / Flicker Time 1.5 (표 2-1)
 3. **A:** 장롱 안 괴물 발소리(표 3), "발소리가 멀어졌다" 표시(표 4)
-4. **A·B:** 관리사무소 눕혀진 선반·의자 콜라이더 고치기(표 1) / UI 고퀄리티(표 11)
+4. **A·B:** ~~관리사무소 선반·의자 콜라이더(표 1)~~ ✅ / 글꼴 남은 칸 연결(표 10, B) / UI 고퀄리티(표 11)
 5. **A·B:** 스토리 전달 결정(아래 "A·B 상의할 것") → 인트로 자막
-6. **A·B:** 안 쓰는 파일 정리(⚠️ 항목 B 확인), Credits의 "Python으로 직접 제작" 중 AI(Claude)로 만든 것 확인
+6. **A·B:** 안 쓰는 파일 정리(B 것 ✅ 11/24, A의 ✅ 목록은 A가 지우기 — 11/24 B 검사에서도 전부 안 씀 확인), Credits AI 표기(B 것 ✅ 11/24 "AI 제작 — Claude", A의 꽃무늬 벽지는 A가 확인)
 7. 11/27 영상·캡처 → 11/28 PPT → 11/29 교차 테스트·리허설 → 11/30 제출 점검·미리 제출
 
 **Git 약속:** `Assets/Settings/GV_RPAsset.json`은 Unity가 열 때마다 날짜 줄을 붙이는 템플릿 파일 → **커밋하지 말고 pull 전에 `git restore`**. SampleScene은 한 사람씩 (수정 전 서로 알리기)
@@ -234,14 +234,14 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 ## 안 쓰는 파일 정리 (11/22 A가 조사만 함, 아직 안 지움 — 동결 후 정리 예정)
 저장된 SampleScene 기준으로 씬·프리팹·재질 참조를 따라가 본 결과. **지울 때는 반드시 Unity Project 창에서**(.meta 같이), 지운 뒤 통플레이로 Missing 경고 확인, Credits 줄도 정리.
 - ✅ **지워도 됨 (A가 넣은 것)**: Audio 25개(`breath_calm_b`, `breath_heavy_a`, `footstep_concrete_001~004`, `footstep_snow_001~004`, `creak2·3`, `doorClose_2·3`, `doorOpen_2`, `door_break_b`, `door_knock_b`, `impactMetal_light_001~004`, `impactWood_medium_001~004`) / 안 놓은 Poly Haven: `korean_public_payphone_01`, `metal_trash_can`, `power_box_01`(모델·텍스처·재질) + 프리팹 `Prop_Payphone`·`Prop_TrashCan`·`Prop_PowerBox` / `portable_cassette_player_alpha_1k.png`, `wall_clock_glass_alpha_1k.png` / 재질 `Interior_Linoleum`
-- ⚠️ **B에게 확인 (B가 넣은 것)**: `Textures/Walls/corridor_wall_basecolor·normal.png`(17.5MB, 재질에 연결 안 됨), `cracked_concrete_wall_*`, `Graffiti/graf_bosanghara·churipgeumji·jipjuin_x·nagara`, `Sprays/gongga_spray.png`, `car_paint_white.jpg`, `Audio/Story/brother_musicbox.ogg`, 재질 `maker material`·`wall_concrete(_long/_short)`·`wall_wallpaper_long/short`·`clue_cassette_material`·`clue_photo_material`·`lamp_tube`·`car_white`·`wardrobe_inside`·`gongga_spray`·`graf_bosanghara`·`graf_nagara`, 프리팹 `street_lamp.prefab`(`StreetLamp`와 중복?)
+- ✅ **B 정리(11/24)**: B가 넣은 ⚠️ 목록을 GUID 참조 검사(씬·프리팹·재질·모델 .meta·스크립트·.mtl 이름까지)로 다시 확인 → 26개 모두 아무 데서도 안 씀 → `delete_unused_B.bat`(git rm, .meta 함께)로 지움, Credits에서 오르골·Cracked Concrete·"공가" 스프레이 항목 삭제. **남김**: `lamp_tube.mat`(검사엔 안 씀이지만 `lamp_fluorescent.mtl`의 재질 이름과 같아 OBJ가 이름으로 찾을 수 있음), `Interior_Linoleum.mat`(A 재질, A가 판단). 지운 것: `corridor_wall_basecolor·normal`, `cracked_concrete_wall_*` 3장, `Graffiti/graf_bosanghara·churipgeumji·jipjuin_x·nagara`, `Sprays/gongga_spray.png`, `car_paint_white.jpg`, `brother_musicbox.ogg`, 재질 `maker Material`·`wall_concrete(_long/_short)`·`wall_wallpaper_long/short`·`clue_cassette_material`·`clue_photo_material`·`car_white`·`wardrobe_inside`·`sprays/gongga_spray`·`graf_bosanghara`·`graf_nagara`, 프리팹 `street_lamp.prefab`
 - ❌ **지우면 안 됨 (검사엔 안 씀으로 나오지만 필요)**: 모든 `.mtl`(OBJ 짝 파일), `Models/Brother/Texture/*`(동생 모델이 이름으로 찾아 씀), `Fonts/OFL.txt`(글꼴 라이선스), `Scenes/Test_A`(A 테스트 씬), `TutorialInfo`·`Readme.asset`·`Settings`(템플릿 제공)
 
 ## 알려진 문제
 **(11/24 A·B 통플레이 메모)** — 🟡 = 고쳤지만 Unity 테스트 전, ⬜ = 아직
 | # | 내용 | 누가 | 메모 |
 |---|---|---|---|
-| 1 | 1층 관리사무소 안에서 앞으로 안 움직이는 곳 없애기 | A·B | 🟡 **B가 씬 파일로 원인 후보 찾음(11/24)**: `Prop_SteelShelves`(-15.7, 0, 5.2)·`Prop_Chair`(-11.17, 0, 6.73)가 Rotation X -90으로 눕혀져 있어 **Box Collider도 같이 누움** → 바닥에 높이 25~28cm 판(선반: x -15.7~-13.6, z 4.6~5.8)이 깔려 못 넘어감. 모델은 서 있는데 콜라이더만 누웠으면 콜라이더 Size Y↔Z 바꾸고 Center (0, 0, Z/2) (선반: Size (1.097, 0.502, 2.141), Center (0, 0, 1.07)) / 모델도 쓰러져 있으면 Rotation (0, 90, 0)으로 세우기 → NavMesh 다시 Bake |
+| 1 | 1층 관리사무소 안에서 앞으로 안 움직이는 곳 없애기 | A·B | ✅ **B 수정(11/24 수정1)**: 눕혀 놓은 `Prop_SteelShelves`(-15.7, 0, 5.2)·`Prop_Chair`(-11.17, 0, 6.73)의 Box Collider를 모델에 맞게 세움(선반 Size (1.097, 0.502, 2.141) Center (0, 0, 1.07) → 실제 높이 0~2.14m, 의자 Size Y 0.675 Z 1.006 Center Z 0.5 → 0~1.0m) + NavMesh 다시 Bake. 다음 통플레이 때 관리사무소를 한 바퀴 걸어서 확인 |
 | 2 | 2층에 올라오자마자 "레버를 올려야 한다" 안내 띄우기 + 레버를 올리면 화면 고정 | B(안내)·A(화면 고정) | ✅ **안내 `Hint_Lever` B 완료(11/24 수정1, A 확인)** / 🟡 **화면 고정 A 스크립트 완료(11/24), 테스트 전**: `Floor2Event` 새 칸 `Lock View During Event`(켜짐) — 레버를 올린 순간 레버를 놓고 걷기·마우스 멈춤 → 1.2초 동안 고개가 괴물(Monster_2F) 가슴 쪽으로 돌아감 → 괴물이 걸어와도 계속 따라 봄 → "숨어라"와 동시에 다시 움직임. 체크포인트 2에서 다시 시작할 때도 같음. `PlayerLook.SetLook/Pitch`, `PlayerInteract.ReleaseGrab` 추가 |
 | 2-1 | 불이 다 켜진 뒤 "숨어라"까지 너무 김 (약 4.7초) | A (씬 값) | ⏸ **B가 씬 작업을 끝내고 push한 뒤** A가 pull → `Floor2Event` **Flicker Start Delay 1.5 → 0.7**, **Flicker Time 2.5 → 1.5** (약 2.9초) → 커밋·push. 씬 동시 수정 충돌 방지 |
 | 2-2 | 레버를 올리고 불이 켜지기 전에 2층 괴물이 조금 움직이다 멈춤 | A | 🟡 **A 스크립트 완료(11/24), 테스트 전**: `Floor2Event`가 괴물을 보이게 할 때 AI뿐 아니라 **NavMeshAgent도 꺼 둠** → 출발(마지막 센서등 + Monster Start Delay) 순간에 Agent → AI 순서로 켬. → (11/24 테스트) 그래도 움직임 → 원인은 모델 기본 Idle 동작이 몸을 앞뒤로 움직이는 것 → 출발 전까지 **Animator 재생 속도 0**(첫 자세로 정지), 출발하면 다시 재생. 다시 테스트 필요 |
@@ -250,9 +250,9 @@ B도 11/9 주 일(2층 연출·단서 UI·지하 맵·바깥 1차)을 못 해서
 | 5 | 괴물이 너무 느림 | A | 🟡 **A 완료(11/24), 테스트 전**: `Monster` 프리팹 Patrol 1.2 → **1.6**, Investigate 2.2 → **3**, Chase 3.5 → **4.3** (플레이어 걷기 3 < 추격 4.3 < 달리기 5.5 → 걸으면 잡히고 뛰면 도망). 씬의 Monster·Monster_2F·Monster_B1에 속도 덮어쓰기 없음 → 셋 다 바뀜 |
 | 6 | 괴물이 소리를 듣는 범위가 너무 작음 | A | 🟡 **A 완료(11/24), 테스트 전**: `MonsterAI` 새 칸 **Hearing Multiplier = 1.5** (소리 크기 × 1.5 거리까지 들음: 달리기 6 → 9m, 물건 떨어짐 8 → 12m, 셔터 20 → 30m). 다른 층 소리는 그대로 무시 |
 | 7 | 마지막(지하) 도망쳐 나올 때 쫓기는 배경음 추가 | A | 🟡 **A 완료(11/24), 테스트 전**: `BrotherEncounter` 새 칸 **Chase Music Until End**(켜짐) — "도망쳐"와 함께 추격 음악이 켜져 엔딩까지 계속(괴물이 놓쳐도 안 꺼짐), 체크포인트 4 재시작도 같음. 엔딩 화면이 줄여 끔 (B 파일이지만 칸 하나만 추가) → (11/24 테스트) 중간에 끊김 → `chase_loop.ogg` 끝에 4초 무음이 있었음 → 잘라 냄(18.7초 → 14.25초), 다시 테스트 필요 |
-| 8 | 타이틀 화면이 반투명이라 허술해 보임 | B | 🟡 B(11/24) 코드 완료, Unity 확인 전: 불투명 + 배경 그림 `title_background`(게임 시작 지점 캡처를 보정, 302호 불빛, 은은하게 천천히 확대) + 버튼 3개 "시작하기 / 조작법 / 그만하기", 조작법 표(키·설명은 Inspector 배열). Background Brightness 0.85. 글꼴은 후보만 정함(제목 동해독도 + 본문 송명 추천) |
-| 9 | 2층 도착 "레버를 올려야 한다", 3층 체크포인트 "302호 열쇠 → 보일러실" 안내 | B | 🟡 B(11/24) 배치: TutorialHint 복사 — `Hint_Lever`(17.6, 4.0, 0.9) Size (3.6, 2.4, 2), Skip 2 / `Hint_Key`(15, 6.8, 1) Size (2, 2.4, 2), Skip 4 |
-| 10 | 글꼴 바꾸기: 경고 문구 = 검은고딕, 나머지 = 동해독도 | B (A 파일 2개 한 줄씩) | 🟡 B(11/24) 코드 완료, Unity 확인 전: `UIStyle`에 **Warning Font**(경고)·**Hanja Font**(空家, 동해독도·검은고딕에 한자가 없음) 칸 + `UIStyle.Warning(크기)`·`UIStyle.Hanja(크기, 색)` 추가. "숨어라"(**A의 `Floor2Event` 518줄**)·"잡혔다"(**A의 `PlayerDeath` 310줄**)·"도망쳐"(`BrotherEncounter`)를 `Title` → `Warning`으로 바꿈, 타이틀·엔딩 "空家"는 `Hanja`. Player 프리팹 UIStyle: Regular·Bold·Black = `EastSeaDokdo-Regular`, Warning = `BlackHanSans-Regular`, Hanja = `NotoSerifKR-Regular`. 지하 축문 단서 제목 "축문(祝文)" → "축문"(한자 없음). 글자 크기는 화면 보고 조절 → (11/24 A) 동해독도가 작아 보여서 `UIStyle` 새 칸 **Main Font Scale = 1.3**(본문·강조·제목 글꼴 크기 배율, 경고·한자는 그대로). Player 프리팹 UIStyle에서 조절 |
+| 8 | 타이틀 화면이 반투명이라 허술해 보임 | B | ✅ **B 완료(11/24 수정3 코드, b6e894b 씬에 배경 그림 연결)**: 불투명 + 배경 그림 `title_background`(게임 시작 지점 캡처를 보정, 302호 불빛, 은은하게 천천히 확대) + 버튼 3개 "시작하기 / 조작법 / 그만하기", 조작법 표(키·설명은 Inspector 배열). Background Brightness 0.85. 글꼴은 11번(동해독도) |
+| 9 | 2층 도착 "레버를 올려야 한다", 3층 체크포인트 "302호 열쇠 → 보일러실" 안내 | B | ✅ **B 배치(11/24 수정1, 2번 표에서 A 확인)**: TutorialHint 복사 — `Hint_Lever`(17.2, 4.0, 1, 11/24 저녁 위치 조정) Size (3.6, 2.4, 2), Skip 2 / `Hint_Key`(15, 6.8, 1) Size (2, 2.4, 2), Skip 4 |
+| 10 | 글꼴 바꾸기: 경고 문구 = 검은고딕, 나머지 = 동해독도 | B (A 파일 2개 한 줄씩) | 🟡 **절반 완료(11/24 수정4)**: 글꼴 파일 2개·OFL·Credits 추가, Player 프리팹 UIStyle의 Regular·Bold·Black = `EastSeaDokdo-Regular` 연결 완료, A가 동해독도 글자 크기 배율 추가(708730f). **남은 것(B): Player 프리팹 UIStyle의 Warning Font = `BlackHanSans-Regular`, Hanja Font = `NotoSerifKR-Regular`가 아직 비어 있음(프리팹 저장 후 push) / 지하 축문 단서 제목 "축문(祝文)" → "축문"** · `UIStyle`에 **Warning Font**(경고)·**Hanja Font**(空家, 동해독도·검은고딕에 한자가 없음) 칸 + `UIStyle.Warning(크기)`·`UIStyle.Hanja(크기, 색)` 추가. "숨어라"(**A의 `Floor2Event` 518줄**)·"잡혔다"(**A의 `PlayerDeath` 310줄**)·"도망쳐"(`BrotherEncounter`)를 `Title` → `Warning`으로 바꿈, 타이틀·엔딩 "空家"는 `Hanja`. Player 프리팹 UIStyle: Regular·Bold·Black = `EastSeaDokdo-Regular`, Warning = `BlackHanSans-Regular`, Hanja = `NotoSerifKR-Regular`. 지하 축문 단서 제목 "축문(祝文)" → "축문"(한자 없음). 글자 크기는 화면 보고 조절 → (11/24 A) 동해독도가 작아 보여서 `UIStyle` 새 칸 **Main Font Scale = 1.3**(본문·강조·제목 글꼴 크기 배율, 경고·한자는 그대로). Player 프리팹 UIStyle에서 조절 |
 | 11 | UI 고퀄리티로 만들기 | A | ⬜ 해야 함 |
 
 - (11/22 A) **분전함이 두 겹으로 보임** → A의 `Model_PowerBox`와 B의 `breaker_plate`가 겹침 → `Breaker` 프리팹에서 A 모델 뺌
