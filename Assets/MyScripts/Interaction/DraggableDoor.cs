@@ -30,6 +30,9 @@ public class DraggableDoor : MonoBehaviour, IInteractable
     [Tooltip("(11/20) 이 열쇠를 가지고 잡으면 잠금이 풀린다. 비워 두면 열쇠로 못 여는 문. 줍는 열쇠(ItemPickup)의 Key Name과 똑같이. 예: 보일러실 열쇠")]
     public string requiredKey = "";
 
+    [Tooltip("(11/25) 잠겨 있을 때 띄울 글. 비워 두면 \"잠겨 있다\" (열쇠 문이면 \"잠겨 있다. ○○가 필요하다\")")]
+    public string lockedMessage = "";
+
     [Tooltip("열쇠로 열 때 찰칵 소리 (없어도 됨). 예: Assets/Audio/Furniture/metalLatch")]
     public AudioClip unlockClip;
 
@@ -140,7 +143,14 @@ public class DraggableDoor : MonoBehaviour, IInteractable
         {
             this.PlaySound(this.lockedSound);
             // 열쇠로 열 수 있는 문이면 무슨 열쇠가 필요한지 알려 준다
-            PlayerKeys.ShowMessage(this.requiredKey != "" ? "잠겨 있다. " + this.requiredKey + "가 필요하다" : "잠겨 있다");
+            if (this.lockedMessage != "")
+            {
+                PlayerKeys.ShowMessage(this.lockedMessage);   // (11/25) 문마다 다른 글 (예: 비상구)
+            }
+            else
+            {
+                PlayerKeys.ShowMessage(this.requiredKey != "" ? "잠겨 있다. " + this.requiredKey + "가 필요하다" : "잠겨 있다");
+            }
             return;
         }
 

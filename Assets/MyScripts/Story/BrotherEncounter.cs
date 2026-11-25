@@ -59,6 +59,12 @@ public class BrotherEncounter : MonoBehaviour
     [Tooltip("(11/24) 체크하면 추격이 시작될 때부터 엔딩까지 쫓기는 음악(TensionMusic 추격 음악)이 계속 나온다. 괴물이 잠깐 놓쳐도 안 꺼짐")]
     public bool chaseMusicUntilEnd = true;
 
+    [Header("비상구 잠금 (11/25)")]
+    [Tooltip("동생을 만나기 전에는 잠가 두고, 추격이 시작될 때 여는 문의 이름 (씬의 비상구 문). 비워 두면 안 잠금")]
+    public string exitDoorName = "Door_Exit";
+    [Tooltip("비상구가 잠겨 있을 때 띄울 글")]
+    public string exitLockedMessage = "비상구가 잠겨 있다. 아직 나갈 수 없다";
+
     [Header("다시 시작")]
     [Tooltip("이 번호 이상의 체크포인트에서 다시 시작하면 자막 없이 바로 추격 (4 = 지하 체크포인트)")]
     public int retryFromCheckpoint = 4;
@@ -82,6 +88,7 @@ public class BrotherEncounter : MonoBehaviour
     private PlayerInteract playerInteract;
     private PlayerDeath playerDeath;
     private NoiseSystem noiseSystem;
+    private DraggableDoor exitDoor;   // (11/25) 동생을 만나기 전까지 잠가 두는 비상구
 
     // 강의 05장 실행 순서: Awake는 모든 Start보다 먼저 불린다.
     // PlayerDeath.Start가 Checkpoint.isRespawning을 false로 되돌리기 전에 읽어 둔다. (Floor2Event와 같은 방식)
@@ -113,6 +120,26 @@ public class BrotherEncounter : MonoBehaviour
         if (this.lookTarget == null && this.brother != null)
         {
             this.lookTarget = this.brother.transform;
+        }
+
+        // (11/25) 지하에 내려오자마자 비상구로 나가 버리지 않게, 동생을 만나기 전까지 잠가 둔다
+        // 강의 04장: Find는 Start()에서 한 번만
+        if (this.exitDoorName != "")
+        {
+            GameObject doorObject = GameObject.Find(this.exitDoorName);
+            if (doorObject != null)
+            {
+                this.exitDoor = doorObject.GetComponentInChildren<DraggableDoor>();
+            }
+            if (this.exitDoor != null)
+            {
+                this.exitDoor.isLocked = true;
+                this.exitDoor.lockedMessage = this.exitLockedMessage;
+            }
+            else
+            {
+                Debug.LogWarning("[BrotherEncounter] 비상구 문(" + this.exitDoorName + ")을 못 찾아서 잠그지 못했습니다.");
+            }
         }
 
         // 연출을 이미 봤고 지하 체크포인트에서 다시 시작 → 동생 없이 바로 추격
@@ -202,6 +229,13 @@ public class BrotherEncounter : MonoBehaviour
     // 괴물을 켜고, 0.5초 뒤(괴물의 Start가 끝난 뒤) 플레이어 자리에서 큰 소리를 낸다
     private IEnumerator StartChase()
     {
+        // (11/25) 추격이 시작되면 비상구가 열린다 (다시 시작해서 바로 추격할 때도 여기를 지난다)
+        if (this.exitDoor != null)
+        {
+            this.exitDoor.isLocked = false;
+            this.exitDoor.lockedMessage = "";
+        }
+
         for (int i = 0; i < this.activateAfter.Length; i++)
         {
             if (this.activateAfter[i] != null)
