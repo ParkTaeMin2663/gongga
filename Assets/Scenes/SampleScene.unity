@@ -16766,6 +16766,9 @@ MonoBehaviour:
   - {fileID: 1284567301}
   noiseLoudness: 40
   chaseMusicUntilEnd: 1
+  exitDoorName: Door_Exit
+  exitLockedMessage: "\uBE44\uC0C1\uAD6C\uAC00 \uC7A0\uACA8 \uC788\uB2E4. \uC544\uC9C1
+    \uB098\uAC08 \uC218 \uC5C6\uB2E4"
   retryFromCheckpoint: 4
   retryDelay: 2
 --- !u!65 &857713380
@@ -24391,6 +24394,14 @@ PrefabInstance:
     - target: {fileID: 122573692787027670, guid: 3cd1bfc54c1c22e4dbdf4ba371389fa0, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 453651659849537703, guid: 3cd1bfc54c1c22e4dbdf4ba371389fa0, type: 3}
+      propertyPath: chaseSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 453651659849537703, guid: 3cd1bfc54c1c22e4dbdf4ba371389fa0, type: 3}
+      propertyPath: alwaysChase
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 453651659849537703, guid: 3cd1bfc54c1c22e4dbdf4ba371389fa0, type: 3}
       propertyPath: patrolPoints.Array.size
@@ -39881,6 +39892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1878199069}
+  - component: {fileID: 1878199070}
   m_Layer: 0
   m_Name: Brother
   m_TagString: Untagged
@@ -39904,6 +39916,22 @@ Transform:
   - {fileID: 833570320}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1878199070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878199068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d51023ebc37d93a46be5468cf9b4b502, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BrotherLook
+  basementY: -1.5
+  lookDistance: 40
+  turnSpeed: 720
+  yawOffset: 0
 --- !u!1 &1888600437
 GameObject:
   m_ObjectHideFlags: 0

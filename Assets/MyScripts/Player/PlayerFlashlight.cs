@@ -210,39 +210,13 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
 
-        // (11/26 A) 손전등 모양 아이콘 + 5칸 막대. 20% 아래면 빨갛게 깜빡인다. 크기는 화면에 맞춤(UIStyle.Size)
+        // (11/26 B) 사용자 요청으로 예전 막대 하나 방식으로 되돌림 (A의 아이콘 + 5칸 방식 대신)
         float rate = this.battery / 100f;
-        bool low = this.battery < this.lowBattery;
-        float blink = low ? 0.55f + 0.45f * Mathf.Sin(Time.time * 6f) : 1f;
-        Color fill = low ? new Color(0.85f, 0.2f, 0.15f, 0.9f * blink) : new Color(1f, 0.85f, 0.5f, 0.85f);
-
-        float unit = UIStyle.Size(4);
-        float left = UIStyle.Size(28);
-        float h = unit * 4f;
-        float y = Screen.height - UIStyle.Size(30) - h;
-
-        // 아이콘: 몸통(긴 네모) + 머리(조금 더 높은 네모)
-        GUI.color = low ? fill : new Color(0.86f, 0.85f, 0.82f, 0.7f);
-        GUI.DrawTexture(new Rect(left, y + unit, unit * 5f, unit * 2f), this.whiteTexture);
-        GUI.DrawTexture(new Rect(left + unit * 5f, y + unit * 0.3f, unit * 2f, unit * 3.4f), this.whiteTexture);
-
-        // 막대 5칸 (마지막 칸은 남은 만큼만 채움)
-        float x = left + unit * 9f;
-        float cellWidth = unit * 5f;
-        float cellGap = unit * 0.8f;
-        int cells = 5;
-        for (int i = 0; i < cells; i++)
-        {
-            Rect cell = new Rect(x + (cellWidth + cellGap) * i, y, cellWidth, h);
-            GUI.color = new Color(1f, 1f, 1f, 0.15f);
-            GUI.DrawTexture(cell, this.whiteTexture);
-            float cellFill = Mathf.Clamp01(rate * cells - i);   // 이 칸이 얼마나 찼는지 0~1
-            if (cellFill > 0f)
-            {
-                GUI.color = fill;
-                GUI.DrawTexture(new Rect(cell.x, cell.y, cell.width * cellFill, cell.height), this.whiteTexture);
-            }
-        }
+        Rect back = new Rect(20f, Screen.height - 34f, 90f, 10f);
+        GUI.color = new Color(1f, 1f, 1f, 0.25f);
+        GUI.DrawTexture(back, this.whiteTexture);
+        GUI.color = this.battery < this.lowBattery ? new Color(0.9f, 0.25f, 0.2f, 0.9f) : new Color(1f, 0.85f, 0.5f, 0.8f);
+        GUI.DrawTexture(new Rect(back.x, back.y, back.width * rate, back.height), this.whiteTexture);
         GUI.color = Color.white;
     }
 }

@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e988fce7a758b44cb16caa181251271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoiseSystem
-  showDebug: 1
+  showDebug: 0

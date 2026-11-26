@@ -266,7 +266,7 @@
   - `Animator` + `Animator.CrossFade`, `applyRootMotion` (MonsterAI 괴물 동작, 11/18 허락)
   - `Application.Quit` / `UnityEditor.EditorApplication.isPlaying` (PlayerDeath "그만하기", 11/18 허락)
   - 강의에서 직접 다루진 않았지만 강의 기능을 보조하는 작은 API (설명하면서 사용):
-    `GetComponentInParent/InChildren`(계층구조에서 찾기), `Mathf.Lerp/LerpAngle/MoveTowards/Clamp/Atan2/PingPong`(PingPong: 타이틀 배경 천천히 확대, 11/24),
+    `GetComponentInParent/InChildren`(계층구조에서 찾기), `Mathf.Lerp/LerpAngle/MoveTowards/MoveTowardsAngle/DeltaAngle/Clamp/Atan2/PingPong`(MoveTowardsAngle·DeltaAngle: 지하 동생이 플레이어 쪽으로 천천히 돌기, 11/26), `Renderer.bounds.center`(동생 몸 가운데를 도는 축으로, 11/26)(PingPong: 타이틀 배경 천천히 확대, 11/24),
     `Vector3.Lerp/MoveTowards/Distance`, `Quaternion` 회전 곱하기, `GUIStyle`·`Font`·`GUI.Button`·`Rect.Contains`·`Event.current`(OnGUI 꾸미기, UIStyle),
     `ColorUtility`(글자 색), `List<string>`(PlayerKeys 열쇠 목록, 11/20), `[TextArea]`(단서·자막 여러 줄 입력), `GUI.DrawTexture`+`Texture2D.whiteTexture`(화면 어둡게·까맣게), `ScaleMode.ScaleAndCrop`(타이틀 배경 그림을 화면에 꽉 채우기, 11/24), `Keyboard.current.anyKey`·`Mouse.current.leftButton.wasPressedThisFrame`(인트로 자막 아무 키로 건너뛰기, 06장 Mouse.current 방식, 11/24), `GUI.depth`(인트로 검은 화면을 다른 OnGUI보다 위에, 11/24), `AudioSource.clip/time/isPlaying/volume`(괴물 목소리 바꾸기, BGM 서서히 줄이기), `NavMeshAgent.velocity/remainingDistance/isStopped/ResetPath/enabled`, `Animator.speed`(2층 괴물 출발 전 동작 멈춤, 11/24), `AudioSource.minDistance`(장롱 안에서 괴물 발소리 크게, 11/24), `isActiveAndEnabled`(켜져 있는 괴물인지, 11/24),
     `#if UNITY_EDITOR`, `FindAnyObjectByType`(RoarScare가 3분에 한 번 괴물 찾기, 11/22 FindFirstObjectByType에서 교체), Unity 외부 도구(Blender로 GLB→FBX 변환, Mixamo 동작, ffmpeg로 소리 가공)

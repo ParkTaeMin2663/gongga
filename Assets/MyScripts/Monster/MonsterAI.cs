@@ -100,6 +100,12 @@ public class MonsterAI : MonoBehaviour
     [Tooltip("체크하면 순찰 지점을 처음부터 끝까지 한 번만 지나가고, 마지막 지점에 도착하면 사라진다 (3층 괴물은 끔)")]
     public bool patrolOnce = false;
 
+    [Header("계속 쫓기 (지하 최종 추격용, 11/26)")]
+    [Tooltip("체크하면 소리를 내지 않아도 같은 층에 있는 플레이어를 계속 쫓는다 (멀어져도 놓치지 않음). 장롱에 숨으면 그때만 놓친다. 지하 Monster_B1만 켠다")]
+    public bool alwaysChase = false;
+    [Tooltip("계속 쫓기일 때 이 거리(m) 안이면 쫓는다. 지하 전체를 덮게 크게")]
+    public float alwaysChaseDistance = 60f;
+
     [Header("발소리")]
     [Tooltip("괴물 몸에 붙은 Audio Source (3D). 비워 두면 발소리 없음")]
     public AudioSource footstepSound;
@@ -274,7 +280,9 @@ public class MonsterAI : MonoBehaviour
         }
 
         // 어느 상태든 플레이어가 바로 옆에 있으면(숨지 않았으면) 기척을 느끼고 추격
-        if (this.CurrentState != State.Chase && this.CurrentState != State.BashDoor && this.CanSensePlayer(this.senseDistance))
+        // (11/26) 계속 쫓기(alwaysChase)면 같은 층 어디에 있든 바로 추격
+        float senseRange = this.alwaysChase ? this.alwaysChaseDistance : this.senseDistance;
+        if (this.CurrentState != State.Chase && this.CurrentState != State.BashDoor && (this.alwaysChase == false || this.CurrentState != State.Lurk) && this.CanSensePlayer(senseRange))
         {
             this.ChangeState(State.Chase);
         }
@@ -365,7 +373,9 @@ public class MonsterAI : MonoBehaviour
         }
 
         // 너무 멀어지면 놓친다 (소리가 나면 ListenForNoise가 다시 쫓게 한다)
-        if (distance > this.loseDistance || this.IsSameFloor(this.player.position) == false)
+        // (11/26) 계속 쫓기면 놓치는 거리를 alwaysChaseDistance로 (사실상 안 놓침)
+        float lose = this.alwaysChase ? this.alwaysChaseDistance : this.loseDistance;
+        if (distance > lose || this.IsSameFloor(this.player.position) == false)
         {
             this.ChangeState(State.Investigate);   // targetPosition = 마지막으로 본 위치
             return;

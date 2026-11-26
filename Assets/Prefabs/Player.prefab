@@ -371,6 +371,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHide
   enterHoldTime: 1
   exitHoldTime: 0
+  goneMessage: "\uBC1C\uC18C\uB9AC\uAC00 \uBA40\uC5B4\uC84C\uB2E4. \uC774\uC81C \uB098\uAC00\uB3C4
+    \uB420 \uAC83 \uAC19\uB2E4"
+  monsterNearDistance: 8
+  monsterGoneDistance: 14
   playerInteract: {fileID: 0}
   playerMovement: {fileID: 0}
   playerLook: {fileID: 0}
@@ -396,6 +400,29 @@ MonoBehaviour:
   screamTime: 1
   shakeAmount: 0.04
   jumpscareSound: {fileID: 8300000, guid: d6d76f188e8b43e284c6934f166f9ed2, type: 3}
+  freezeTime: 0.35
+  lookUpPitch: -12
+  impactFlash: 0.8
+  shakeAngle: 4
+  collapseTime: 0.6
+  collapseHeight: 0.3
+  collapseRoll: 75
+  collapsePitch: -35
+  lyingTime: 0.3
+  fallSound: {fileID: 0}
+  strobeCount: 3
+  staticAmount: 0.8
+  menuDelay: 1.5
+  deathWhispers: []
+  floorHints:
+  - "\uB6F0\uBA74 \uBC1C\uC18C\uB9AC\uAC00 \uD06C\uAC8C \uB09C\uB2E4. \uAD34\uBB3C\uC740
+    \uC18C\uB9AC\uB85C \uC0AC\uB0E5\uD55C\uB2E4."
+  - "\uAD34\uBB3C\uC740 \uB208\uC774 \uC5C6\uB2E4. \uC228\uC5B4\uC11C \uC228\uC744
+    \uC8FD\uC5EC\uB77C."
+  - "\uC7A5\uB871 \uC548\uC5D0 \uC228\uC73C\uBA74 \uAD34\uBB3C\uC740 \uCC3E\uC9C0
+    \uBABB\uD55C\uB2E4. \uBB3C\uAC74\uC744 \uB358\uC838 \uB530\uB3CC\uB824\uB77C."
+  - "\uBA48\uCD94\uBA74 \uC7A1\uD78C\uB2E4. \uBCF4\uC77C\uB7EC\uB97C \uB3CC\uC544
+    \uBE44\uC0C1\uAD6C\uB85C \uB2EC\uB824\uB77C."
   deathSound: {fileID: 0}
   playerMovement: {fileID: 0}
   playerLook: {fileID: 0}
