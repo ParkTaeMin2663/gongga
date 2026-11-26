@@ -31,7 +31,7 @@ public class UIStyle : MonoBehaviour
     public Font hanjaFont;
 
     [Header("글자 크기 (11/24)")]
-    [Tooltip("본문·강조·제목 글꼴(동해독도) 글자 크기 배율. 손글씨 글꼴이라 작아 보여서 키운다. 1 = 그대로. 경고(검은고딕)·한자 글꼴에는 안 곱함")]
+    [Tooltip("동해독도 글꼴(본문·제목·경고) 글자 크기 배율. 손글씨 글꼴이라 작아 보여서 키운다. 1 = 그대로. 한자 글꼴에는 안 곱함. Play 중에 바꿔도 바로 보인다")]
     public float mainFontScale = 1.3f;
 
     // ----- 모두가 쓰는 값 (강의 07장 public static) -----
@@ -60,6 +60,12 @@ public class UIStyle : MonoBehaviour
         mainScale = this.mainFontScale;
     }
 
+    // Play 중 Inspector에서 배율을 바꾸면 바로 보이게 (강의 02장 Update: 매 프레임)
+    private void Update()
+    {
+        mainScale = this.mainFontScale;
+    }
+
     /// <summary>화면 크기에 맞춘 글자 크기. 1080p 기준 크기를 넣으면 화면 높이에 비례해서 커지거나 작아진다.</summary>
     public static int Size(int sizeAt1080)
     {
@@ -71,8 +77,9 @@ public class UIStyle : MonoBehaviour
     {
         GUIStyle style = new GUIStyle();
         style.font = font;                    // null이면 Unity 기본 글꼴
-        // (11/24) 본문·강조·제목 글꼴이면 배율을 곱한다 (경고·한자 글꼴은 그대로)
-        bool isMainFont = font != null && (font == regular || font == bold || font == black) && font != warning && font != hanja;
+        // (11/24) 동해독도 글꼴이면 배율을 곱한다 (한자 글꼴은 그대로)
+        // (11/26) 경고 글꼴도 동해독도가 되어 'font != warning' 조건 때문에 배율이 아예 안 곱해지던 문제 수정
+        bool isMainFont = font != null && (font == regular || font == bold || font == black) && font != hanja;
         float scale = isMainFont ? mainScale : 1f;
         style.fontSize = Size(Mathf.RoundToInt(sizeAt1080 * scale));
         style.normal.textColor = color;
