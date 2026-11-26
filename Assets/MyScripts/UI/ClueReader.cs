@@ -217,9 +217,14 @@ public class ClueReader : MonoBehaviour
         float paperHeight = Screen.height * 0.8f;
         float paperWidth = paperHeight * 0.75f;
         Rect paper = new Rect((Screen.width - paperWidth) / 2f, (Screen.height - paperHeight) / 2f, paperWidth, paperHeight);
+        // (11/26 A) 종이 아래 그림자 → 종이 → 가장자리가 누렇게 바랜 듯 → 얇은 테두리
+        GUI.color = new Color(0f, 0f, 0f, 0.6f);
+        GUI.DrawTexture(new Rect(paper.x + UIStyle.Size(10), paper.y + UIStyle.Size(14), paper.width, paper.height), this.whiteTexture);
         GUI.color = this.paperColor;
         GUI.DrawTexture(paper, this.whiteTexture);
         GUI.color = Color.white;
+        UIStyle.EdgeShade(paper, new Color(0.35f, 0.24f, 0.1f, 0.45f), 0.1f);
+        UIStyle.Frame(paper, new Color(0.3f, 0.2f, 0.1f, 0.5f), 1f);
 
         // 3) 제목 (본명조 Black, 빨간색 — 스프레이 색)
         Rect titleRect = new Rect(paper.x + margin, paper.y + margin * 0.6f, paper.width - margin * 2f, UIStyle.Size(this.fontSize + 8) * 2f);

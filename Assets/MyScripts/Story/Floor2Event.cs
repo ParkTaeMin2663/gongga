@@ -546,6 +546,7 @@ public class Floor2Event : MonoBehaviour
         this.hintStyle = UIStyle.Warning(this.hideHintSize);
         float height = UIStyle.Size(this.hideHintSize) * 1.6f;
         float alpha = 0.55f + 0.45f * Mathf.Sin(Time.time * 3f);
-        UIStyle.Label(new Rect(0f, Screen.height * 0.3f - height / 2f, Screen.width, height), this.hideHint, this.hintStyle, alpha);
+        // (11/26 A) 화면 가장자리가 붉게 맥박치듯 + 글자가 살짝 떨림 (UIStyle.WarningText)
+        UIStyle.WarningText(new Rect(0f, Screen.height * 0.3f - height / 2f, Screen.width, height), this.hideHint, this.hintStyle, alpha);
     }
 }

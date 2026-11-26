@@ -325,7 +325,7 @@ public class BrotherEncounter : MonoBehaviour
         if (this.showRunText)
         {
             Rect rect = new Rect(0f, Screen.height / 2f - UIStyle.Size(90), Screen.width, UIStyle.Size(180));
-            UIStyle.Label(rect, this.runText, UIStyle.Warning(this.runTextSize), this.runAlpha);
+            UIStyle.WarningText(rect, this.runText, UIStyle.Warning(this.runTextSize), this.runAlpha);   // (11/26 A) "숨어라"와 같은 연출
         }
     }
 }

@@ -743,7 +743,7 @@ MonoBehaviour:
   regularFont: {fileID: 12800000, guid: cb52bbcbeb2108341bce6441139a92dc, type: 3}
   boldFont: {fileID: 12800000, guid: cb52bbcbeb2108341bce6441139a92dc, type: 3}
   blackFont: {fileID: 12800000, guid: cb52bbcbeb2108341bce6441139a92dc, type: 3}
-  warningFont: {fileID: 12800000, guid: 74ebf04167043c74d9bf4ddd005a743b, type: 3}
+  warningFont: {fileID: 12800000, guid: cb52bbcbeb2108341bce6441139a92dc, type: 3}
   hanjaFont: {fileID: 12800000, guid: 28b2663ffaf94f94994b2f150f6e27fe, type: 3}
   mainFontScale: 1.3
 --- !u!82 &4242424242424242611

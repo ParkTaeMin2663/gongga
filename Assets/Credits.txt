@@ -3,360 +3,175 @@
  게임 물리와 상호작용 텀 프로젝트
 =====================================================
 
-※ 유료 애셋·유료 리소스는 사용하지 않습니다.
+※ 유료 애셋·유료 리소스는 사용하지 않았습니다. 아래 리소스는 모두 무료 라이선스이거나 팀이 AI로 만든 것입니다.
 ※ 무료 리소스를 추가할 때마다 아래 형식으로 한 항목씩 기록합니다.
 
 [형식]
 - 이름      :
-- 종류      : (사운드 / 텍스처 / 폰트 / 모델 / 스크립트)
-- 사용 위치 : (예: Assets/Audio/door_creak.wav)
-- 출처 URL  :
-- 저작자    :
-- 라이선스  : (예: CC0, CC BY 4.0 — CC BY 계열은 저작자 표기 필수)
+- 종류      : (사운드 / 텍스처 / 모델 / 애니메이션 / 폰트 / 이미지, 가공했으면 "(가공: …)")
+- 출처 URL  : (AI로 만든 것은 "AI 제작 — Claude(Anthropic)")
+- 라이선스  :
+- 저작자    : (CC BY 계열만 — 저작자 표기가 라이선스 조건)
 
 -----------------------------------------------------
 [사운드]
-- 이름      : Impact Sounds (1.0) — 발소리·상자·레버 소리
-- 종류      : 사운드
-- 사용 위치 : Assets/Audio/Footsteps/footstep_concrete_000~004.ogg, footstep_snow_000~004.ogg
-              Assets/Audio/Impacts/impactWood_medium_000~004.ogg, impactMetal_light_000~004.ogg
-              Assets/Audio/Impacts/door_fall.ogg (impactWood_heavy_001 + impactPlank_medium_002)
-              Assets/Audio/Monster/monster_step_0~3.ogg (footstep_concrete_000~003을 낮추고 저음·울림을 더해 가공)
+- 이름      : Impact Sounds (1.0) — 발소리, 상자·나무·금속 부딪히는 소리, 괴물 발소리
+- 종류      : 사운드 (가공: 괴물 발소리는 사람 발소리를 낮추고 저음·울림을 더함, 문짝 떨어지는 소리는 두 소리를 겹침)
 - 출처 URL  : https://kenney.nl/assets/impact-sounds
-- 저작자    : Kenney (www.kenney.nl)
 - 라이선스  : CC0
 
 - 이름      : RPG Audio — 문·서랍·레버 소리
 - 종류      : 사운드
-- 사용 위치 : Assets/Audio/Furniture/doorOpen_1~2, doorClose_1~4, creak1~3, metalClick, metalLatch (.ogg)
 - 출처 URL  : https://kenney.nl/assets/rpg-audio
-- 저작자    : Kenney (www.kenney.nl)
 - 라이선스  : CC0
 
 - 이름      : Wooden_Drawer_open_close_1 (of 2) — 나무 서랍 열기·닫기
-- 종류      : 사운드 (열기·닫기 부분만 잘라 ogg로 변환)
-- 사용 위치 : Assets/Audio/Furniture/drawerOpen_wood.ogg, drawerClose_wood.ogg
+- 종류      : 사운드 (가공: 열기·닫기 부분만 자름)
 - 출처 URL  : https://pixabay.com/sound-effects/household-wooden-drawer-open-close-1-of-2-102552/
-- 저작자    : freesound_community (Pixabay)
-- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+- 라이선스  : Pixabay Content License
 
 - 이름      : Close drawer — 나무 서랍 닫기
-- 종류      : 사운드 (앞 무음 잘라 ogg로 변환)
-- 사용 위치 : Assets/Audio/Furniture/drawerClose_wood2.ogg
+- 종류      : 사운드 (가공: 앞 무음 자름)
 - 출처 URL  : https://pixabay.com/sound-effects/film-special-effects-close-drawer-104761/
-- 저작자    : freesound_community (Pixabay)
-- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+- 라이선스  : Pixabay Content License
 
 - 이름      : 숨소리 4종 — Breathing / Male breathing / Male Heavy Breathing / Heavy breath male
-- 종류      : 사운드 (모노·음량 맞춤·앞뒤 0.25초 페이드, ogg 변환)
-- 사용 위치 : Assets/Audio/Breath/breath_calm_a.ogg, breath_calm_b.ogg, breath_heavy_a.ogg, breath_heavy_b.ogg
+- 종류      : 사운드 (가공: 모노·음량 맞춤·앞뒤 페이드)
 - 출처 URL  : https://pixabay.com/sound-effects/people-breathing-6811/
               https://pixabay.com/sound-effects/people-male-breathing-84775/
               https://pixabay.com/sound-effects/people-male-heavy-breathing-67325/
               https://pixabay.com/sound-effects/people-heavy-breath-male-63980/
-- 저작자    : freesound_community (Pixabay)
-- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+- 라이선스  : Pixabay Content License
 
 - 이름      : 문 두드림·부서짐 — Basement door slam / A door got kicked / Locked door being forced open / Wood Smash 3
-- 종류      : 사운드 (한 번 치는 부분만 자르고 겹쳐서 음량 맞춤, ogg 변환. door_knock_b는 저음 강조판)
-- 사용 위치 : Assets/Audio/Impacts/door_knock.ogg, door_knock_b.ogg, door_break.ogg, door_break_b.ogg
+- 종류      : 사운드 (가공: 한 번 치는 부분만 자르고 겹쳐서 음량 맞춤)
 - 출처 URL  : https://pixabay.com/sound-effects/film-special-effects-basement-door-slam-202981/
               https://pixabay.com/sound-effects/film-special-effects-a-door-got-kicked-579124/
               https://pixabay.com/sound-effects/household-locked-door-being-forced-open-85088/
               https://pixabay.com/sound-effects/film-special-effects-wood-smash-3-170418/
-- 저작자    : alex_jauk, soumages, freesound_community, floraphonic (Pixabay)
-- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+- 라이선스  : Pixabay Content License
 
-- 이름      : 괴물 목소리·비명, 긴장 BGM (Pixabay)
-- 종류      : 사운드
-- 사용 위치 : Assets/Audio/Monster/monster_breath_loop.ogg (Deep Demonic Beast Breathing and Growl — alesiadavina)
-              Assets/Audio/Monster/monster_sniff_loop.ogg (Monster Sniffing Sound Effect, Deep Beast Breathing — alesiadavina)
-              Assets/Audio/Monster/monster_roar.ogg (Low Monster Roar — freesound_community)
-              Assets/Audio/Monster/monster_growl.ogg (Deep Guttural Growl — Dragon Studio, 앞 6초)
-              Assets/Audio/Monster/monster_scream.ogg (Monster Scream 1 — freesound_community)
-              Assets/Audio/Music/hide_heartbeat_loop.ogg (Intense horror music 01 — freesound_community + Sfx6 - Horror Suspense [Hiding - Heartbeat] (loop) — yarzur_ofc, 두 곡을 ffmpeg로 섞음)
-              Assets/Audio/Monster/monster_roar_far.ogg (Monster Roar 02 — freesound_community)
-              Assets/Audio/Music/chase_loop.ogg (Horror Chase Music loop — freesound_community) (11/24 끝 4초 무음을 ffmpeg로 잘라 끊김 없이 반복)
-              Assets/Audio/Music/ambient_loop.ogg (Eerie Suspense Atmosphere — Universfield)
-              (앞쪽 무음 자르기·크기 맞추기·ogg 변환은 ffmpeg로 직접 가공)
+- 이름      : 괴물 목소리·비명, 배경음·긴장 음악
+              Deep Demonic Beast Breathing and Growl / Monster Sniffing Sound Effect, Deep Beast Breathing /
+              Low Monster Roar / Deep Guttural Growl / Monster Scream 1 / Monster Roar 02 /
+              Intense horror music 01 / Sfx6 - Horror Suspense [Hiding - Heartbeat] (loop) /
+              Horror Chase Music loop / Eerie Suspense Atmosphere
+- 종류      : 사운드 (가공: 앞뒤 무음 자르기, 음량 맞춤, "숨어라" 음악은 두 곡을 섞음)
 - 출처 URL  : https://pixabay.com/sound-effects/ (각 제목으로 검색, ID 541145 / 541144 / 97413 / 102957 / 472380 / 45669 / 14890 / 323052 / 67634 / 345816)
-- 라이선스  : Pixabay Content License (무료, 출처 표기 의무 없음)
+- 라이선스  : Pixabay Content License
 
-[텍스처]
-- 이름      : Decrepit Wallpaper
-- 종류      : 텍스처
-- 사용 위치 : Assets/Textures/Walls/decrepit_wallpaper_*_1k.jpg (재질 wall_wallpaper)
-- 출처 URL  : https://polyhaven.com/a/decrepit_wallpaper
-- 저작자    : Poly Haven
+- 이름      : 환경음·효과음 5종 — 겨울바람, 보일러 웅웅, 건물 삐걱임, 방화 셔터 끼이익, 엔딩 피아노 (AI 제작)
+- 종류      : 사운드
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python으로 소리를 합성하고 ffmpeg로 울림·크기 조절, 외부 리소스 없음)
+- 라이선스  : 팀 소유 (AI 생성물)
+
+[텍스처 · 이미지]
+- 이름      : Poly Haven 텍스처 11종 — decrepit_wallpaper, linoleum_brown, ceiling_interior, concrete_floor_worn_001,
+              peeling_painted_wall, rusty_painted_metal, dirty_tiles, concrete_wall_008, damaged_concrete_floor,
+              painted_concrete, concrete_floor_02
+- 종류      : 텍스처 (가공: 노멀 맵 EXR을 JPG로 변환)
+- 출처 URL  : https://polyhaven.com/a/<이름> (예: https://polyhaven.com/a/decrepit_wallpaper)
 - 라이선스  : CC0
 
-- 이름      : 스프레이 낙서 3종 (AI 제작)
+- 이름      : 꽃무늬 벽지 텍스처 (AI 제작)
 - 종류      : 텍스처
-- 사용 위치 : Assets/Textures/Sprays/graffiti_X·graffiti_left·graffiti_03.png (X 표시 / 지그재그·화살표 / 엉킨 선)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 그림, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python으로 그린 반복 무늬, 외부 이미지 사용 안 함)
 - 라이선스  : 팀 소유 (AI 생성물)
 
-- 이름      : "보일러실" 스프레이 글씨 (AI 제작)
+- 이름      : 스프레이 낙서·글씨 — "공가"·"보일러실" 스프레이, 낙서 3종, 펜스 낙서 3종 (AI 제작)
 - 종류      : 텍스처
-- 사용 위치 : Assets/Textures/Sprays/boiler_spray.png (재질 boiler_spray, 1층 지하 문)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 획마다 스프레이 점을 찍어 그림, 폰트·외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python으로 직접 그림, 외부 리소스 없음)
 - 라이선스  : 팀 소유 (AI 생성물)
 
-- 이름      : 눈 바닥 텍스처 (AI 제작)
-- 종류      : 텍스처 (Base Map + Normal Map, 이어 붙여도 경계 없음)
-- 사용 위치 : Assets/Textures/Snow/snow_basecolor.png, snow_normal.png (재질 snow_ground, 단지 바깥 바닥)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python 노이즈로 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 함석 펜스 텍스처 (AI 제작)
-- 종류      : 텍스처 (Base Map + Normal Map, 골판 무늬·녹물 자국, 이어 붙여도 경계 없음)
-- 사용 위치 : Assets/Textures/Fence/fence_basecolor.png, fence_normal.png (재질 fence_metal, 철거 가림막)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python 노이즈로 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 펜스 스프레이 낙서 3종 (AI 제작)
-- 종류      : 텍스처 (투명 배경 PNG, 글꼴 없이 붓질로 그림)
-- 사용 위치 : Assets/Textures/Graffiti/graf_cheolgeo·graf_302_arrow·graf_scribble.png (철거, 302↑, 낙서 — 안 쓰는 4종은 11/24 정리)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 그림, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 단지 바깥 3D 모델 14종 (AI 제작)
-- 종류      : 모델 (.obj) — 철문, 문 기둥, 경비실, 승용차, 1톤 트럭(11/22 차대·앞부분 보강), 앙상한 나무 3종, 화단, 모래판, 그네, 미끄럼틀, 벤치, 가로등
-- 사용 위치 : Assets/Models/Outside/
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 점·면을 직접 계산해 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 단지 바깥 텍스처 (AI 제작)
-- 종류      : 텍스처 (Base Map + Normal Map) — 녹슨 페인트 철 5색, 주차장 아스팔트(주차선·균열·눈), 경비실 벽, 콘크리트, 언 흙, 모래, 나무껍질, 자동차 페인트 3색, "경비실" 간판, 눈송이 파티클
-- 사용 위치 : Assets/Textures/Outside/
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python 노이즈·붓질로 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 아이 신발 2켤레 (AI 제작)
-- 종류      : 모델 (.obj) — 남색 운동화(찍찍이), 흰 고무신
-- 사용 위치 : Assets/Models/Props/shoes_sneaker.obj, shoes_gomusin.obj (302호 현관)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 점·면을 직접 계산해 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 302호 소품 (AI 제작)
-- 종류      : 모델 (.obj) — 아이 이부자리(요·이불·베개), 장난감 묶음(블록·팽이·공·크레파스·딱지), 보일러실 열쇠(꼬리표 포함), 그림 종이 / 텍스처 — 꽃무늬 솜이불, 줄무늬 요, 크레파스 그림, "보일러실" 꼬리표
-- 사용 위치 : Assets/Models/Props/Room302/, Assets/Textures/Room302/
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 생성, 그림·글씨도 직접 그림, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 환경음·효과음 5종 (AI 제작)
-- 종류      : 사운드 — 겨울바람(wind_loop), 보일러 웅웅(boiler_hum), 건물 삐걱임(building_creak), 방화 셔터 끼이익(shutter_screech), 엔딩 피아노(ending_piano)
-- 사용 위치 : Assets/Audio/Ambience/
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 소리를 합성하고 ffmpeg로 울림·크기 조절, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 축문 한지 텍스처 (AI 제작)
+- 이름      : 단지 바깥 텍스처 — 눈 바닥, 함석 펜스, 녹슨 페인트 철, 주차장 아스팔트, 경비실 벽, 콘크리트, 언 흙, 모래, 나무껍질, 자동차 페인트, "경비실" 간판, 눈송이 (AI 제작)
 - 종류      : 텍스처
-- 사용 위치 : Assets/Models/Props/chukmun_paper.png (재질 chukmun_material)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 한지 결·붓 자국 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python 노이즈·붓질로 생성, 외부 리소스 없음)
 - 라이선스  : 팀 소유 (AI 생성물)
 
-[모델]
-- 이름      : Plastic Torch 6V — 손전등 (관리사무소에서 줍기, 왼손에 들기)
-- 종류      : 모델 + 텍스처
-- 사용 위치 : Assets/Models/Props/Flashlight/ (pastic_torch_6v_1k.fbx, diff·nor_gl·ao 텍스처), 프리팹 FlashlightPickup, Player(HeldFlashlight)
-- 출처 URL  : https://polyhaven.com/a/pastic_torch_6v
-- 저작자    : Poly Haven
-- 라이선스  : CC0
-
-- 이름      : D Battery — 건전지
-- 종류      : 모델 (D형 크기로 맞추고 윗면·아랫면/옆면 재질을 나눔. 재질은 직접 만든 색)
-- 사용 위치 : Assets/Models/Props/Battery/battery_d.obj, 프리팹 Assets/Prefabs/Battery
-- 출처 URL  : https://sketchfab.com/3d-models/d-battery-997adbcda4234a0cb89b00adb6e7b0bc
-- 저작자    : hollowmj (Sketchfab)
-- 라이선스  : CC BY 4.0 (저작자 표기 필수)
-
-- 이름      : Old Russian wardrobe in 1983 V 2.0 — 장롱 (숨기)
-- 종류      : 모델 + 텍스처 (OBJ를 미터 단위·앞면 +Z로 변환, 텍스처 4K → 1K로 줄임)
-- 사용 위치 : Assets/Models/Furniture/Wardrobe/ (wardrobe1983.obj, 텍스처 12개), 재질 Assets/Materials/Wardrobe/, 프리팹 Assets/Prefabs/Wardrobe
-- 출처 URL  : https://sketchfab.com/3d-models/old-russian-wardrobe-in-1983-v-20-f0ad9f13bc784d5ebaa81e6956cf5118
-- 저작자    : Paule Gennadievich (Sketchfab @PauleMenson)
-- 라이선스  : CC BY 4.0 (저작자 표기 필수)
-
-- 이름      : Painted Wooden Nightstand
-- 종류      : 모델 (+ 텍스처)
-- 사용 위치 : Assets/Models/Furniture/Nightstand/ (재질 nightstand_material)
-- 출처 URL  : https://polyhaven.com/a/painted_wooden_nightstand
-- 저작자    : Poly Haven
-- 라이선스  : CC0
-
-- 이름      : Cursed Rune Demon (괴물 「집주인」 외형)
-- 종류      : 모델 (+ 텍스처, Idle 동작)
-- 사용 위치 : Assets/Models/Monster/CursedRuneDemon/ (GLB를 Blender로 FBX 변환), Assets/Prefabs/Monster
-- 출처 URL  : https://sketchfab.com/3d-models/cursed-rune-demon-0d2348598de9425b95e3a9a1cb915b79
-- 저작자    : PolyGoreStudio (Sketchfab @Phu.99)
-- 라이선스  : CC BY 4.0 (저작자 표기 필수)
-
-- 이름      : Mixamo 애니메이션 (Walking - Creeping Zombie Walk, Zombie Running, Looking Around, Zombie Attack, Zombie Scream)
-- 종류      : 애니메이션
-- 사용 위치 : Assets/Models/Monster/Animations/Monster_Walk·Run·LookAround·BashDoor·Scream.fbx
-- 출처 URL  : https://www.mixamo.com
-- 저작자    : Adobe Mixamo
-- 라이선스  : Mixamo 이용약관 — 개인·상업 프로젝트에 무료 사용 가능 (로열티 없음)
-
-- 이름      : 제기 그릇·접시, 축문 두루마리 (AI 제작)
-- 종류      : 모델 (.obj)
-- 사용 위치 : Assets/Models/Props/jegi_bowl.obj, jegi_plate.obj, chukmun_scroll.obj (지하 제사상)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 회전체·곡면을 직접 계산해 만듦, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 지하 소품 모델 5종 (AI 제작) — 보일러, 제사상, 놋촛대와 초, 쌀가마니, 배관(밸브·압력계·보온재)
-- 종류      : 모델 (.obj)
-- 사용 위치 : Assets/Models/Props/Basement/old_boiler, altar_table, candle_holder, rice_sack, basement_pipes
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 모델링, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 지하 소품 텍스처 (AI 제작) — 짚 엮음, 새끼줄, 옻칠 나무, 압력계 눈금판, 배관 보온재
+- 이름      : 실내·지하 텍스처 — 축문 한지, 짚 엮음, 새끼줄, 옻칠 나무, 압력계 눈금판, 배관 보온재, 등 유리, 모서리 때, 뿌연 유리 (AI 제작)
 - 종류      : 텍스처
-- 사용 위치 : Assets/Textures/Basement/straw_*, straw_rope_basecolor, altar_wood_*, gauge_face, insulation_basecolor
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python 노이즈·그리기로 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 현관문 철문 모델 (AI 제작) — 손잡이, 보조 자물쇠, 도어스코프, 문패, 우유 투입구, 도어 클로저
-- 종류      : 모델 (.obj)
-- 사용 위치 : Assets/Models/Props/Door/door_steel (Door 프리팹)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 모델링, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 알루미늄 미닫이 창문 + 방범창 모델, 뿌연 유리 텍스처 (AI 제작)
-- 종류      : 모델 (.obj) / 텍스처
-- 사용 위치 : Assets/Models/Props/Window/window_unit (Unit 프리팹, 302호 복도 창), Assets/Textures/Window/window_glass_dirty.png
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 모델링·노이즈 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 계단 손잡이, 비상구 표지, 차단기 레버·이름판 (AI 제작)
-- 종류      : 모델 (.obj) / 텍스처
-- 사용 위치 : Assets/Models/Props/Misc/handrail_A, handrail_B, exit_sign, breaker_lever, breaker_plate / Assets/Textures/Misc/exit_sign_face.png, breaker_plate.png
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 모델링·그림, 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
-- 저작자    : 「공가」 팀 (AI: Claude) / 폰트: Qianqian Fang and The WenQuanYi Project
-- 라이선스  : 팀 소유 (AI 생성물) (폰트는 GPL-2 with Font embedding exception, 폰트로 만든 이미지는 자유롭게 사용 가능)
-
-- 이름      : 단서 모델 4종과 텍스처 (AI 제작) — 일기장, 사진(앞·뒷면), 카세트테이프, 관리비 봉투와 쪽지
-- 종류      : 모델 (.obj) / 텍스처
-- 사용 위치 : Assets/Models/Props/Clues/clue_diary, clue_photo, clue_cassette, clue_note / Assets/Textures/Clues/
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 모델링·그림, 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
-- 저작자    : 「공가」 팀 (AI: Claude) / 폰트: Qianqian Fang and The WenQuanYi Project
-- 라이선스  : 팀 소유 (AI 생성물) (폰트는 GPL-2 with Font embedding exception, 폰트로 만든 이미지는 자유롭게 사용 가능)
-
-- 이름      : 방화 셔터 모델과 경고판 텍스처 (AI 제작) — 셔터 막, 셔터함, 레일
-- 종류      : 모델 (.obj) / 텍스처
-- 사용 위치 : Assets/Models/Props/Shutter/shutter_curtain, shutter_frame / Assets/Textures/Shutter/shutter_sign.png
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 모델링·그림, 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
-- 저작자    : 「공가」 팀 (AI: Claude) / 폰트: Qianqian Fang and The WenQuanYi Project
-- 라이선스  : 팀 소유 (AI 생성물) (폰트는 GPL-2 with Font embedding exception, 폰트로 만든 이미지는 자유롭게 사용 가능)
-
-- 이름      : 천장 등 모델 3종 (방수등, 센서등, 형광등) + 등 유리 텍스처 (AI 제작)
-- 종류      : 모델 (.obj) / 텍스처
-- 사용 위치 : Assets/Models/Props/Lamps/lamp_bulkhead, lamp_sensor, lamp_fluorescent / Assets/Textures/Props/lamp_glass_basecolor.png
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 직접 모델링·그림, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
-- 라이선스  : 팀 소유 (AI 생성물)
-
-- 이름      : 복도 벽·바닥 모서리 때 띠 모델과 텍스처 (AI 제작)
-- 종류      : 모델 (.obj) / 텍스처 (투명)
-- 사용 위치 : Assets/Models/Props/Grime/grime_corridor / Assets/Textures/Props/grime_edge.png
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (Python으로 노이즈를 직접 생성, 외부 리소스 없음)
-- 저작자    : 「공가」 팀 (AI: Claude)
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python 노이즈·그리기로 생성, 외부 리소스 없음)
 - 라이선스  : 팀 소유 (AI 생성물)
 
 - 이름      : 타이틀 배경 그림 (AI 제작) — 게임 시작 지점 화면을 캡처해 색 보정, 302호 불빛·안개 추가
-- 종류      : 이미지 (1920x1080)
-- 사용 위치 : Assets/Textures/UI/title_background.png (TitleScreen 배경)
-- 출처 URL  : AI 제작 — Claude(Anthropic)로 생성 (우리 게임 화면 캡처 + Python 보정)
-- 저작자    : 「공가」 팀 (AI: Claude)
+- 종류      : 이미지
+- 출처 URL  : AI 제작 — Claude(Anthropic) (우리 게임 화면 캡처 + Python 보정)
 - 라이선스  : 팀 소유 (AI 생성물)
 
-- 이름      : Boy Finnigon Lowpoly Gamecharacter (지하의 동생, 검은 실루엣 재질로 사용)
-- 종류      : 모델 (glTF → Blender로 FBX 변환, 카메라·조명·눈 부품 끔)
-- 사용 위치 : Assets/Models/Brother/brother.fbx, Assets/Models/Brother/Texture/
-- 출처 URL  : https://sketchfab.com/3d-models/boy-finnigon-lowpoly-gamecharacter-990be0ecf1634d3b94c6e3b529cef211
-- 저작자    : Fion Noir (@fionnoir)
+[모델 · 애니메이션]
+- 이름      : Poly Haven 모델 24종 — pastic_torch_6v(손전등), painted_wooden_nightstand, cardboard_box_01, power_box_01,
+              metal_office_desk, SchoolChair_01, steel_frame_shelves_01, drawer_cabinet, binder_notebook, clipboard,
+              wall_clock, metal_trash_can, Television_01, old_bed_frame, vintage_cabinet_01, wooden_bookshelf_worn,
+              alarm_clock_01, pot_enamel_01, vintage_suitcase, trashbag, pull_chain_light_socket,
+              portable_cassette_player, rubber_duck_toy, korean_public_payphone_01
+- 종류      : 모델 + 텍스처
+- 출처 URL  : https://polyhaven.com/a/<이름> (예: https://polyhaven.com/a/cardboard_box_01)
+- 라이선스  : CC0
+
+- 이름      : D Battery — 건전지
+- 종류      : 모델 (가공: D형 크기로 맞추고 재질을 나눔)
+- 출처 URL  : https://sketchfab.com/3d-models/d-battery-997adbcda4234a0cb89b00adb6e7b0bc
 - 라이선스  : CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+- 저작자    : hollowmj (Sketchfab)
+
+- 이름      : Old Russian wardrobe in 1983 V 2.0 — 장롱 (숨기)
+- 종류      : 모델 + 텍스처 (가공: 미터 단위·방향 변환, 텍스처 4K → 1K, 문짝 분리)
+- 출처 URL  : https://sketchfab.com/3d-models/old-russian-wardrobe-in-1983-v-20-f0ad9f13bc784d5ebaa81e6956cf5118
+- 라이선스  : CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+- 저작자    : Paule Gennadievich (Sketchfab @PauleMenson)
+
+- 이름      : Cursed Rune Demon — 괴물 「집주인」
+- 종류      : 모델 + 텍스처 + Idle 동작 (가공: GLB를 Blender로 FBX 변환)
+- 출처 URL  : https://sketchfab.com/3d-models/cursed-rune-demon-0d2348598de9425b95e3a9a1cb915b79
+- 라이선스  : CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+- 저작자    : PolyGoreStudio (Sketchfab @Phu.99)
+
+- 이름      : Boy Finnigon Lowpoly Gamecharacter — 지하의 동생
+- 종류      : 모델 (가공: glTF를 Blender로 FBX 변환, 검은 실루엣 재질)
+- 출처 URL  : https://sketchfab.com/3d-models/boy-finnigon-lowpoly-gamecharacter-990be0ecf1634d3b94c6e3b529cef211
+- 라이선스  : CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+- 저작자    : Fion Noir (@fionnoir)
+
+- 이름      : Mixamo 애니메이션 — Creeping Zombie Walk, Zombie Running, Looking Around, Zombie Attack, Zombie Scream
+- 종류      : 애니메이션
+- 출처 URL  : https://www.mixamo.com
+- 라이선스  : Mixamo 이용약관 (Adobe, 무료·로열티 없음)
+
+- 이름      : 단지 바깥 모델 14종 — 철문, 문 기둥, 경비실, 승용차, 1톤 트럭, 앙상한 나무 3종, 화단, 모래판, 그네, 미끄럼틀, 벤치, 가로등 (AI 제작)
+- 종류      : 모델
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python으로 점·면을 직접 계산해 생성, 외부 리소스 없음)
+- 라이선스  : 팀 소유 (AI 생성물)
+
+- 이름      : 건물 부품 모델 — 현관 철문, 알루미늄 창문·방범창, 계단 손잡이, 비상구 표지, 차단기 레버·이름판, 방화 셔터, 천장 등 3종, 모서리 때 띠 (AI 제작)
+- 종류      : 모델 + 텍스처
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python으로 직접 모델링·그림. 표지 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
+- 라이선스  : 팀 소유 (AI 생성물) / 글자에 쓴 폰트는 GPL-2 with Font embedding exception
+
+- 이름      : 이야기 소품 모델 — 단서 4종(일기장, 사진, 카세트테이프, 관리비 봉투·쪽지), 302호 소품(이부자리, 장난감, 그림 종이, 보일러실 열쇠), 아이 신발 2켤레, 제기 그릇·접시, 축문 두루마리 (AI 제작)
+- 종류      : 모델 + 텍스처
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python으로 직접 모델링·그림. 단서 글자는 WenQuanYi Zen Hei 폰트 http://wenq.org/)
+- 라이선스  : 팀 소유 (AI 생성물) / 글자에 쓴 폰트는 GPL-2 with Font embedding exception
+
+- 이름      : 지하 소품 모델 5종 — 보일러, 제사상, 놋촛대와 초, 쌀가마니, 배관 (AI 제작)
+- 종류      : 모델
+- 출처 URL  : AI 제작 — Claude(Anthropic) (Python으로 직접 모델링, 외부 리소스 없음)
+- 라이선스  : 팀 소유 (AI 생성물)
 
 [폰트]
-- 이름      : Noto Serif KR (본명조) Regular / Bold / Black
-- 종류      : 폰트 (OTF)
-- 사용 위치 : Assets/Fonts/ (11/24부터 타이틀·엔딩의 한자 "空家"만, MyScripts/UI/UIStyle.cs의 Hanja Font)
-- 출처 URL  : https://github.com/notofonts/noto-cjk (Serif/SubsetOTF/KR)
-- 저작자    : Adobe, Google (Noto CJK)
-- 라이선스  : SIL Open Font License 1.1 (라이선스 원문 Assets/Fonts/OFL.txt)
+- 이름      : East Sea Dokdo (동해독도) Regular — UI 글자 전체
+- 종류      : 폰트
+- 출처 URL  : https://fonts.google.com/specimen/East+Sea+Dokdo
+- 라이선스  : SIL Open Font License 1.1 (원문 Assets/Fonts/OFL_EastSeaDokdo.txt)
 
-[실내 재질 · 소품 모델 — Poly Haven (11/20 A)]
-- 라이선스  : CC0 1.0 (퍼블릭 도메인, https://polyhaven.com/license)
-- 사용 위치 : 텍스처 Assets/Textures/Interior/<이름>/, 재질 Assets/Materials/Interior/, 모델 Assets/Models/Props/PolyHaven/<이름>/, 프리팹 Assets/Prefabs/Props/, Box 프리팹(cardboard_box_01)
-- 텍스처 decrepit_wallpaper : https://polyhaven.com/a/decrepit_wallpaper (저작자 Rob Tuytel)
-- 텍스처 linoleum_brown : https://polyhaven.com/a/linoleum_brown (저작자 Rob Tuytel)
-- 텍스처 ceiling_interior : https://polyhaven.com/a/ceiling_interior (저작자 Dimitrios Savva)
-- 텍스처 concrete_floor_worn_001 : https://polyhaven.com/a/concrete_floor_worn_001 (저작자 Dimitrios Savva, Rico Cilliers)
-- 텍스처 peeling_painted_wall : https://polyhaven.com/a/peeling_painted_wall (저작자 Dimitrios Savva)
-- 텍스처 rusty_painted_metal : https://polyhaven.com/a/rusty_painted_metal (저작자 Amal Kumar)
-- 텍스처 dirty_tiles : https://polyhaven.com/a/dirty_tiles (저작자 Matterfield, Jenelle van Heerden)
-- 텍스처 concrete_wall_008 : https://polyhaven.com/a/concrete_wall_008 (저작자 Dario Barresi, Charlotte Baglioni)
-- 텍스처 damaged_concrete_floor : https://polyhaven.com/a/damaged_concrete_floor (저작자 Rob Tuytel)
-- 모델 cardboard_box_01 : https://polyhaven.com/a/cardboard_box_01 (저작자 Rahul Chaudhary)
-- 모델 power_box_01 : https://polyhaven.com/a/power_box_01 (저작자 Rico Cilliers, Yann Kervran)
-- 모델 metal_office_desk : https://polyhaven.com/a/metal_office_desk (저작자 Ulan Cabanilla)
-- 모델 SchoolChair_01 : https://polyhaven.com/a/SchoolChair_01 (저작자 Ethan Place)
-- 모델 steel_frame_shelves_01 : https://polyhaven.com/a/steel_frame_shelves_01 (저작자 James Ray Cock)
-- 모델 drawer_cabinet : https://polyhaven.com/a/drawer_cabinet (저작자 Ulan Cabanilla)
-- 모델 binder_notebook : https://polyhaven.com/a/binder_notebook (저작자 DaDrood)
-- 모델 clipboard : https://polyhaven.com/a/clipboard (저작자 ProgrammerOnCoffee)
-- 모델 wall_clock : https://polyhaven.com/a/wall_clock (저작자 PierreB3D)
-- 모델 metal_trash_can : https://polyhaven.com/a/metal_trash_can (저작자 GurJas Studios)
-- 모델 Television_01 : https://polyhaven.com/a/Television_01 (저작자 Gabriel Radić)
-- 모델 old_bed_frame : https://polyhaven.com/a/old_bed_frame (저작자 Luca B)
-- 모델 vintage_cabinet_01 : https://polyhaven.com/a/vintage_cabinet_01 (저작자 Rico Cilliers)
-- 모델 wooden_bookshelf_worn : https://polyhaven.com/a/wooden_bookshelf_worn (저작자 Ulan Cabanilla)
-- 모델 alarm_clock_01 : https://polyhaven.com/a/alarm_clock_01 (저작자 Yann Kervran, James Ray Cock)
-- 모델 pot_enamel_01 : https://polyhaven.com/a/pot_enamel_01 (저작자 Kuutti Siitonen)
-- 모델 vintage_suitcase : https://polyhaven.com/a/vintage_suitcase (저작자 Maximilian Schuster)
-- 모델 trashbag : https://polyhaven.com/a/trashbag (저작자 Benny Weimer)
-- 모델 pull_chain_light_socket : https://polyhaven.com/a/pull_chain_light_socket (저작자 Josh Dean)
-- 모델 portable_cassette_player : https://polyhaven.com/a/portable_cassette_player (저작자 Mateusz Sadek)
-- 모델 rubber_duck_toy : https://polyhaven.com/a/rubber_duck_toy (저작자 Plat251)
-- 모델 korean_public_payphone_01 : https://polyhaven.com/a/korean_public_payphone_01 (저작자 UM JOORIN)
-- 텍스처 painted_concrete : https://polyhaven.com/a/painted_concrete (계단실 벽, CC0)
-- 텍스처 concrete_floor_02 : https://polyhaven.com/a/concrete_floor_02 (계단·계단참, CC0)
+- 이름      : Noto Serif KR (본명조) — 한자 "空家"
+- 종류      : 폰트
+- 출처 URL  : https://github.com/notofonts/noto-cjk
+- 라이선스  : SIL Open Font License 1.1 (원문 Assets/Fonts/OFL.txt)
 
-[꽃무늬 벽지 텍스처 — 직접 제작 (11/20 A)]
-- 사용 위치 : Assets/Textures/Interior/floral_wallpaper/floral_wallpaper_diff.jpg (재질 Interior_Wallpaper_Floral, 노멀 맵은 Poly Haven decrepit_wallpaper)
-- 제작 방법 : Python(PIL)으로 그린 반복 무늬 (외부 이미지 사용 안 함)
-
+- 이름      : Black Han Sans (검은고딕) — 11/26부터 안 씀, 제출 전 파일과 함께 이 항목 삭제
+- 종류      : 폰트
+- 출처 URL  : https://fonts.google.com/specimen/Black+Han+Sans
+- 라이선스  : SIL Open Font License 1.1 (원문 Assets/Fonts/OFL_BlackHanSans.txt)
 
 [스크립트 — Assets/OtherScripts/]
-(아직 없음)
-
-- 이름      : East Sea Dokdo (동해독도) Regular
-- 종류      : 폰트 (TTF)
-- 사용 위치 : Assets/Fonts/EastSeaDokdo-Regular.ttf (UI 본문·강조·제목 전체, MyScripts/UI/UIStyle.cs)
-- 출처 URL  : https://fonts.google.com/specimen/East+Sea+Dokdo (파일: https://github.com/google/fonts/tree/main/ofl/eastseadokdo)
-- 저작자    : YoonDesign Inc.
-- 라이선스  : SIL Open Font License 1.1 (라이선스 원문 Assets/Fonts/OFL_EastSeaDokdo.txt)
-
-- 이름      : Black Han Sans (검은고딕) Regular
-- 종류      : 폰트 (TTF)
-- 사용 위치 : Assets/Fonts/BlackHanSans-Regular.ttf (경고 문구 "숨어라"·"잡혔다"·"도망쳐", UIStyle의 Warning Font)
-- 출처 URL  : https://fonts.google.com/specimen/Black+Han+Sans (파일: https://github.com/google/fonts/tree/main/ofl/blackhansans)
-- 저작자    : The Black Han Sans Project Authors (Zess Type)
-- 라이선스  : SIL Open Font License 1.1 (라이선스 원문 Assets/Fonts/OFL_BlackHanSans.txt)
+(없음 — 모든 스크립트는 직접 작성, Assets/MyScripts/)

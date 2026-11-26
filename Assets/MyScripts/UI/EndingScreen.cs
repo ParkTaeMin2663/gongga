@@ -214,6 +214,7 @@ public class EndingScreen : MonoBehaviour
         GUI.color = new Color(0f, 0f, 0f, this.blackAmount);
         GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
         GUI.color = Color.white;
+        UIStyle.MenuBackdrop(this.blackAmount, new Color(0.06f, 0.08f, 0.14f, 1f));   // (11/26 A) 가운데 차가운 남색, 가장자리 까맣게 (비네트)
 
         // 엔딩 글 (가운데)
         if (this.currentLine != null)

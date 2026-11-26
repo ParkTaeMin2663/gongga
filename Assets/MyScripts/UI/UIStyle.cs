@@ -173,6 +173,71 @@ public class UIStyle : MonoBehaviour
         return result;
     }
 
+    // ---------------- (11/26 A) 화면 효과: 흰 텍스처(Texture2D.whiteTexture)를 색·투명도만 바꿔 여러 번 그린다 ----------------
+
+    /// <summary>
+    /// rect 가장자리를 안쪽으로 갈수록 옅게 칠한다 (비네트). 가장자리 = color, 안쪽으로 갈수록 투명.
+    /// thickness = 짧은 변에 대한 번짐 두께 비율 (0~0.5)
+    /// </summary>
+    public static void EdgeShade(Rect rect, Color color, float thickness = 0.3f)
+    {
+        Color old = GUI.color;
+        int steps = 20;
+        float total = Mathf.Min(rect.width, rect.height) * thickness;
+        float step = total / steps;
+        for (int i = 0; i < steps; i++)
+        {
+            float k = 1f - (float)i / steps;   // 가장자리 1 → 안쪽 0
+            GUI.color = new Color(color.r, color.g, color.b, color.a * k * k);
+            float inset = step * i;
+            Rect r = new Rect(rect.x + inset, rect.y + inset, rect.width - inset * 2f, rect.height - inset * 2f);
+            // 겹치지 않는 네 변 띠 (위·아래·왼쪽·오른쪽)
+            GUI.DrawTexture(new Rect(r.x, r.y, r.width, step), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(r.x, r.yMax - step, r.width, step), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(r.x, r.y + step, step, r.height - step * 2f), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(r.xMax - step, r.y + step, step, r.height - step * 2f), Texture2D.whiteTexture);
+        }
+        GUI.color = old;
+    }
+
+    /// <summary>
+    /// 메뉴 화면 배경 (사망·엔딩): 까만 화면 위에 가운데만 아주 옅게 색(tint)을 깔고, 가장자리는 다시 까맣게 → 비네트.
+    /// 완전히 까만 화면에는 비네트가 안 보이므로 가운데를 살짝 밝힌다.
+    /// </summary>
+    public static void MenuBackdrop(float alpha, Color tint)
+    {
+        Rect screen = new Rect(0f, 0f, Screen.width, Screen.height);
+        Color old = GUI.color;
+        GUI.color = new Color(tint.r, tint.g, tint.b, tint.a * alpha);
+        GUI.DrawTexture(screen, Texture2D.whiteTexture);
+        GUI.color = old;
+        EdgeShade(screen, new Color(0f, 0f, 0f, alpha), 0.45f);
+    }
+
+    /// <summary>테두리 선 (두께 thickness 픽셀)</summary>
+    public static void Frame(Rect rect, Color color, float thickness)
+    {
+        Color old = GUI.color;
+        GUI.color = color;
+        GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, thickness), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(rect.x, rect.y, thickness, rect.height), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(rect.xMax - thickness, rect.y, thickness, rect.height), Texture2D.whiteTexture);
+        GUI.color = old;
+    }
+
+    /// <summary>
+    /// 경고 문구 연출 ("숨어라"·"도망쳐"): 화면 가장자리가 붉게 물들고, 글자가 살짝 떨린다.
+    /// rect = 글자 자리, alpha = 깜빡임·사라짐 투명도
+    /// </summary>
+    public static void WarningText(Rect rect, string text, GUIStyle style, float alpha)
+    {
+        EdgeShade(new Rect(0f, 0f, Screen.width, Screen.height), new Color(0.35f, 0f, 0f, 0.55f * alpha), 0.3f);
+        float shake = Size(3);
+        Rect shaken = new Rect(rect.x + Random.Range(-shake, shake), rect.y + Random.Range(-shake, shake), rect.width, rect.height);   // 강의 03장 Random.Range
+        Label(shaken, text, style, alpha);
+    }
+
     /// <summary>화면 가운데 조준점 바로 아래 안내 문구가 들어갈 자리</summary>
     public static Rect PromptRect()
     {

@@ -284,6 +284,7 @@ public class PlayerDeath : MonoBehaviour
 
         if (this.showMenu)
         {
+            UIStyle.MenuBackdrop(this.menuAlpha, new Color(0.22f, 0.02f, 0.02f, 1f));   // (11/26 A) 가운데 검붉게, 가장자리 까맣게 (비네트)
             this.DrawMenu();
             return;
         }
