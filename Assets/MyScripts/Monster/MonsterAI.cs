@@ -106,6 +106,16 @@ public class MonsterAI : MonoBehaviour
     [Tooltip("계속 쫓기일 때 이 거리(m) 안이면 쫓는다. 지하 전체를 덮게 크게")]
     public float alwaysChaseDistance = 60f;
 
+    [Header("계단실로 안 나가기 (3층 괴물용)")]
+    [Tooltip("체크하면 이 x보다 동쪽(계단실 x 16~20)으로는 쫓아가지 않는다. 플레이어가 계단으로 도망치면 계단 앞에서 멈춰 두리번거리다 순찰로 돌아간다. 3층 Monster_3F만 켠다 (2층 괴물은 계단으로 사라져야 하므로 끔)")]
+    public bool stayOffStairs = false;
+    [Tooltip("괴물이 갈 수 있는 가장 동쪽 x. 복도 끝이 16이라 조금 안쪽")]
+    public float stairsX = 15f;
+
+    [Header("다음 구역에 가면 끄기 (3층 괴물용)")]
+    [Tooltip("이 번호 이상의 체크포인트에 도착하면(또는 거기서 다시 시작하면) 괴물이 꺼진다. 지하 체크포인트가 4라서 Monster_3F는 4. 0이면 안 끔. 지하에서 3층 괴물이 문 부수는 소리가 들리던 문제")]
+    public int offFromCheckpoint = 0;
+
     [Header("발소리")]
     [Tooltip("괴물 몸에 붙은 Audio Source (3D). 비워 두면 발소리 없음")]
     public AudioSource footstepSound;
@@ -203,6 +213,17 @@ public class MonsterAI : MonoBehaviour
     private bool isChaseMusicOn;
     private float normalStepMinDistance = -1f;   // 발소리 Audio Source의 원래 Min Distance (11/24)
 
+    // (11/28) 괴물이 꺼질 때(다음 구역 도착, 2층 괴물이 길 끝에서 사라짐) 쫓던 중이었으면 추격 음악도 꺼 준다.
+    // 안 그러면 TensionMusic이 "쫓는 괴물 수"를 그대로 기억해서 지하에서도 추격 음악이 계속 나온다. (강의 05장 실행 순서: OnEnable/OnDisable)
+    private void OnDisable()
+    {
+        if (this.isChaseMusicOn && this.tensionMusic != null)
+        {
+            this.isChaseMusicOn = false;
+            this.tensionMusic.StopChase();
+        }
+    }
+
     private void Start()
     {
         this.agent = this.GetComponent<NavMeshAgent>();
@@ -258,6 +279,13 @@ public class MonsterAI : MonoBehaviour
 
     private void Update()
     {
+        // 다음 구역(예: 지하) 체크포인트에 도착했으면 이 괴물은 끈다 (강의 04장 SetActive, 07장 public static)
+        if (this.offFromCheckpoint > 0 && Checkpoint.savedOrder >= this.offFromCheckpoint)
+        {
+            this.gameObject.SetActive(false);
+            return;
+        }
+
         if (this.player == null || this.agent == null)
         {
             return;
@@ -375,7 +403,7 @@ public class MonsterAI : MonoBehaviour
         // 너무 멀어지면 놓친다 (소리가 나면 ListenForNoise가 다시 쫓게 한다)
         // (11/26) 계속 쫓기면 놓치는 거리를 alwaysChaseDistance로 (사실상 안 놓침)
         float lose = this.alwaysChase ? this.alwaysChaseDistance : this.loseDistance;
-        if (distance > lose || this.IsSameFloor(this.player.position) == false)
+        if (distance > lose || this.IsSameFloor(this.player.position) == false || this.IsInStairs(this.player.position))
         {
             this.ChangeState(State.Investigate);   // targetPosition = 마지막으로 본 위치
             return;
@@ -753,6 +781,12 @@ public class MonsterAI : MonoBehaviour
         this.agent.isStopped = false;
         this.agent.speed = speed;
 
+        // 계단실로 안 나가기: 목표가 계단실 쪽이면 계단 앞(stairsX)까지만 간다
+        if (this.stayOffStairs && target.x > this.stairsX)
+        {
+            target.x = this.stairsX;
+        }
+
         // 목표가 조금이라도 바뀌었으면 새로 길을 찾는다 (매 프레임 찾지 않게)
         if ((this.agent.destination - target).magnitude > 0.3f || this.agent.hasPath == false)
         {
@@ -780,12 +814,19 @@ public class MonsterAI : MonoBehaviour
     {
         return this.IsPlayerHidden() == false
                && this.IsSameFloor(this.player.position)
+               && this.IsInStairs(this.player.position) == false
                && this.FlatDistance(this.player.position) <= distance;
     }
 
     private bool IsPlayerHidden()
     {
         return this.playerHide != null && this.playerHide.IsHidden;
+    }
+
+    // 계단실로 안 나가기가 켜져 있고, 그 위치가 계단실 쪽(stairsX보다 동쪽)인지
+    private bool IsInStairs(Vector3 position)
+    {
+        return this.stayOffStairs && position.x > this.stairsX;
     }
 
     private bool IsSameFloor(Vector3 position)

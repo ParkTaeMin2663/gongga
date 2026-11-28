@@ -461,7 +461,7 @@ public class PlayerDeath : MonoBehaviour
         if (Checkpoint.lastSaveShowsMessage && ago >= 0f && ago < 2f)
         {
             // 공통 UI 스타일 (UIStyle.cs): 오른쪽 아래, 흐린 글자로 서서히 사라짐
-            GUIStyle style = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.LowerRight);
+            GUIStyle style = UIStyle.Make(UIStyle.regular, UIStyle.Text(26), UIStyle.gray, TextAnchor.LowerRight);
             Rect rect = new Rect(0f, 0f, Screen.width - UIStyle.Size(32), Screen.height - UIStyle.Size(28));
             UIStyle.Label(rect, "저장됨", style, 1f - ago / 2f);
         }
@@ -511,8 +511,8 @@ public class PlayerDeath : MonoBehaviour
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(330), Screen.width, UIStyle.Size(110)), "잡혔다", UIStyle.Warning(90), menuShow);
 
         string where = Checkpoint.savedOrder > 0 ? "마지막 체크포인트에서 다시 시작합니다" : "처음부터 다시 시작합니다";
-        GUIStyle small = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.MiddleCenter);
-        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(20), Screen.width, UIStyle.Size(40)), where, small, menuShow);
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);
+        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(30), Screen.width, UIStyle.Size(60)), where, small, menuShow);
 
         if (menuShow < 0.5f)
         {

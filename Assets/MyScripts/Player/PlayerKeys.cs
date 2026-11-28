@@ -83,8 +83,9 @@ public class PlayerKeys : MonoBehaviour
         }
         // 마지막 0.5초 동안 서서히 사라짐
         float alpha = Mathf.Clamp01(left / 0.5f);
-        float height = UIStyle.Size(this.messageSize) * 2f;
+        int size = UIStyle.Text(this.messageSize);   // 흰 안내 글자 배율
+        float height = UIStyle.Size(size) * 2f;
         Rect rect = new Rect(0f, Screen.height * 0.72f, Screen.width, height);
-        UIStyle.Label(rect, message, UIStyle.Strong(this.messageSize, UIStyle.white), alpha);
+        UIStyle.Label(rect, message, UIStyle.Strong(size, UIStyle.white), alpha);
     }
 }

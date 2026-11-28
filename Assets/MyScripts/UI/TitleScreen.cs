@@ -185,8 +185,8 @@ public class TitleScreen : MonoBehaviour
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(125), Screen.width, UIStyle.Size(50)), this.subTitle, subStyle, this.alpha);
 
         // 한 줄 소개
-        GUIStyle small = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.MiddleCenter);
-        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(65), Screen.width, UIStyle.Size(40)), this.tagline, small, this.alpha);
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);   // (11/28) 작아서 키움
+        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(75), Screen.width, UIStyle.Size(60)), this.tagline, small, this.alpha);
 
         if (this.isShowing == false)
         {
@@ -215,9 +215,9 @@ public class TitleScreen : MonoBehaviour
     {
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(380), Screen.width, UIStyle.Size(90)), "조작법", UIStyle.Title(70), this.alpha);
 
-        GUIStyle keyStyle = UIStyle.Make(UIStyle.bold, 28, UIStyle.yellow, TextAnchor.MiddleRight);
-        GUIStyle descStyle = UIStyle.Make(UIStyle.regular, 28, UIStyle.white, TextAnchor.MiddleLeft);
-        float lineHeight = UIStyle.Size(54);
+        GUIStyle keyStyle = UIStyle.Make(UIStyle.bold, UIStyle.Text(28), UIStyle.yellow, TextAnchor.MiddleRight);
+        GUIStyle descStyle = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.white, TextAnchor.MiddleLeft);
+        float lineHeight = UIStyle.Size(UIStyle.Text(46));   // 글자가 커져서 줄 간격은 살짝 좁혀 아래 "돌아가기"와 안 겹치게
         float top = cy - UIStyle.Size(260);
         float gap = UIStyle.Size(40);   // 키와 설명 사이 간격
         int count = Mathf.Min(this.controlKeys.Length, this.controlDescs.Length);
@@ -228,9 +228,9 @@ public class TitleScreen : MonoBehaviour
             UIStyle.Label(new Rect(cx + gap / 2f, y, Screen.width - cx, lineHeight), this.controlDescs[i], descStyle, this.alpha);
         }
 
-        GUIStyle small = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.MiddleCenter);
-        UIStyle.Label(new Rect(0f, top + lineHeight * count + UIStyle.Size(10), Screen.width, UIStyle.Size(40)),
-            "괴물은 눈이 없다. 소리를 내지 마라.", small, this.alpha);
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);   // (11/28) 작아서 키움
+        UIStyle.Label(new Rect(0f, top + lineHeight * count + UIStyle.Size(10), Screen.width, UIStyle.Size(100)),
+            "괴물은 눈이 없다. 소리를 내지 마라.\n괴물은 빛을 보지 못한다.", small, this.alpha);   // (11/28) 두 줄
 
         float width = UIStyle.Size(320);
         float height = UIStyle.Size(64);

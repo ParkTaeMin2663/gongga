@@ -219,7 +219,7 @@ public class EndingScreen : MonoBehaviour
         // 엔딩 글 (가운데)
         if (this.currentLine != null)
         {
-            GUIStyle lineStyle = UIStyle.Make(UIStyle.regular, this.lineSize, UIStyle.white, TextAnchor.MiddleCenter);
+            GUIStyle lineStyle = UIStyle.Make(UIStyle.regular, UIStyle.Text(this.lineSize), UIStyle.white, TextAnchor.MiddleCenter);
             float margin = UIStyle.Size(160);
             Rect rect = new Rect(margin, Screen.height / 2f - UIStyle.Size(80), Screen.width - margin * 2f, UIStyle.Size(160));
             UIStyle.Label(rect, this.currentLine, lineStyle, this.lineAlpha);
@@ -235,8 +235,8 @@ public class EndingScreen : MonoBehaviour
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(300), Screen.width, UIStyle.Size(180)), this.endTitle, UIStyle.Title(150), this.menuAlpha);
         GUIStyle subStyle = UIStyle.Hanja(36, UIStyle.white);   // 空家: 동해독도에 한자가 없어 본명조 (11/24)
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(125), Screen.width, UIStyle.Size(50)), this.endSubTitle, subStyle, this.menuAlpha);
-        GUIStyle small = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.MiddleCenter);
-        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(65), Screen.width, UIStyle.Size(40)), this.thanks, small, this.menuAlpha);
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);   // (11/28) 작아서 키움
+        UIStyle.Label(new Rect(0f, cy - UIStyle.Size(75), Screen.width, UIStyle.Size(60)), this.thanks, small, this.menuAlpha);
 
         if (this.menuAlpha < 0.5f)
         {

@@ -314,11 +314,11 @@ public class BrotherEncounter : MonoBehaviour
 
         if (this.currentLine != null)
         {
-            GUIStyle lineStyle = UIStyle.Body(this.lineSize, UIStyle.white);
+            GUIStyle lineStyle = UIStyle.Body(UIStyle.Text(this.lineSize), UIStyle.white);
             lineStyle.alignment = TextAnchor.MiddleCenter;
             lineStyle.wordWrap = true;
             float margin = UIStyle.Size(200);
-            Rect rect = new Rect(margin, Screen.height - UIStyle.Size(220), Screen.width - margin * 2f, UIStyle.Size(110));
+            Rect rect = new Rect(margin, Screen.height - UIStyle.Size(240), Screen.width - margin * 2f, UIStyle.Size(140));
             UIStyle.Label(rect, this.currentLine, lineStyle, this.lineAlpha);
         }
 

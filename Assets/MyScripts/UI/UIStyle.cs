@@ -33,6 +33,8 @@ public class UIStyle : MonoBehaviour
     [Header("글자 크기 (11/24)")]
     [Tooltip("동해독도 글꼴(본문·제목·경고) 글자 크기 배율. 손글씨 글꼴이라 작아 보여서 키운다. 1 = 그대로. 한자 글꼴에는 안 곱함. Play 중에 바꿔도 바로 보인다")]
     public float mainFontScale = 1.3f;
+    [Tooltip("흰색 안내 글자(타이틀 조작법, 인트로 자막, 플레이 중 안내·[E] 문구, 동생·엔딩 자막)만 더 키우는 배율. 1 = 그대로. Play 중에 바꿔도 바로 보인다")]
+    public float textScale = 1.25f;
 
     // ----- 모두가 쓰는 값 (강의 07장 public static) -----
     public static Font regular;
@@ -41,6 +43,7 @@ public class UIStyle : MonoBehaviour
     public static Font warning;
     public static Font hanja;
     public static float mainScale = 1.3f;
+    public static float textScaleNow = 1.25f;   // 흰 안내 글자 배율 (Text 함수가 곱한다)
 
     // 색: 차가운 회색/남색 바탕에 빨간 "공가"와 노란 불빛만 튀게 (CLAUDE.md 4장 분위기)
     public static Color white  = new Color(0.86f, 0.85f, 0.82f);        // 기본 글자 (살짝 누런 흰색)
@@ -58,12 +61,20 @@ public class UIStyle : MonoBehaviour
         if (this.warningFont != null) warning = this.warningFont;
         if (this.hanjaFont != null) hanja = this.hanjaFont;
         mainScale = this.mainFontScale;
+        textScaleNow = this.textScale;
     }
 
     // Play 중 Inspector에서 배율을 바꾸면 바로 보이게 (강의 02장 Update: 매 프레임)
     private void Update()
     {
         mainScale = this.mainFontScale;
+        textScaleNow = this.textScale;
+    }
+
+    /// <summary>흰 안내 글자 크기: 1080p 기준 크기에 textScale을 곱한 값 (Make에 그대로 넣는다)</summary>
+    public static int Text(int sizeAt1080)
+    {
+        return Mathf.RoundToInt(sizeAt1080 * textScaleNow);
     }
 
     /// <summary>화면 크기에 맞춘 글자 크기. 1080p 기준 크기를 넣으면 화면 높이에 비례해서 커지거나 작아진다.</summary>
@@ -248,7 +259,7 @@ public class UIStyle : MonoBehaviour
     /// <summary>화면 가운데 조준점 바로 아래 안내 문구가 들어갈 자리</summary>
     public static Rect PromptRect()
     {
-        float height = Size(40);
+        float height = Size(Text(40));
         return new Rect(0f, Screen.height / 2f + Size(24), Screen.width, height);
     }
 
@@ -265,6 +276,6 @@ public class UIStyle : MonoBehaviour
                 text = "<color=#" + ColorUtility.ToHtmlStringRGB(yellow) + ">" + key + "</color>" + text.Substring(end + 1);
             }
         }
-        Label(PromptRect(), text, Make(regular, 26, white, TextAnchor.MiddleCenter), alpha);
+        Label(PromptRect(), text, Make(regular, Text(26), white, TextAnchor.MiddleCenter), alpha);
     }
 }

@@ -107,8 +107,9 @@ public class TutorialHint : MonoBehaviour
             return;
         }
 
-        GUIStyle style = UIStyle.Make(UIStyle.regular, this.fontSize, UIStyle.white, TextAnchor.MiddleCenter);
-        Rect rect = new Rect(0f, Screen.height * 0.10f, Screen.width, UIStyle.Size(this.fontSize * 3));
+        int size = UIStyle.Text(this.fontSize);   // 흰 안내 글자 배율
+        GUIStyle style = UIStyle.Make(UIStyle.regular, size, UIStyle.white, TextAnchor.MiddleCenter);
+        Rect rect = new Rect(0f, Screen.height * 0.10f, Screen.width, UIStyle.Size(size * 3));
         UIStyle.Label(rect, this.ColorKeys(this.message), style, this.alpha);
     }
 

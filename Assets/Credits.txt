@@ -66,8 +66,8 @@
 - 라이선스  : 팀 소유 (AI 생성물)
 
 [텍스처 · 이미지]
-- 이름      : Poly Haven 텍스처 11종 — decrepit_wallpaper, linoleum_brown, ceiling_interior, concrete_floor_worn_001,
-              peeling_painted_wall, rusty_painted_metal, dirty_tiles, concrete_wall_008, damaged_concrete_floor,
+- 이름      : Poly Haven 텍스처 10종 — decrepit_wallpaper, linoleum_brown, ceiling_interior, concrete_floor_worn_001,
+              peeling_painted_wall, rusty_painted_metal, dirty_tiles, damaged_concrete_floor,
               painted_concrete, concrete_floor_02
 - 종류      : 텍스처 (가공: 노멀 맵 EXR을 JPG로 변환)
 - 출처 URL  : https://polyhaven.com/a/<이름> (예: https://polyhaven.com/a/decrepit_wallpaper)
@@ -88,7 +88,7 @@
 - 출처 URL  : AI 제작 — Claude(Anthropic) (Python 노이즈·붓질로 생성, 외부 리소스 없음)
 - 라이선스  : 팀 소유 (AI 생성물)
 
-- 이름      : 실내·지하 텍스처 — 축문 한지, 짚 엮음, 새끼줄, 옻칠 나무, 압력계 눈금판, 배관 보온재, 등 유리, 모서리 때, 뿌연 유리 (AI 제작)
+- 이름      : 실내·지하 텍스처 — 축문 한지, 짚 엮음, 새끼줄, 옻칠 나무, 압력계 눈금판, 배관 보온재, 등 유리, 모서리 때, 뿌연 유리, 지하 벽 거친 콘크리트 (AI 제작)
 - 종류      : 텍스처
 - 출처 URL  : AI 제작 — Claude(Anthropic) (Python 노이즈·그리기로 생성, 외부 리소스 없음)
 - 라이선스  : 팀 소유 (AI 생성물)

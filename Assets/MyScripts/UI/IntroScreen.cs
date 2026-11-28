@@ -200,7 +200,7 @@ public class IntroScreen : MonoBehaviour
         }
 
         // 자막: 화면 가운데에 줄들을 세로로 늘어놓는다
-        float gap = UIStyle.Size(this.lineGap);
+        float gap = UIStyle.Size(UIStyle.Text(this.lineGap));   // 흰 안내 글자 배율만큼 줄 간격도
         float totalHeight = gap * this.lines.Length;
         float y = Screen.height / 2f - totalHeight / 2f;
         for (int i = 0; i < this.lines.Length; i++)
@@ -209,14 +209,14 @@ public class IntroScreen : MonoBehaviour
             {
                 bool isLast = i == this.lines.Length - 1;
                 Color color = (isLast && this.lastLineRed) ? UIStyle.red : UIStyle.white;
-                GUIStyle style = UIStyle.Make(UIStyle.regular, this.fontSize, color, TextAnchor.MiddleCenter);
+                GUIStyle style = UIStyle.Make(UIStyle.regular, UIStyle.Text(this.fontSize), color, TextAnchor.MiddleCenter);
                 UIStyle.Label(new Rect(0f, y, Screen.width, gap), this.lines[i], style, this.lineAlpha[i] * this.textAlpha);
             }
             y = y + gap;
         }
 
         // 오른쪽 아래 건너뛰기 안내
-        GUIStyle small = UIStyle.Make(UIStyle.regular, 22, UIStyle.gray, TextAnchor.LowerRight);
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(26), UIStyle.gray, TextAnchor.LowerRight);   // (11/28) 작아서 키움
         float m = UIStyle.Size(40);
         UIStyle.Label(new Rect(0f, 0f, Screen.width - m, Screen.height - m), "아무 키나 누르면 건너뜁니다", small, 0.7f * this.textAlpha);
     }
