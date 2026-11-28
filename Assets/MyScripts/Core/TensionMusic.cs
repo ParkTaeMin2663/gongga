@@ -1,17 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// 배경음 관리. (11/18)
-///   - 으스스한 배경음(ambient): 게임 시작부터 계속 작게 깔린다.
-///   - 긴장 음악 2종: "숨어라"(숨기 — 심장 소리) / 추격(쫓김 — 빠른 음악). 켜지면 배경음은 작아진다.
-///   - 둘 다 켜지면 추격 음악이 우선.
-///
-/// [붙이는 곳] Player 프리팹 (이미 붙어 있음) + 같은 Player의 Audio Source 2개 (둘 다 Loop, 2D, Play On Awake 끔)
-/// [쓰는 곳]   Floor2Event: PlayHide() / StopHide()  ("숨어라" → 괴물이 사라질 때까지)
-///             MonsterAI  : PlayChase() / StopChase() (추격 시작 → 순찰로 돌아갈 때까지)
-///             → playerObject.GetComponent<TensionMusic>()로 찾는다
-/// [방식] 강의 03장 AudioSource(clip, Play, Loop, volume) + Time.deltaTime으로 볼륨을 조금씩 바꿔 서서히 커지고 작아진다.
-/// </summary>
+// 배경음 관리: 평소 배경음, "숨어라" 긴장 음악, 추격 음악을 상황에 맞게 바꿔 튼다.
 public class TensionMusic : MonoBehaviour
 {
     [Header("연결 (Player의 Audio Source 2개)")]
@@ -40,8 +29,8 @@ public class TensionMusic : MonoBehaviour
     [Tooltip("끌 때 작아지는 데 걸리는 시간(초)")]
     public float fadeOutTime = 4f;
 
-    private int hideCount;    // "숨어라" 음악을 원하는 곳 수
-    private int chaseCount;   // 추격 음악을 원하는 곳 수 (괴물이 여럿일 수 있음)
+    private int hideCount;
+    private int chaseCount;
     private AudioClip wantClip;
 
     private void Start()
@@ -55,8 +44,8 @@ public class TensionMusic : MonoBehaviour
         {
             this.ambientSource.clip = this.ambientClip;
             this.ambientSource.loop = true;
-            this.ambientSource.volume = 0f;   // 서서히 커지며 시작
-            this.ambientSource.Play();        // 강의 03장
+            this.ambientSource.volume = 0f;
+            this.ambientSource.Play();
         }
     }
 
@@ -67,7 +56,6 @@ public class TensionMusic : MonoBehaviour
 
     private void Update()
     {
-        // 지금 틀어야 할 음악: 추격 > 숨어라 > 없음
         AudioClip want = null;
         float wantVolume = 0f;
         if (this.chaseCount > 0 && this.chaseClip != null)
@@ -85,7 +73,6 @@ public class TensionMusic : MonoBehaviour
         {
             if (want != null && this.musicSource.clip != want)
             {
-                // 다른 음악으로 바꿀 때: 아직 크게 나오고 있으면 먼저 줄인 뒤 바꾼다
                 if (this.musicSource.isPlaying && this.musicSource.volume > 0.05f)
                 {
                     wantVolume = 0f;
@@ -99,7 +86,7 @@ public class TensionMusic : MonoBehaviour
 
             float target = want != null ? wantVolume : 0f;
             float speed = target > this.musicSource.volume ? 1f / this.fadeInTime : 1f / this.fadeOutTime;
-            this.musicSource.volume = Mathf.MoveTowards(this.musicSource.volume, target, speed * Time.deltaTime);   // 강의 03장 Time.deltaTime
+            this.musicSource.volume = Mathf.MoveTowards(this.musicSource.volume, target, speed * Time.deltaTime);
             if (want == null && this.musicSource.volume <= 0f && this.musicSource.isPlaying)
             {
                 this.musicSource.Stop();
@@ -107,7 +94,6 @@ public class TensionMusic : MonoBehaviour
             }
         }
 
-        // 배경음: 긴장 음악이 나오면 작아지고, 끝나면 다시 커진다
         if (this.ambientSource != null)
         {
             float ambientTarget = want != null ? this.ambientDuckVolume : this.ambientVolume;

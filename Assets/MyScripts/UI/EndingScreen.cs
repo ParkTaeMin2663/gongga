@@ -1,20 +1,8 @@
-using System.Collections;          // 강의 05장: 코루틴(IEnumerator)
+using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement; // 강의 04장: SceneManager.LoadScene
+using UnityEngine.SceneManagement;
 
-/// <summary>
-/// 탈출 엔딩. 지하 비상구 구역(Is Trigger)에 들어오면:
-///   1) 괴물을 끄고(더 쫓아오지 않게) 플레이어가 멈춘다
-///   2) 화면이 서서히 까매지고 배경음·긴장 음악이 줄어든다
-///   3) 엔딩 글이 한 줄씩 나타났다 사라진다
-///   4) 큰 빨간 "공가" + "처음으로 / 그만하기" (마우스 커서 보임)
-///       · 처음으로: 체크포인트·연출 기록을 모두 지우고 씬을 다시 불러온다 → 타이틀부터
-///       · 그만하기: 게임 종료 (에디터에서는 Play 멈춤)
-///
-/// [붙이는 곳] 지하 비상구 문 바로 바깥의 빈 오브젝트 "ExitTrigger" + Box Collider(Is Trigger 체크, 강의 05·07장)
-/// [A 16번] 탈출 = 이 구역에 들어오는 것. 추격 쪽에서 따로 부를 필요 없음. 엔딩 중인지는 EndingScreen.isEnding
-/// [같이 쓰는 것] UIStyle.cs, TitleScreen.hasStarted, Checkpoint·Floor2Event·BrotherEncounter의 static 값
-/// </summary>
+// 탈출 엔딩: 비상구에 들어오면 화면이 어두워지고 엔딩 글과 메뉴를 보여 준다.
 public class EndingScreen : MonoBehaviour
 {
     [Header("끝날 때 끌 것")]
@@ -48,17 +36,15 @@ public class EndingScreen : MonoBehaviour
     [Tooltip("(없어도 됨) 엔딩 음악. 이 오브젝트에 Audio Source(Spatial Blend 0, Play On Awake 끔)를 붙이고 Clip을 넣는다")]
     public AudioSource endingMusic;
 
-    // 강의 07장 public static: 엔딩 중인지 (다른 스크립트가 확인할 수 있게)
     public static bool isEnding = false;
 
     private bool started;
-    private float blackAmount;    // 화면 검은 정도 (0~1)
+    private float blackAmount;
     private string currentLine;
     private float lineAlpha;
     private bool showMenu;
     private float menuAlpha;
 
-    // 강의 04장: Find는 Start()에서 한 번만
     private PlayerMovement playerMovement;
     private PlayerLook playerLook;
     private PlayerInteract playerInteract;
@@ -81,7 +67,6 @@ public class EndingScreen : MonoBehaviour
         }
     }
 
-    // 강의 05·07장 Is Trigger: 비상구를 나왔다
     private void OnTriggerEnter(Collider other)
     {
         if (this.started || other.CompareTag("Player") == false)
@@ -97,16 +82,13 @@ public class EndingScreen : MonoBehaviour
     {
         if (this.showMenu)
         {
-            // [강의 외] Cursor — 다른 스크립트가 숨기지 못하게 메뉴 동안 계속 보이게
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
     }
 
-    // 강의 05장 코루틴
     private IEnumerator EndingRoutine()
     {
-        // 1) 괴물 끄기, 플레이어 멈추기
         for (int i = 0; i < this.stopObjects.Length; i++)
         {
             if (this.stopObjects[i] != null)
@@ -120,7 +102,6 @@ public class EndingScreen : MonoBehaviour
         if (this.playerLook != null) this.playerLook.IsLocked = true;
         if (this.playerBody != null) this.playerBody.linearVelocity = Vector3.zero;
 
-        // 긴장 음악 스크립트를 멈추고(강의 04장 enabled) 그 소리 두 개를 직접 줄인다
         AudioSource music = null;
         AudioSource ambient = null;
         if (this.tensionMusic != null)
@@ -132,10 +113,9 @@ public class EndingScreen : MonoBehaviour
         if (this.endingMusic != null)
         {
             this.endingMusic.volume = 0f;
-            this.endingMusic.Play();   // 강의 03장
+            this.endingMusic.Play();
         }
 
-        // 2) 화면이 서서히 까매진다 + 소리 줄이기
         float musicStart = music != null ? music.volume : 0f;
         float ambientStart = ambient != null ? ambient.volume : 0f;
         while (this.blackAmount < 1f)
@@ -148,7 +128,6 @@ public class EndingScreen : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
 
-        // 3) 엔딩 글 한 줄씩
         for (int i = 0; i < this.lines.Length; i++)
         {
             this.currentLine = this.lines[i];
@@ -159,7 +138,6 @@ public class EndingScreen : MonoBehaviour
         }
         this.currentLine = null;
 
-        // 4) 마지막 화면
         this.showMenu = true;
         while (this.menuAlpha < 1f)
         {
@@ -179,7 +157,6 @@ public class EndingScreen : MonoBehaviour
         }
     }
 
-    // 처음으로: 저장된 기록을 모두 지우고 씬을 다시 불러온다 → 타이틀부터 (강의 04장 LoadScene, 07장 public static)
     private void BackToTitle()
     {
         Checkpoint.savedOrder = 0;
@@ -193,7 +170,6 @@ public class EndingScreen : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // 그만하기 ([강의 외] Application.Quit — PlayerDeath와 같은 방식, 11/18 허락)
     private void Quit()
     {
 #if UNITY_EDITOR
@@ -202,7 +178,6 @@ public class EndingScreen : MonoBehaviour
         Application.Quit();
     }
 
-    // 강의 04장 OnGUI
     private void OnGUI()
     {
         if (this.blackAmount <= 0f)
@@ -210,13 +185,11 @@ public class EndingScreen : MonoBehaviour
             return;
         }
 
-        // 까만 화면
         GUI.color = new Color(0f, 0f, 0f, this.blackAmount);
         GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
         GUI.color = Color.white;
-        UIStyle.MenuBackdrop(this.blackAmount, new Color(0.06f, 0.08f, 0.14f, 1f));   // (11/26 A) 가운데 차가운 남색, 가장자리 까맣게 (비네트)
+        UIStyle.MenuBackdrop(this.blackAmount, new Color(0.06f, 0.08f, 0.14f, 1f));
 
-        // 엔딩 글 (가운데)
         if (this.currentLine != null)
         {
             GUIStyle lineStyle = UIStyle.Make(UIStyle.regular, UIStyle.Text(this.lineSize), UIStyle.white, TextAnchor.MiddleCenter);
@@ -233,14 +206,14 @@ public class EndingScreen : MonoBehaviour
         float cx = Screen.width / 2f;
         float cy = Screen.height / 2f;
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(300), Screen.width, UIStyle.Size(180)), this.endTitle, UIStyle.Title(150), this.menuAlpha);
-        GUIStyle subStyle = UIStyle.Hanja(36, UIStyle.white);   // 空家: 동해독도에 한자가 없어 본명조 (11/24)
+        GUIStyle subStyle = UIStyle.Hanja(36, UIStyle.white);
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(125), Screen.width, UIStyle.Size(50)), this.endSubTitle, subStyle, this.menuAlpha);
-        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);   // (11/28) 작아서 키움
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(75), Screen.width, UIStyle.Size(60)), this.thanks, small, this.menuAlpha);
 
         if (this.menuAlpha < 0.5f)
         {
-            return;   // 반쯤 나타난 뒤부터 누를 수 있다 (PlayerDeath와 같음)
+            return;
         }
 
         float width = UIStyle.Size(320);
@@ -255,7 +228,6 @@ public class EndingScreen : MonoBehaviour
         }
     }
 
-    // 글자 버튼 (PlayerDeath·TitleScreen과 같은 모양)
     private bool MenuButton(Rect rect, string text)
     {
         bool hover = rect.Contains(Event.current.mousePosition);

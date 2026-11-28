@@ -1,21 +1,7 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Input System Package를 쓰기 위해 반드시 포함 (강의 03장)
+using UnityEngine.InputSystem;
 
-/// <summary>
-/// 바라보는 물체를 찾고, 마우스 왼쪽으로 잡아서 끄는 기능. 화면 가운데에 조준점도 그린다.
-///
-/// [붙이는 곳] Player 오브젝트 (Player Input이 있는 오브젝트)
-/// [Inspector 연결]
-///   - Camera Transform : Player의 자식 Main Camera
-///   - Player Look      : Player에 붙어 있는 PlayerLook (잡는 동안 시점을 멈추기 위해)
-///
-/// [입력] 강의 04장 Fire처럼 새 액션 Grab 추가
-///   - Path = Mouse Left Button, Interaction = Press (Press And Release)
-///   - 누른 순간 OnGrab(isPressed = true), 뗀 순간 OnGrab(isPressed = false)
-///   - OnLook은 PlayerLook과 이 스크립트가 둘 다 받는다. 잡는 동안에는 이쪽이 문을 미는 데 쓴다.
-/// [입력] 새 액션 Throw 추가 (물건 던지기)
-///   - Path = Mouse Right Button, Interaction = Press (Press Only) → 누른 순간 OnThrow
-/// </summary>
+// 바라보는 물체를 찾고, 마우스 왼쪽으로 잡아서 끄는 기능. 화면 가운데에 조준점도 그린다.
 public class PlayerInteract : MonoBehaviour
 {
     [Header("연결")]
@@ -32,25 +18,19 @@ public class PlayerInteract : MonoBehaviour
     [Tooltip("잡은 물체에서 이만큼(m) 멀어지면 자동으로 놓는다.")]
     public float releaseDistance = 3f;
 
-    // ----- 상태 -----
-    private IInteractable lookTarget;   // 지금 바라보고 있는 잡을 수 있는 물체 (없으면 null)
-    private IInteractable heldTarget;   // 지금 잡고 있는 물체 (없으면 null)
-    private Transform heldTransform;    // 잡고 있는 물체의 위치 (거리 확인용)
-    private Vector2 lookDelta;          // 이번 프레임 마우스 움직임
+    private IInteractable lookTarget;
+    private IInteractable heldTarget;
+    private Transform heldTransform;
+    private Vector2 lookDelta;
 
-    // 숨어 있는 동안에는 잡기를 막기 위해 (같은 Player의 PlayerHide)
     private PlayerHide playerHide;
 
-    /// <summary>지금 바라보고 있는 장롱 (없으면 null). PlayerHide가 E를 눌렀을 때 확인한다.</summary>
     public HideSpot LookHideSpot { get; private set; }
 
-    /// <summary>지금 바라보고 있는 E로 줍는 물건 (손전등·건전지, 없으면 null). PlayerPickup이 쓴다.</summary>
     public ItemPickup LookItem { get; private set; }
 
-    /// <summary>지금 무언가를 잡고 있는지. 잡은 채로는 장롱에 숨을 수 없다.</summary>
     public bool IsHolding { get { return this.heldTarget != null; } }
 
-    // 조준점 그리기용 흰색 그림 (Unity가 기본으로 제공하는 1x1 흰색)
     private Texture2D dotTexture;
 
     private void Start()
@@ -64,13 +44,11 @@ public class PlayerInteract : MonoBehaviour
         this.playerHide = this.GetComponent<PlayerHide>();
     }
 
-    // 마우스가 움직일 때마다 호출 (PlayerLook도 같은 메시지를 받는다)
     private void OnLook(InputValue value)
     {
         this.lookDelta += value.Get<Vector2>();
     }
 
-    // 마우스 왼쪽을 누른 순간 / 뗀 순간 (Press And Release)
     private void OnGrab(InputValue value)
     {
         if (value.isPressed)
@@ -83,8 +61,6 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    // 마우스 오른쪽을 누른 순간 (강의 04장 Fire처럼 새로 만든 Throw 액션)
-    // 물건(PickupObject)을 들고 있을 때만 던진다. 문을 잡고 있을 때는 아무 일도 없다.
     private void OnThrow(InputValue value)
     {
         PickupObject pickup = this.heldTarget as PickupObject;
@@ -93,8 +69,8 @@ public class PlayerInteract : MonoBehaviour
             return;
         }
 
-        this.EndGrab();                              // 먼저 손에서 놓고 (중력 되돌리기)
-        pickup.Throw(this.cameraTransform.forward);  // 바라보는 쪽으로 던진다
+        this.EndGrab();
+        pickup.Throw(this.cameraTransform.forward);
     }
 
     private void Update()
@@ -104,7 +80,6 @@ public class PlayerInteract : MonoBehaviour
             return;
         }
 
-        // 장롱에 숨어 있는 동안에는 아무것도 찾거나 잡지 않는다.
         if (this.playerHide != null && this.playerHide.IsInsideSpot)
         {
             this.lookTarget = null;
@@ -114,7 +89,6 @@ public class PlayerInteract : MonoBehaviour
             return;
         }
 
-        // 잡은 물체가 사라졌으면(건전지처럼 줍자마자 없어지는 물체) 손을 비운다
         if (this.heldTarget != null && this.heldTransform == null)
         {
             this.heldTarget = null;
@@ -126,10 +100,8 @@ public class PlayerInteract : MonoBehaviour
 
         if (this.heldTarget != null)
         {
-            // 잡고 있는 동안: 마우스 움직임을 물체에 전달
             this.heldTarget.OnGrabUpdate(this.lookDelta);
 
-            // 너무 멀어지면 놓친다
             float distance = Vector3.Distance(this.cameraTransform.position, this.heldTransform.position);
             if (distance > this.releaseDistance)
             {
@@ -138,7 +110,6 @@ public class PlayerInteract : MonoBehaviour
         }
         else
         {
-            // 잡고 있지 않을 때: 무엇을 보고 있는지 찾는다
             this.FindLookTarget();
         }
 
@@ -151,18 +122,13 @@ public class PlayerInteract : MonoBehaviour
         this.LookHideSpot = null;
         this.LookItem = null;
 
-        // 강의 07장 Physics.Raycast: 카메라에서 정면으로 보이지 않는 선을 쏴서 처음 맞은 물체를 알려준다.
-        //           reachDistance(m)까지만 쏜다. 벽에 먼저 맞으면 벽 너머 물체는 찾지 않는다.
         RaycastHit hit;
         if (Physics.Raycast(this.cameraTransform.position, this.cameraTransform.forward, out hit, this.reachDistance))
         {
-            // 맞은 물체(또는 그 부모)에 IInteractable이 붙어 있는지 확인
             this.lookTarget = hit.collider.GetComponentInParent<IInteractable>();
 
-            // 장롱인지도 같이 확인 (장롱은 잡는 물체가 아니라 E로 숨는 곳)
             this.LookHideSpot = hit.collider.GetComponentInParent<HideSpot>();
 
-            // E로 줍는 물건인지도 확인
             this.LookItem = hit.collider.GetComponentInParent<ItemPickup>();
         }
     }
@@ -178,15 +144,12 @@ public class PlayerInteract : MonoBehaviour
         this.heldTransform = ((MonoBehaviour)this.lookTarget).transform;
         this.heldTarget.OnGrabStart(this.cameraTransform);
 
-        // 문처럼 마우스로 미는 물체는 잡는 동안 고개를 고정한다.
-        // 들고 다니는 물건(PickupObject)은 고개를 돌려야 하므로 고정하지 않는다.
         if (this.playerLook != null && this.heldTarget.LocksLook)
         {
             this.playerLook.IsLocked = true;
         }
     }
 
-    /// <summary>잡고 있던 물체를 강제로 놓는다 (11/24, 2층 연출이 시작될 때 레버를 놓게 Floor2Event가 부른다)</summary>
     public void ReleaseGrab()
     {
         this.EndGrab();
@@ -208,8 +171,6 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    // 강의 04장 OnGUI: 화면 가운데 조준점
-    // 평소에는 작은 점, 잡을 수 있는 물체를 보거나 잡고 있으면 큰 점
     private void OnGUI()
     {
         bool isActive = this.lookTarget != null || this.heldTarget != null || this.LookHideSpot != null || this.LookItem != null;

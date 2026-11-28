@@ -1,20 +1,7 @@
-using System.Collections;          // 강의 05장: 코루틴(IEnumerator)
+using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// 타이틀 화면. (게임은 SampleScene에서 시작해야 하므로 별도 씬 없이 SampleScene 위에 그린다)
-///   - Play를 누르면 불투명한 배경 그림(눈 오는 밤, 302호만 불 켜진 아파트) + 큰 빨간 "공가" + "시작하기 / 조작법 / 그만하기"
-///   - 배경 그림은 아주 천천히 커졌다 작아진다 (은은하게 움직이는 느낌)
-///   - "조작법" → 키 안내 표가 뜨고 "돌아가기"로 닫는다
-///   - 마우스 커서가 보이고, 플레이어는 움직이거나 둘러볼 수 없다
-///   - "시작하기" → 막이 서서히 걷히며 게임 시작 (커서 숨김)
-///   - 죽어서 다시 시작할 때는 다시 뜨지 않는다 (hasStarted = public static, 강의 07장)
-///   - 엔딩에서 "처음으로"를 누르면 EndingScreen이 hasStarted를 false로 → 다시 타이틀부터
-///
-/// [붙이는 곳] SampleScene의 빈 오브젝트 "TitleScreen"
-/// [같이 쓰는 것] UIStyle.cs (Player 프리팹에 붙어 있음 — 글꼴·색), PlayerMovement/PlayerLook/PlayerInteract (Player)
-/// [테스트 팁] 매번 타이틀을 보기 귀찮으면 Inspector에서 Show Title 체크를 끈다 (제출 전에 다시 켜기!)
-/// </summary>
+// 타이틀 화면. (게임은 SampleScene에서 시작해야 하므로 별도 씬 없이 SampleScene 위에 그린다)
 public class TitleScreen : MonoBehaviour
 {
     [Header("켜기/끄기")]
@@ -53,14 +40,12 @@ public class TitleScreen : MonoBehaviour
     [Tooltip("시작을 누른 뒤 어두운 막이 걷히는 시간(초)")]
     public float fadeTime = 1.5f;
 
-    // 강의 07장 public static: 씬을 다시 불러와도(죽어서 다시 시작) 값이 남는다 → 타이틀을 다시 띄우지 않는다
     public static bool hasStarted = false;
 
-    private bool isShowing;          // 타이틀이 떠 있는지 (버튼을 누를 수 있는지)
-    private float alpha;             // 화면 전체 투명도 (1 = 다 보임 → 0 = 사라짐)
-    private bool showingControls;    // 조작법 표가 떠 있는지
+    private bool isShowing;
+    private float alpha;
+    private bool showingControls;
 
-    // 강의 04장: Find는 Start()에서 한 번만
     private PlayerMovement playerMovement;
     private PlayerLook playerLook;
     private PlayerInteract playerInteract;
@@ -85,7 +70,7 @@ public class TitleScreen : MonoBehaviour
         {
             hasStarted = true;
             this.alpha = 0f;
-            return;   // 바로 게임
+            return;
         }
 
         this.isShowing = true;
@@ -97,14 +82,11 @@ public class TitleScreen : MonoBehaviour
     {
         if (this.isShowing)
         {
-            // PlayerLook.Start가 커서를 숨기므로, 타이틀이 떠 있는 동안은 매 프레임 다시 보이게 한다
-            // ([강의 외] Cursor — PlayerLook, PlayerDeath와 같은 방식)
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
     }
 
-    // 플레이어 걷기·시점·잡기·줍기를 멈추거나 다시 켠다 (강의 04장 enabled)
     private void SetPlayerFrozen(bool frozen)
     {
         if (this.playerMovement != null) this.playerMovement.enabled = !frozen;
@@ -113,29 +95,26 @@ public class TitleScreen : MonoBehaviour
         if (this.playerLook != null) this.playerLook.IsLocked = frozen;
     }
 
-    // "시작하기"를 눌렀을 때
     private void StartGame()
     {
         this.isShowing = false;
         hasStarted = true;
-        Cursor.lockState = CursorLockMode.Locked;   // [강의 외] Cursor
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         this.SetPlayerFrozen(false);
         this.StartCoroutine(this.FadeOut());
     }
 
-    // 강의 05장 코루틴: 막이 서서히 걷힌다
     private IEnumerator FadeOut()
     {
         while (this.alpha > 0f)
         {
-            this.alpha = this.alpha - Time.deltaTime / this.fadeTime;   // 강의 03장 Time.deltaTime
+            this.alpha = this.alpha - Time.deltaTime / this.fadeTime;
             yield return null;
         }
         this.alpha = 0f;
     }
 
-    // 그만하기: 게임 종료 ([강의 외] Application.Quit — PlayerDeath와 같은 방식, 11/18 허락)
     private void Quit()
     {
 #if UNITY_EDITOR
@@ -144,7 +123,6 @@ public class TitleScreen : MonoBehaviour
         Application.Quit();
     }
 
-    // 강의 04장 OnGUI
     private void OnGUI()
     {
         if (this.alpha <= 0f)
@@ -152,14 +130,11 @@ public class TitleScreen : MonoBehaviour
             return;
         }
 
-        // 불투명한 검은 바탕 (뒤의 게임 화면이 비치지 않게)
         GUI.color = new Color(0f, 0f, 0f, this.alpha);
         GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
 
-        // 배경 그림: 화면을 꽉 채우고(ScaleAndCrop) 아주 천천히 커졌다 작아진다
         if (this.backgroundImage != null)
         {
-            // Mathf.PingPong: 0 → 1 → 0 을 반복 (강의 03장 Time과 같은 방식으로 시간에 따라 값이 변함)
             float zoom = 1f + this.zoomAmount * Mathf.PingPong(Time.time / this.zoomTime * 2f, 1f);
             float w = Screen.width * zoom;
             float h = Screen.height * zoom;
@@ -179,21 +154,18 @@ public class TitleScreen : MonoBehaviour
             return;
         }
 
-        // 큰 빨간 제목 + 한자
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(300), Screen.width, UIStyle.Size(180)), this.gameTitle, UIStyle.Title(this.titleSize), this.alpha);
-        GUIStyle subStyle = UIStyle.Hanja(36, UIStyle.white);   // 空家: 동해독도에 한자가 없어 본명조 (11/24)
+        GUIStyle subStyle = UIStyle.Hanja(36, UIStyle.white);
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(125), Screen.width, UIStyle.Size(50)), this.subTitle, subStyle, this.alpha);
 
-        // 한 줄 소개
-        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);   // (11/28) 작아서 키움
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(75), Screen.width, UIStyle.Size(60)), this.tagline, small, this.alpha);
 
         if (this.isShowing == false)
         {
-            return;   // 사라지는 중에는 버튼을 누를 수 없다
+            return;
         }
 
-        // 버튼 세 개 (PlayerDeath의 "다시 시작 / 그만하기"와 같은 모양)
         float width = UIStyle.Size(320);
         float height = UIStyle.Size(64);
         if (this.MenuButton(new Rect(cx - width / 2f, cy + UIStyle.Size(40), width, height), "시작하기"))
@@ -210,16 +182,15 @@ public class TitleScreen : MonoBehaviour
         }
     }
 
-    // 조작법 표: 왼쪽 키(노란색) / 오른쪽 설명, 맨 아래 "돌아가기"
     private void DrawControls(float cx, float cy)
     {
         UIStyle.Label(new Rect(0f, cy - UIStyle.Size(380), Screen.width, UIStyle.Size(90)), "조작법", UIStyle.Title(70), this.alpha);
 
         GUIStyle keyStyle = UIStyle.Make(UIStyle.bold, UIStyle.Text(28), UIStyle.yellow, TextAnchor.MiddleRight);
         GUIStyle descStyle = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.white, TextAnchor.MiddleLeft);
-        float lineHeight = UIStyle.Size(UIStyle.Text(46));   // 글자가 커져서 줄 간격은 살짝 좁혀 아래 "돌아가기"와 안 겹치게
+        float lineHeight = UIStyle.Size(UIStyle.Text(46));
         float top = cy - UIStyle.Size(260);
-        float gap = UIStyle.Size(40);   // 키와 설명 사이 간격
+        float gap = UIStyle.Size(40);
         int count = Mathf.Min(this.controlKeys.Length, this.controlDescs.Length);
         for (int i = 0; i < count; i++)
         {
@@ -228,9 +199,9 @@ public class TitleScreen : MonoBehaviour
             UIStyle.Label(new Rect(cx + gap / 2f, y, Screen.width - cx, lineHeight), this.controlDescs[i], descStyle, this.alpha);
         }
 
-        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);   // (11/28) 작아서 키움
+        GUIStyle small = UIStyle.Make(UIStyle.regular, UIStyle.Text(28), UIStyle.gray, TextAnchor.MiddleCenter);
         UIStyle.Label(new Rect(0f, top + lineHeight * count + UIStyle.Size(10), Screen.width, UIStyle.Size(100)),
-            "괴물은 눈이 없다. 소리를 내지 마라.\n괴물은 빛을 보지 못한다.", small, this.alpha);   // (11/28) 두 줄
+            "괴물은 눈이 없다. 소리를 내지 마라.\n괴물은 빛을 보지 못한다.", small, this.alpha);
 
         float width = UIStyle.Size(320);
         float height = UIStyle.Size(64);
@@ -240,7 +211,6 @@ public class TitleScreen : MonoBehaviour
         }
     }
 
-    // 글자 버튼: 마우스가 위에 있으면(Rect.Contains) 노란색, 투명한 GUI.Button으로 클릭을 받는다 (PlayerDeath와 같은 방식)
     private bool MenuButton(Rect rect, string text)
     {
         bool hover = rect.Contains(Event.current.mousePosition);

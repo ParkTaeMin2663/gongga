@@ -1,19 +1,7 @@
-using System.Collections;          // 강의 05장: 코루틴(IEnumerator)
+using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// 4장 지하: 제사상 앞에서 동생과 마주하는 연출 → 최종 추격 시작 신호.
-///   1) 플레이어가 제사상 앞 구역(Is Trigger)에 들어오면 걷기·시점이 멈추고 고개가 동생 쪽으로 천천히 돌아간다
-///   2) 동생의 말(자막)이 한 줄씩 뜬다 (목소리 소리는 없어도 됨)
-///   3) 동생이 사라지고 촛불(조명)이 꺼진다 → 빨간 "도망쳐"
-///   4) 꺼 둔 괴물(Monster_B1)을 켜고, 0.5초 뒤 플레이어 자리에서 큰 소리 → 괴물이 듣고 달려온다 (NoiseSystem, 느슨한 연결)
-///   5) 플레이어는 다시 움직일 수 있다 → 비상구(EndingScreen)로 도망
-///
-/// [붙이는 곳] 빈 오브젝트 "BrotherEncounter" + Box Collider(Is Trigger 체크, 강의 05·07장) — 제사상 앞
-/// [다시 시작] 연출을 끝까지 본 뒤 잡혀서 체크포인트 retryFromCheckpoint(4)번에서 다시 시작하면
-///            자막 없이 동생은 이미 없고, retryDelay초 뒤 바로 괴물이 켜져 쫓아온다. (finished = public static, 강의 07장)
-/// [A 16번] 추격 쪽에서 "연출이 끝났는지" 알고 싶으면 BrotherEncounter.finished 를 보면 된다.
-/// </summary>
+// 4장 지하: 제사상 앞에서 동생과 마주하는 연출, 끝나면 최종 추격을 시작한다.
 public class BrotherEncounter : MonoBehaviour
 {
     [Header("동생")]
@@ -71,33 +59,29 @@ public class BrotherEncounter : MonoBehaviour
     [Tooltip("다시 시작한 뒤 괴물이 켜질 때까지 시간(초)")]
     public float retryDelay = 2f;
 
-    // 강의 07장 public static: 씬을 다시 불러와도 값이 남는다. 연출을 끝까지 봤는지 기억
     public static bool finished = false;
 
-    private bool isRespawn;       // 죽어서 다시 시작한 게임인지
-    private bool isPlaying;       // 연출 중인지 (두 번 시작하지 않게)
-    private string currentLine;   // 지금 화면에 띄울 자막
-    private float lineAlpha;      // 자막 투명도
+    private bool isRespawn;
+    private bool isPlaying;
+    private string currentLine;
+    private float lineAlpha;
     private bool showRunText;
     private float runAlpha;
 
-    // 강의 04장: Find는 Start()에서 한 번만
     private Transform player;
     private PlayerMovement playerMovement;
     private PlayerLook playerLook;
     private PlayerInteract playerInteract;
     private PlayerDeath playerDeath;
     private NoiseSystem noiseSystem;
-    private DraggableDoor exitDoor;   // (11/25) 동생을 만나기 전까지 잠가 두는 비상구
+    private DraggableDoor exitDoor;
 
-    // 강의 05장 실행 순서: Awake는 모든 Start보다 먼저 불린다.
-    // PlayerDeath.Start가 Checkpoint.isRespawning을 false로 되돌리기 전에 읽어 둔다. (Floor2Event와 같은 방식)
     private void Awake()
     {
         this.isRespawn = Checkpoint.isRespawning;
         if (this.isRespawn == false)
         {
-            finished = false;   // 처음부터 시작하는 게임
+            finished = false;
         }
     }
 
@@ -122,8 +106,6 @@ public class BrotherEncounter : MonoBehaviour
             this.lookTarget = this.brother.transform;
         }
 
-        // (11/25) 지하에 내려오자마자 비상구로 나가 버리지 않게, 동생을 만나기 전까지 잠가 둔다
-        // 강의 04장: Find는 Start()에서 한 번만
         if (this.exitDoorName != "")
         {
             GameObject doorObject = GameObject.Find(this.exitDoorName);
@@ -142,16 +124,14 @@ public class BrotherEncounter : MonoBehaviour
             }
         }
 
-        // 연출을 이미 봤고 지하 체크포인트에서 다시 시작 → 동생 없이 바로 추격
         if (this.isRespawn && finished && Checkpoint.savedOrder >= this.retryFromCheckpoint)
         {
-            this.isPlaying = true;   // 구역에 다시 들어가도 연출이 또 나오지 않게
+            this.isPlaying = true;
             this.SetEndState();
             this.StartCoroutine(this.RetryRoutine());
         }
     }
 
-    // 강의 05·07장 Is Trigger: 플레이어가 제사상 앞에 들어왔다
     private void OnTriggerEnter(Collider other)
     {
         if (this.isPlaying || other.CompareTag("Player") == false)
@@ -162,7 +142,6 @@ public class BrotherEncounter : MonoBehaviour
         this.StartCoroutine(this.EncounterRoutine());
     }
 
-    // 강의 05장 코루틴: 시간 순서대로 연출
     private IEnumerator EncounterRoutine()
     {
         this.SetPlayerFrozen(true);
@@ -171,15 +150,14 @@ public class BrotherEncounter : MonoBehaviour
         if (voice != null && this.voiceClip != null)
         {
             voice.clip = this.voiceClip;
-            voice.Play();   // 강의 03장
+            voice.Play();
         }
 
-        // 1) 고개가 동생 쪽으로 천천히 돌아간다
         if (this.lookTarget != null && this.playerLook != null && this.playerLook.cameraTransform != null)
         {
             Vector3 dir = this.lookTarget.position - this.player.position;
             float startYaw = this.playerLook.cameraTransform.eulerAngles.y;
-            float endYaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;   // 바라볼 좌우 각도
+            float endYaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
             float t = 0f;
             while (t < 1f)
             {
@@ -189,7 +167,6 @@ public class BrotherEncounter : MonoBehaviour
             }
         }
 
-        // 2) 자막 한 줄씩 (서서히 나타났다 사라짐)
         for (int i = 0; i < this.lines.Length; i++)
         {
             this.currentLine = this.lines[i];
@@ -199,11 +176,9 @@ public class BrotherEncounter : MonoBehaviour
         }
         this.currentLine = null;
 
-        // 3) 동생이 사라지고 촛불이 꺼진다
         this.SetEndState();
         yield return new WaitForSeconds(0.8f);
 
-        // 4) "도망쳐" + 괴물 켜기 + 큰 소리
         finished = true;
         this.showRunText = true;
         this.runAlpha = 1f;
@@ -219,17 +194,14 @@ public class BrotherEncounter : MonoBehaviour
         this.showRunText = false;
     }
 
-    // 다시 시작했을 때: 잠깐 뒤 바로 추격
     private IEnumerator RetryRoutine()
     {
         yield return new WaitForSeconds(this.retryDelay);
         yield return this.StartCoroutine(this.StartChase());
     }
 
-    // 괴물을 켜고, 0.5초 뒤(괴물의 Start가 끝난 뒤) 플레이어 자리에서 큰 소리를 낸다
     private IEnumerator StartChase()
     {
-        // (11/25) 추격이 시작되면 비상구가 열린다 (다시 시작해서 바로 추격할 때도 여기를 지난다)
         if (this.exitDoor != null)
         {
             this.exitDoor.isLocked = false;
@@ -243,8 +215,6 @@ public class BrotherEncounter : MonoBehaviour
                 this.activateAfter[i].SetActive(true);
             }
         }
-        // (11/24) 지하 탈출 내내 쫓기는 음악. TensionMusic은 "원하는 곳 수"를 세므로 여기서 한 번 켜 두면
-        // 괴물이 놓쳤다가 다시 쫓아도(괴물 쪽 PlayChase/StopChase) 꺼지지 않는다. 엔딩 화면(EndingScreen)이 음악을 줄여 끈다.
         if (this.chaseMusicUntilEnd && this.player != null)
         {
             TensionMusic music = this.player.GetComponent<TensionMusic>();
@@ -260,7 +230,6 @@ public class BrotherEncounter : MonoBehaviour
         }
     }
 
-    // 자막 투명도를 from → to로 바꾼다
     private IEnumerator FadeLine(float from, float to, float time)
     {
         float t = 0f;
@@ -272,7 +241,6 @@ public class BrotherEncounter : MonoBehaviour
         }
     }
 
-    // 연출이 끝난 모습: 동생 없음, 촛불 꺼짐
     private void SetEndState()
     {
         if (this.brother != null)
@@ -288,7 +256,6 @@ public class BrotherEncounter : MonoBehaviour
         }
     }
 
-    // 플레이어 걷기·시점·잡기를 멈추거나 다시 켠다 (강의 04장 enabled, PlayerDeath와 같은 방식)
     private void SetPlayerFrozen(bool frozen)
     {
         if (this.playerMovement != null) this.playerMovement.enabled = !frozen;
@@ -299,12 +266,11 @@ public class BrotherEncounter : MonoBehaviour
             Rigidbody body = this.player.GetComponent<Rigidbody>();
             if (body != null)
             {
-                body.linearVelocity = Vector3.zero;   // 미끄러지지 않게
+                body.linearVelocity = Vector3.zero;
             }
         }
     }
 
-    // 강의 04장 OnGUI: 자막(아래 가운데)과 "도망쳐"
     private void OnGUI()
     {
         if (this.playerDeath != null && this.playerDeath.IsDead)
@@ -325,7 +291,7 @@ public class BrotherEncounter : MonoBehaviour
         if (this.showRunText)
         {
             Rect rect = new Rect(0f, Screen.height / 2f - UIStyle.Size(90), Screen.width, UIStyle.Size(180));
-            UIStyle.WarningText(rect, this.runText, UIStyle.Warning(this.runTextSize), this.runAlpha);   // (11/26 A) "숨어라"와 같은 연출
+            UIStyle.WarningText(rect, this.runText, UIStyle.Warning(this.runTextSize), this.runAlpha);
         }
     }
 }

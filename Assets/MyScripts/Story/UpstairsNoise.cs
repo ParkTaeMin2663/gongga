@@ -1,17 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// 1장 "위층에서 소리만" 연출. 플레이어가 1층 구역 안에 있는 동안,
-/// 가끔씩 머리 위(위층)에서 괴물 발소리·으르렁 소리가 난다. (괴물은 아직 없다 — 소리만)
-///   - 구역에 들어오면 시작, 나가면 멈춘다 (계단으로 2층에 올라가면 끝)
-///   - 소리 간격은 minDelay ~ maxDelay초 사이에서 무작위 (강의 03장 Random.Range)
-///   - 소리 위치는 플레이어 머리 위 height m, 앞뒤좌우로 조금씩 무작위 → 위층 어딘가에서 나는 느낌
-///   - 2층 체크포인트(stopFromCheckpoint) 이후에 다시 시작했으면 안 난다
-///
-/// [붙이는 곳] 빈 오브젝트 "UpstairsNoise" + Box Collider(Is Trigger 체크) — 1층 복도·관리사무소를 덮게
-/// [방식] 강의 05장 코루틴(WaitForSeconds) + 강의 07장 AudioSource.PlayClipAtPoint
-/// </summary>
+// 1장 연출: 1층에 있는 동안 위층에서 괴물 발소리·으르렁 소리가 가끔 들린다.
 public class UpstairsNoise : MonoBehaviour
 {
     [Header("소리")]
@@ -55,10 +45,9 @@ public class UpstairsNoise : MonoBehaviour
     private bool isInside;
     private Coroutine loop;
 
-    // 강의 04장: Find는 Start()에서 한 번만
     private void Start()
     {
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");   // 강의 05장 Tag
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
             this.player = playerObject.transform;
@@ -69,7 +58,6 @@ public class UpstairsNoise : MonoBehaviour
         }
     }
 
-    // 강의 05·07장 Trigger: 1층에 들어왔다 → 소리 시작
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") == false || this.isInside)
@@ -84,7 +72,6 @@ public class UpstairsNoise : MonoBehaviour
         this.loop = this.StartCoroutine(this.NoiseLoop());
     }
 
-    // 1층을 나갔다 → 소리 멈춤
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player") == false)
@@ -99,7 +86,6 @@ public class UpstairsNoise : MonoBehaviour
         }
     }
 
-    // 강의 05장 코루틴: 기다렸다가 소리, 또 기다렸다가 소리...
     private IEnumerator NoiseLoop()
     {
         yield return new WaitForSeconds(this.firstDelay);
@@ -111,12 +97,10 @@ public class UpstairsNoise : MonoBehaviour
 
             if (hasOther && Random.value < this.otherChance)
             {
-                // 가끔: 으르렁 같은 소리 한 번
                 this.PlayRandomClip(this.otherClips, spot);
             }
             else
             {
-                // 보통: 발소리 repeat번 (쿵, 쿵, 쿵 — 위층을 걸어가는 느낌으로 조금씩 옮김)
                 Vector3 step = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-0.5f, 0.5f)).normalized * 0.8f;
                 for (int i = 0; i < this.repeat; i++)
                 {
@@ -144,7 +128,7 @@ public class UpstairsNoise : MonoBehaviour
         AudioClip clip = list[Random.Range(0, list.Length)];
         if (clip != null)
         {
-            AudioSource.PlayClipAtPoint(clip, position, this.volume);   // 강의 07장
+            AudioSource.PlayClipAtPoint(clip, position, this.volume);
         }
     }
 }

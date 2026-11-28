@@ -1,19 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// 플레이어 숨소리. 평소에는 작고 고른 숨, 뛰면 점점 헐떡이고, 멈추면 천천히 가라앉는다.
-/// 장롱에 숨어 있을 때 헐떡이면 괴물에게 들릴 수 있다 (작은 소리).
-///
-/// [붙이는 곳] Player 오브젝트 (Player 프리팹)
-/// [같이 필요한 컴포넌트] Audio Source 2개 (강의 03장)
-///   - 평소 숨소리 : Loop 체크, Play On Awake 끔 → Calm Breath 칸에
-///   - 헐떡임      : Loop 체크, Play On Awake 끔 → Heavy Breath 칸에
-///   (발소리용 Audio Source와는 따로)
-///
-/// [동작] "숨참(exertion)" 값 0~1
-///   - 달리는 동안 올라가고(강의 03장 Time.deltaTime), 안 달리면 내려간다.
-///   - 평소 숨소리는 숨참이 클수록 작아지고, 헐떡임은 커진다 (두 소리를 섞음).
-/// </summary>
+// 플레이어 숨소리. 평소에는 작고 고른 숨, 뛰면 점점 헐떡이고, 멈추면 천천히 가라앉는다.
 public class PlayerBreath : MonoBehaviour
 {
     [Header("소리")]
@@ -42,10 +29,8 @@ public class PlayerBreath : MonoBehaviour
     [Tooltip("몇 초마다 소리를 낼지")]
     public float noiseInterval = 1.5f;
 
-    /// <summary>지금 숨찬 정도 (0 = 평온, 1 = 최대로 헐떡임)</summary>
     public float Exertion { get; private set; }
 
-    // ----- Start()에서 한 번만 찾아 저장 (강의 04장) -----
     private PlayerMovement playerMovement;
     private PlayerHide playerHide;
     private NoiseSystem noiseSystem;
@@ -62,7 +47,6 @@ public class PlayerBreath : MonoBehaviour
             this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
         }
 
-        // 두 숨소리를 처음부터 계속 반복 재생해 두고, 볼륨만 바꾼다 (강의 03장 Loop, Play)
         if (this.calmBreath != null)
         {
             this.calmBreath.loop = true;
@@ -78,7 +62,6 @@ public class PlayerBreath : MonoBehaviour
 
     private void Update()
     {
-        // 1) 숨참: 달리면 오르고, 아니면 내려간다
         bool isSprinting = this.playerMovement != null && this.playerMovement.enabled && this.playerMovement.IsSprinting;
         if (isSprinting)
         {
@@ -89,7 +72,6 @@ public class PlayerBreath : MonoBehaviour
             this.Exertion = Mathf.Max(0f, this.Exertion - this.exertionDownSpeed * Time.deltaTime);
         }
 
-        // 2) 두 소리 섞기
         bool isHidden = this.playerHide != null && this.playerHide.IsHidden;
         float calm = this.calmVolume * (1f - this.Exertion * 0.8f);
         if (isHidden)
@@ -105,7 +87,6 @@ public class PlayerBreath : MonoBehaviour
             this.heavyBreath.volume = this.heavyVolume * this.Exertion;
         }
 
-        // 3) 숨어서 헐떡이면 괴물에게 들린다 (밖에서 뛸 때는 발소리가 이미 소리를 낸다)
         if (isHidden && this.Exertion > this.noiseThreshold)
         {
             this.noiseTimer = this.noiseTimer - Time.deltaTime;

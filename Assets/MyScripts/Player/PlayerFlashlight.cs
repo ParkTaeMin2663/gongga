@@ -1,26 +1,8 @@
-using System.Collections;          // 강의 05장: 코루틴
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem; // Input System Package를 쓰기 위해 반드시 포함 (강의 03장)
+using UnityEngine.InputSystem;
 
-/// <summary>
-/// 손전등 켜고 끄기 (F 키) + 배터리.
-///
-/// [붙이는 곳] Player 오브젝트 (Player Input이 있는 오브젝트에 붙여야 OnFlashlight 메시지를 받는다)
-/// [Inspector 연결] Flashlight 칸에 Main Camera의 자식 Spotlight를 드래그
-///
-/// [설계] 손전등은 Main Camera의 자식 Spotlight다. (강의 02장 Spotlight, 04장 계층구조)
-///        자식이라서 카메라가 돌면 손전등도 같이 돌아 → 보는 곳을 비춘다.
-///
-/// [입력] 강의 04장 "새 Input Action 만들기" 방식
-///   - Player 맵에 Flashlight 액션 추가, Path = Keyboard F, Interaction = Press (Press Only)
-///   - 액션 이름이 Flashlight라서 Player Input이 OnFlashlight 함수를 불러준다.
-///
-/// [배터리]
-///   - 켜져 있는 동안 drainPerSecond씩 줄어든다 (강의 03장 Time.deltaTime). 0이면 꺼지고 다시 못 켠다.
-///   - lowBattery 아래로 내려가면 빛이 약해지고 가끔 깜빡인다 (강의 03장 Random.Range).
-///   - 건전지(BatteryPickup)를 주우면 AddBattery()로 충전.
-/// [연출용] FlickerOut(초): 깜빡깜빡하다가 꺼진다 (B의 2층 연출에서 부른다). 강의 05장 코루틴.
-/// </summary>
+// 손전등 켜고 끄기(F)와 배터리. 배터리가 적으면 어두워지고 깜빡인다.
 public class PlayerFlashlight : MonoBehaviour
 {
     [Header("연결")]
@@ -54,12 +36,11 @@ public class PlayerFlashlight : MonoBehaviour
     [Tooltip("켜져 있을 때 왼쪽 아래에 배터리 막대를 보여 준다")]
     public bool showBatteryBar = true;
 
-    /// <summary>지금 켜져 있는지</summary>
     public bool IsOn { get { return this.flashlight != null && this.flashlight.enabled; } }
 
-    private float baseIntensity;     // 처음 밝기 (Start에서 저장)
-    private float flickerTimer;      // 다음 깜빡임까지
-    private bool isScripted;         // FlickerOut 연출 중이면 true (플레이어 입력·배터리 깜빡임 무시)
+    private float baseIntensity;
+    private float flickerTimer;
+    private bool isScripted;
     private Texture2D whiteTexture;
 
     private void Start()
@@ -74,11 +55,9 @@ public class PlayerFlashlight : MonoBehaviour
 
         this.baseIntensity = this.flashlight.intensity;
 
-        // 시작할 때 켤지 끌지 정한다. enabled = 컴포넌트 켜기/끄기 (Inspector의 체크박스와 같다)
         this.flashlight.enabled = this.isOnAtStart && this.hasFlashlight && this.battery > 0f;
     }
 
-    // F를 누른 순간 Player Input이 호출한다.
     private void OnFlashlight(InputValue value)
     {
         if (this.flashlight == null || this.isScripted || this.hasFlashlight == false)
@@ -86,7 +65,6 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
 
-        // 배터리가 없으면 켜지지 않는다 (딸깍 소리만)
         bool turnOn = !this.flashlight.enabled;
         if (turnOn && this.battery <= 0f)
         {
@@ -94,14 +72,12 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
 
-        // 켜져 있으면 끄고, 꺼져 있으면 켠다. (! = 반대로)
         this.flashlight.enabled = turnOn;
         this.PlayClick();
     }
 
     private void Update()
     {
-        // 손전등을 가졌을 때만 왼손에 보인다 (강의 04장: SetActive로 오브젝트 켜고 끄기)
         if (this.heldModel != null && this.heldModel.activeSelf != this.hasFlashlight)
         {
             this.heldModel.SetActive(this.hasFlashlight);
@@ -112,7 +88,6 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
 
-        // 1) 배터리 소모
         this.battery = Mathf.Max(0f, this.battery - this.drainPerSecond * Time.deltaTime);
         if (this.battery <= 0f)
         {
@@ -120,30 +95,26 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
 
-        // 2) 밝기: lowBattery 아래에서 점점 어두워진다
         float rate = 1f;
         if (this.battery < this.lowBattery)
         {
             rate = Mathf.Lerp(this.lowIntensityRate, 1f, this.battery / this.lowBattery);
 
-            // 3) 가끔 짧게 깜빡 (강의 03장 Random.Range)
             this.flickerTimer = this.flickerTimer - Time.deltaTime;
             if (this.flickerTimer <= 0f)
             {
                 this.flickerTimer = Random.Range(0.3f, 2.5f) * (this.battery / this.lowBattery + 0.2f);
-                rate = rate * Random.Range(0f, 0.3f);   // 이번 프레임만 거의 꺼짐
+                rate = rate * Random.Range(0f, 0.3f);
             }
         }
         this.flashlight.intensity = this.baseIntensity * rate;
     }
 
-    /// <summary>건전지를 주웠을 때. amount만큼 충전 (최대 100)</summary>
     public void AddBattery(float amount)
     {
         this.battery = Mathf.Min(100f, this.battery + amount);
     }
 
-    /// <summary>손전등을 얻었을 때 (관리사무소 등). 바로 켜진다.</summary>
     public void GiveFlashlight()
     {
         this.hasFlashlight = true;
@@ -154,10 +125,6 @@ public class PlayerFlashlight : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 연출용: duration초 동안 불규칙하게 깜빡이다가 꺼진다. 배터리는 줄지 않는다.
-    /// 꺼진 뒤에는 플레이어가 F로 다시 켤 수 있다. (예: 2층 실루엣 등장 때)
-    /// </summary>
     public void FlickerOut(float duration)
     {
         if (this.flashlight == null)
@@ -165,7 +132,7 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
         this.StopAllCoroutines();
-        this.StartCoroutine(this.FlickerOutRoutine(duration));   // 강의 05장
+        this.StartCoroutine(this.FlickerOutRoutine(duration));
     }
 
     private IEnumerator FlickerOutRoutine(float duration)
@@ -176,7 +143,6 @@ public class PlayerFlashlight : MonoBehaviour
         float time = 0f;
         while (time < duration)
         {
-            // 켜졌다 꺼졌다를 짧게 반복. 끝으로 갈수록 꺼져 있는 시간이 길어진다
             float progress = time / duration;
             this.flashlight.enabled = Random.Range(0f, 1f) > progress * 0.8f;
             this.flashlight.intensity = this.baseIntensity * Random.Range(0.3f, 1f);
@@ -194,11 +160,10 @@ public class PlayerFlashlight : MonoBehaviour
     {
         if (this.clickSound != null)
         {
-            this.clickSound.Play();   // 강의 03장
+            this.clickSound.Play();
         }
     }
 
-    // 강의 04장 OnGUI: 켜져 있거나 배터리가 적을 때 왼쪽 아래에 배터리 막대
     private void OnGUI()
     {
         if (this.showBatteryBar == false || this.hasFlashlight == false)
@@ -210,7 +175,6 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
 
-        // (11/26 B) 사용자 요청으로 예전 막대 하나 방식으로 되돌림 (A의 아이콘 + 5칸 방식 대신)
         float rate = this.battery / 100f;
         Rect back = new Rect(20f, Screen.height - 34f, 90f, 10f);
         GUI.color = new Color(1f, 1f, 1f, 0.25f);

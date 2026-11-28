@@ -1,16 +1,7 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Input System Package를 쓰기 위해 반드시 포함 (강의 03장)
+using UnityEngine.InputSystem;
 
-/// <summary>
-/// 1인칭 마우스 시점. 마우스를 좌우로 움직이면 좌우로, 위아래로 움직이면 위아래로 본다.
-///
-/// [붙이는 곳] Player 오브젝트 (Player Input이 있는 오브젝트에 붙여야 OnLook 메시지를 받는다)
-/// [Inspector 연결] Camera Transform 칸에 Player의 자식인 Main Camera를 드래그 (강의 03장 "변수에 물체 연결")
-///
-/// [설계] Player(몸)는 Rigidbody라서 직접 돌리면 물리와 부딪쳐 화면이 떨릴 수 있다.
-///        그래서 몸은 그대로 두고, 자식인 Main Camera만 회전시킨다. (강의 04장 계층구조)
-///        이동 방향은 PlayerMovement가 이 카메라의 방향을 보고 정한다.
-/// </summary>
+// 1인칭 마우스 시점. 마우스를 좌우로 움직이면 좌우로, 위아래로 움직이면 위아래로 본다.
 public class PlayerLook : MonoBehaviour
 {
     [Header("연결")]
@@ -28,14 +19,11 @@ public class PlayerLook : MonoBehaviour
     [Tooltip("아래로 내려다볼 수 있는 최대 각도 (양수 = 아래쪽)")]
     public float maxPitch = 80f;
 
-    // ----- 현재 각도 -----
-    private float yaw;    // 좌우 각도 (Y축 회전)
-    private float pitch;  // 위아래 각도 (X축 회전)
+    private float yaw;
+    private float pitch;
 
-    // ----- 이번 프레임에 들어온 마우스 움직임 -----
     private Vector2 lookDelta;
 
-    /// <summary>true면 시점이 멈춘다. 문 등을 잡고 있는 동안 PlayerInteract가 켠다.</summary>
     public bool IsLocked { get; set; }
 
     private void Start()
@@ -46,50 +34,34 @@ public class PlayerLook : MonoBehaviour
             return;
         }
 
-        // 시작할 때 카메라가 보고 있던 좌우 방향에서 출발
         this.yaw = this.cameraTransform.eulerAngles.y;
         this.pitch = 0f;
 
-        // [강의 외] 마우스 커서를 화면 가운데에 고정하고 숨긴다. (1인칭 게임의 기본)
-        // 에디터에서는 Esc를 누르면 커서가 다시 나타나고, Game 창을 클릭하면 다시 고정된다.
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    // 마우스가 움직일 때마다 Player Input이 호출한다. 값 = 이번에 움직인 픽셀 수 (x = 좌우, y = 위아래)
-    /// <summary>
-    /// 바라보는 좌우 방향을 강제로 정한다. (장롱에 들어가고 나올 때 PlayerHide가 부른다)
-    /// angle = 월드 기준 Y 각도. 위아래(pitch)는 정면으로 되돌린다.
-    /// </summary>
     public void SetYaw(float angle)
     {
         this.SetLook(angle, 0f);
     }
 
-    /// <summary>
-    /// 바라보는 좌우(yawAngle)·위아래(pitchAngle) 각도를 강제로 정한다. (11/24, 2층 연출에서 괴물 쪽으로 고개를 돌릴 때 Floor2Event가 부른다)
-    /// pitchAngle: 음수 = 위, 양수 = 아래 (minPitch~maxPitch로 제한)
-    /// </summary>
     public void SetLook(float yawAngle, float pitchAngle)
     {
         this.yaw = yawAngle;
         this.pitch = Mathf.Clamp(pitchAngle, this.minPitch, this.maxPitch);
         this.lookDelta = Vector2.zero;
 
-        // 시점이 잠겨 있어도(IsLocked) 바로 보이도록 카메라를 직접 돌린다. (강의 03장 rotation + Quaternion.Euler)
         if (this.cameraTransform != null)
         {
             this.cameraTransform.rotation = Quaternion.Euler(this.pitch, this.yaw, 0f);
         }
     }
 
-    /// <summary>지금 바라보는 좌우 각도(도)</summary>
     public float Yaw { get { return this.yaw; } }
 
-    /// <summary>지금 바라보는 위아래 각도(도)</summary>
     public float Pitch { get { return this.pitch; } }
 
-    // 한 프레임에 여러 번 불릴 수 있어서 더해서(+=) 모아 둔다.
     private void OnLook(InputValue value)
     {
         this.lookDelta += value.Get<Vector2>();
@@ -102,25 +74,19 @@ public class PlayerLook : MonoBehaviour
             return;
         }
 
-        // 잠겨 있으면 마우스 움직임을 버린다. (물체를 잡고 있는 동안)
         if (this.IsLocked)
         {
             this.lookDelta = Vector2.zero;
             return;
         }
 
-        // 1) 모아 둔 마우스 움직임을 각도로 바꾼다.
-        //    마우스 움직임은 이미 "이번 프레임에 움직인 양"이라 Time.deltaTime을 곱하지 않는다.
         this.yaw += this.lookDelta.x * this.mouseSensitivity;
-        this.pitch -= this.lookDelta.y * this.mouseSensitivity; // 마우스를 위로 올리면 위를 보도록 빼기
+        this.pitch -= this.lookDelta.y * this.mouseSensitivity;
 
-        // 2) 위아래는 목이 꺾이지 않게 제한
         this.pitch = Mathf.Clamp(this.pitch, this.minPitch, this.maxPitch);
 
-        // 3) 카메라 회전을 직접 지정 (강의 03장: rotation + Quaternion.Euler)
         this.cameraTransform.rotation = Quaternion.Euler(this.pitch, this.yaw, 0f);
 
-        // 4) 사용한 움직임은 비운다. (다음 프레임에 또 모은다)
         this.lookDelta = Vector2.zero;
     }
 }
