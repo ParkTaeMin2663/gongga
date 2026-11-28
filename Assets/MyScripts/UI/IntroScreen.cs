@@ -38,7 +38,7 @@ public class IntroScreen : MonoBehaviour
     public int fontSize = 40;
     public int lineGap = 90;
 
-    public static bool isPlaying = false;
+    public static bool isPlaying = false;   // 강의 07장: public static 변수
 
     private TitleScreen titleScreen;
     private bool waitingForTitle;
@@ -58,7 +58,7 @@ public class IntroScreen : MonoBehaviour
         isPlaying = false;
         this.lineAlpha = new float[this.lines.Length];
 
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.playerMovement = playerObject.GetComponent<PlayerMovement>();
@@ -85,7 +85,7 @@ public class IntroScreen : MonoBehaviour
         if (this.waitingForTitle && TitleScreen.hasStarted)
         {
             this.waitingForTitle = false;
-            this.StartCoroutine(this.PlayIntro());
+            this.StartCoroutine(this.PlayIntro());   // 강의 05장: 코루틴 StartCoroutine
         }
 
         if (isPlaying == false)
@@ -98,7 +98,7 @@ public class IntroScreen : MonoBehaviour
         if (this.skipped == false && Time.time - this.startTime > 0.5f)
         {
             bool keyPressed = Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame;
-            bool mousePressed = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+            bool mousePressed = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;   // 강의 06장: Mouse.current
             if (keyPressed || mousePressed)
             {
                 this.skipped = true;
@@ -117,7 +117,7 @@ public class IntroScreen : MonoBehaviour
         {
             while (this.lineAlpha[i] < 1f && this.skipped == false)
             {
-                this.lineAlpha[i] = this.lineAlpha[i] + Time.deltaTime / this.lineFadeTime;
+                this.lineAlpha[i] = this.lineAlpha[i] + Time.deltaTime / this.lineFadeTime;   // 강의 03장: Time.deltaTime
                 yield return null;
             }
             this.lineAlpha[i] = 1f;
@@ -156,7 +156,7 @@ public class IntroScreen : MonoBehaviour
         if (this.playerLook != null) this.playerLook.IsLocked = frozen;
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.screenAlpha <= 0f)
         {

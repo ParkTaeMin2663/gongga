@@ -35,8 +35,9 @@ public class PlayerLook : MonoBehaviour
         }
 
         this.yaw = this.cameraTransform.eulerAngles.y;
-        this.pitch = 0f;
+        this.pitch = 0f;   // 강의 03장: AudioSource Pitch
 
+        // [강의 외] Cursor.lockState / Cursor.visible: 커서를 화면 가운데 고정하고 숨기기
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -54,7 +55,7 @@ public class PlayerLook : MonoBehaviour
 
         if (this.cameraTransform != null)
         {
-            this.cameraTransform.rotation = Quaternion.Euler(this.pitch, this.yaw, 0f);
+            this.cameraTransform.rotation = Quaternion.Euler(this.pitch, this.yaw, 0f);   // 강의 03장: Quaternion.Euler
         }
     }
 
@@ -62,7 +63,7 @@ public class PlayerLook : MonoBehaviour
 
     public float Pitch { get { return this.pitch; } }
 
-    private void OnLook(InputValue value)
+    private void OnLook(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnLook
     {
         this.lookDelta += value.Get<Vector2>();
     }

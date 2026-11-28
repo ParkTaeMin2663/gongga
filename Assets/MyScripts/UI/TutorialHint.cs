@@ -18,7 +18,7 @@ public class TutorialHint : MonoBehaviour
     [Tooltip("이 번호 이상의 체크포인트를 지났으면 안 보여 준다 (2 = 2층 체크포인트). 0이면 항상 보여 줌")]
     public int skipFromCheckpoint = 2;
 
-    public static TutorialHint current;
+    public static TutorialHint current;   // 강의 07장: public static 변수
 
     private bool isUsed;
     private float timer;
@@ -33,9 +33,9 @@ public class TutorialHint : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)   // 강의 05장: Is Trigger + OnTriggerEnter
     {
-        if (this.isUsed || other.CompareTag("Player") == false)
+        if (this.isUsed || other.CompareTag("Player") == false)   // 강의 07장: CompareTag
         {
             return;
         }
@@ -66,7 +66,7 @@ public class TutorialHint : MonoBehaviour
 
         if (this.timer < this.showTime)
         {
-            this.alpha = Mathf.MoveTowards(this.alpha, 1f, Time.deltaTime * 2f);
+            this.alpha = Mathf.MoveTowards(this.alpha, 1f, Time.deltaTime * 2f);   // 강의 03장: Time.deltaTime
             if (this.alpha >= 1f)
             {
                 this.timer += Time.deltaTime;
@@ -83,7 +83,7 @@ public class TutorialHint : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.isShowing == false || this.alpha <= 0f)
         {

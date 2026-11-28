@@ -30,7 +30,7 @@ public class ItemPickup : MonoBehaviour
     {
         if (this.type == ItemType.Key && PlayerKeys.Has(this.keyName))
         {
-            Destroy(this.gameObject);
+            Destroy(this.gameObject);   // 강의 05장: Destroy
         }
     }
 
@@ -56,7 +56,7 @@ public class ItemPickup : MonoBehaviour
 
         if (this.pickupSound != null)
         {
-            AudioSource.PlayClipAtPoint(this.pickupSound, this.transform.position);
+            AudioSource.PlayClipAtPoint(this.pickupSound, this.transform.position);   // 강의 07장: AudioSource.PlayClipAtPoint
         }
 
         Destroy(this.gameObject);

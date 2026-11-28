@@ -40,7 +40,7 @@ public class TitleScreen : MonoBehaviour
     [Tooltip("시작을 누른 뒤 어두운 막이 걷히는 시간(초)")]
     public float fadeTime = 1.5f;
 
-    public static bool hasStarted = false;
+    public static bool hasStarted = false;   // 강의 07장: public static 변수
 
     private bool isShowing;
     private float alpha;
@@ -53,7 +53,7 @@ public class TitleScreen : MonoBehaviour
 
     private void Start()
     {
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.playerMovement = playerObject.GetComponent<PlayerMovement>();
@@ -82,6 +82,7 @@ public class TitleScreen : MonoBehaviour
     {
         if (this.isShowing)
         {
+            // [강의 외] Cursor.lockState / Cursor.visible: 메뉴에서 마우스 커서 보이기
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -102,19 +103,20 @@ public class TitleScreen : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         this.SetPlayerFrozen(false);
-        this.StartCoroutine(this.FadeOut());
+        this.StartCoroutine(this.FadeOut());   // 강의 05장: 코루틴 StartCoroutine
     }
 
     private IEnumerator FadeOut()
     {
         while (this.alpha > 0f)
         {
-            this.alpha = this.alpha - Time.deltaTime / this.fadeTime;
+            this.alpha = this.alpha - Time.deltaTime / this.fadeTime;   // 강의 03장: Time.deltaTime
             yield return null;
         }
         this.alpha = 0f;
     }
 
+    // [강의 외] Application.Quit: 게임 종료
     private void Quit()
     {
 #if UNITY_EDITOR
@@ -123,7 +125,7 @@ public class TitleScreen : MonoBehaviour
         Application.Quit();
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.alpha <= 0f)
         {

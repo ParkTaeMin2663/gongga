@@ -12,7 +12,7 @@ public class FootstepZone : MonoBehaviour
 
     private void Start()
     {
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.playerAudio = playerObject.GetComponent<AudioSource>();
@@ -23,15 +23,15 @@ public class FootstepZone : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)   // 강의 05장: Is Trigger + OnTriggerEnter
     {
-        if (other.CompareTag("Player") && this.playerAudio != null && this.zoneClip != null)
+        if (other.CompareTag("Player") && this.playerAudio != null && this.zoneClip != null)   // 강의 07장: CompareTag
         {
             this.playerAudio.clip = this.zoneClip;
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)   // 강의 05장: Is Trigger + OnTriggerExit
     {
         if (other.CompareTag("Player") && this.playerAudio != null)
         {

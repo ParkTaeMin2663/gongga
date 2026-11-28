@@ -40,7 +40,7 @@ public class ClueReader : MonoBehaviour
         this.whiteTexture = Texture2D.whiteTexture;
         this.audioSource = this.GetComponent<AudioSource>();
 
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject == null)
         {
             Debug.LogError("[ClueReader] 이름이 Player인 오브젝트가 없습니다.");
@@ -86,7 +86,7 @@ public class ClueReader : MonoBehaviour
             return;
         }
         RaycastHit hit;
-        if (Physics.Raycast(this.cameraTransform.position, this.cameraTransform.forward, out hit, this.reachDistance))
+        if (Physics.Raycast(this.cameraTransform.position, this.cameraTransform.forward, out hit, this.reachDistance))   // 강의 07장: Physics.Raycast
         {
             this.lookClue = hit.collider.GetComponentInParent<ClueItem>();
         }
@@ -107,7 +107,7 @@ public class ClueReader : MonoBehaviour
         if (clue.type == ClueItem.ClueType.Cassette && clue.audioClip != null && this.audioSource != null)
         {
             this.audioSource.clip = clue.audioClip;
-            this.audioSource.Play();
+            this.audioSource.Play();   // 강의 03장: AudioSource.Play
         }
         else
         {
@@ -145,7 +145,7 @@ public class ClueReader : MonoBehaviour
         this.current.IsRead = true;
         if (this.current.removeAfterRead)
         {
-            Destroy(this.current.gameObject);
+            Destroy(this.current.gameObject);   // 강의 05장: Destroy
         }
         this.current = null;
         this.SetPlayerFrozen(false);
@@ -171,7 +171,7 @@ public class ClueReader : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.current == null)
         {

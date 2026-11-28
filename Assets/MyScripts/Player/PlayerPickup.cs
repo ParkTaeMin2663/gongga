@@ -14,9 +14,9 @@ public class PlayerPickup : MonoBehaviour
         if (this.playerFlashlight == null) this.playerFlashlight = this.GetComponent<PlayerFlashlight>();
     }
 
-    private void OnInteract(InputValue value)
+    private void OnInteract(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnInteract
     {
-        if (value.isPressed == false || this.playerInteract == null)
+        if (value.isPressed == false || this.playerInteract == null)   // 강의 02장: value.isPressed (Press And Release)
         {
             return;
         }
@@ -28,7 +28,7 @@ public class PlayerPickup : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.playerInteract == null || this.playerInteract.LookItem == null)
         {

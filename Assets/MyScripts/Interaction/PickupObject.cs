@@ -56,14 +56,14 @@ public class PickupObject : MonoBehaviour, IInteractable
 
         this.audioSource = this.GetComponent<AudioSource>();
 
-        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        GameObject noiseObject = GameObject.Find("NoiseSystem");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (noiseObject != null)
         {
             this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
         }
     }
 
-    private void OnCollisionEnter(Collision coll)
+    private void OnCollisionEnter(Collision coll)   // 강의 03장: OnCollisionEnter
     {
         if (this.IsHeld)
         {
@@ -75,7 +75,7 @@ public class PickupObject : MonoBehaviour, IInteractable
             return;
         }
 
-        float impactSpeed = coll.relativeVelocity.magnitude;
+        float impactSpeed = coll.relativeVelocity.magnitude;   // 강의 07장: relativeVelocity
         if (impactSpeed < this.noiseMinImpactSpeed)
         {
             return;
@@ -83,7 +83,7 @@ public class PickupObject : MonoBehaviour, IInteractable
 
         if (this.audioSource != null)
         {
-            this.audioSource.Play();
+            this.audioSource.Play();   // 강의 03장: AudioSource.Play
         }
 
         if (this.noiseSystem != null)
@@ -102,7 +102,7 @@ public class PickupObject : MonoBehaviour, IInteractable
         this.cameraTransform = cameraTransform;
         this.IsHeld = true;
 
-        this.originalUseGravity = this.rb.useGravity;
+        this.originalUseGravity = this.rb.useGravity;   // 강의 03장: Rigidbody Use Gravity
         this.originalAngularDamping = this.rb.angularDamping;
         this.rb.useGravity = false;
         this.rb.angularDamping = 10f;
@@ -158,6 +158,6 @@ public class PickupObject : MonoBehaviour, IInteractable
             return;
         }
 
-        this.rb.AddForce(direction.normalized * this.throwForce);
+        this.rb.AddForce(direction.normalized * this.throwForce);   // 강의 03장: Rigidbody.AddForce
     }
 }

@@ -44,14 +44,14 @@ public class PlayerInteract : MonoBehaviour
         this.playerHide = this.GetComponent<PlayerHide>();
     }
 
-    private void OnLook(InputValue value)
+    private void OnLook(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnLook
     {
         this.lookDelta += value.Get<Vector2>();
     }
 
     private void OnGrab(InputValue value)
     {
-        if (value.isPressed)
+        if (value.isPressed)   // 강의 02장: value.isPressed (Press And Release)
         {
             this.StartGrab();
         }
@@ -61,7 +61,7 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    private void OnThrow(InputValue value)
+    private void OnThrow(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnThrow
     {
         PickupObject pickup = this.heldTarget as PickupObject;
         if (pickup == null)
@@ -123,7 +123,7 @@ public class PlayerInteract : MonoBehaviour
         this.LookItem = null;
 
         RaycastHit hit;
-        if (Physics.Raycast(this.cameraTransform.position, this.cameraTransform.forward, out hit, this.reachDistance))
+        if (Physics.Raycast(this.cameraTransform.position, this.cameraTransform.forward, out hit, this.reachDistance))   // 강의 07장: Physics.Raycast
         {
             this.lookTarget = hit.collider.GetComponentInParent<IInteractable>();
 
@@ -171,7 +171,7 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         bool isActive = this.lookTarget != null || this.heldTarget != null || this.LookHideSpot != null || this.LookItem != null;
         float size = isActive ? 10f : 4f;

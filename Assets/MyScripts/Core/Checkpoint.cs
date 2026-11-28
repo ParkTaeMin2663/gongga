@@ -10,7 +10,7 @@ public class Checkpoint : MonoBehaviour
     [Tooltip("화면에 잠깐 \"저장됨\"을 띄울지")]
     public bool showSavedMessage = true;
 
-    public static int savedOrder = 0;
+    public static int savedOrder = 0;   // 강의 07장: public static 변수
     public static Vector3 savedPosition;
     public static float savedYaw;
     public static bool isRespawning = false;
@@ -28,9 +28,9 @@ public class Checkpoint : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)   // 강의 05장: Is Trigger + OnTriggerEnter
     {
-        if (other.CompareTag("Player") == false)
+        if (other.CompareTag("Player") == false)   // 강의 07장: CompareTag
         {
             return;
         }

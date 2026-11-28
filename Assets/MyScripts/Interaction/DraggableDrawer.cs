@@ -35,7 +35,7 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        if (this.transform.parent == null)
+        if (this.transform.parent == null)   // 강의 04장: transform.parent (계층구조)
         {
             Debug.LogError(this.name + " : 서랍은 서랍장(빈 오브젝트)의 자식이어야 합니다.");
         }
@@ -93,7 +93,7 @@ public class DraggableDrawer : MonoBehaviour, IInteractable
     {
         if (sound != null)
         {
-            sound.Play();
+            sound.Play();   // 강의 03장: AudioSource.Play
         }
     }
 }

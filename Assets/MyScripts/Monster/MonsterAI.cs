@@ -144,7 +144,7 @@ public class MonsterAI : MonoBehaviour
 
     public bool IsRouteFinished { get; private set; }
 
-    private NavMeshAgent agent;
+    private NavMeshAgent agent;   // 강의 07장: NavMeshAgent
     private Transform player;
     private PlayerHide playerHide;
     private PlayerDeath playerDeath;
@@ -209,10 +209,10 @@ public class MonsterAI : MonoBehaviour
         Rigidbody rb = this.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.isKinematic = true;
+            rb.isKinematic = true;   // 강의 03장: Rigidbody Is Kinematic
         }
 
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.player = playerObject.transform;
@@ -290,9 +290,9 @@ public class MonsterAI : MonoBehaviour
             {
                 Vector3 look = this.pauseLookAt.position;
                 look.y = this.transform.position.y;
-                this.transform.LookAt(look);
+                this.transform.LookAt(look);   // 강의 07장: transform.LookAt
             }
-            this.pauseTimer = this.pauseTimer + Time.deltaTime;
+            this.pauseTimer = this.pauseTimer + Time.deltaTime;   // 강의 03장: Time.deltaTime
             if (this.pauseTimer >= this.pauseTime)
             {
                 this.isPausing = false;
@@ -366,7 +366,7 @@ public class MonsterAI : MonoBehaviour
     {
         this.Stop();
 
-        this.transform.Rotate(0f, this.searchTurnSpeed * Time.deltaTime, 0f);
+        this.transform.Rotate(0f, this.searchTurnSpeed * Time.deltaTime, 0f);   // 강의 03장: transform.Rotate
 
         this.searchTimer = this.searchTimer + Time.deltaTime;
         if (this.searchTimer >= this.searchTime)
@@ -384,7 +384,7 @@ public class MonsterAI : MonoBehaviour
 
         RaycastHit hit;
         Vector3 origin = this.transform.position + Vector3.up * 1.2f;
-        if (Physics.Raycast(origin, this.transform.forward, out hit, this.doorCheckDistance) == false)
+        if (Physics.Raycast(origin, this.transform.forward, out hit, this.doorCheckDistance) == false)   // 강의 07장: Physics.Raycast
         {
             return;
         }
@@ -415,7 +415,7 @@ public class MonsterAI : MonoBehaviour
 
         if (bash && this.bashGrowlClip != null)
         {
-            AudioSource.PlayClipAtPoint(this.bashGrowlClip, this.transform.position + Vector3.up * 1.6f);
+            AudioSource.PlayClipAtPoint(this.bashGrowlClip, this.transform.position + Vector3.up * 1.6f);   // 강의 07장: AudioSource.PlayClipAtPoint
         }
 
         if (bash == false)
@@ -500,7 +500,7 @@ public class MonsterAI : MonoBehaviour
             if (this.MoveTowards(this.targetPosition, speed))
             {
                 this.lurkMoving = false;
-                this.lurkPauseTimer = Random.Range(this.lurkPauseMin, this.lurkPauseMax);
+                this.lurkPauseTimer = Random.Range(this.lurkPauseMin, this.lurkPauseMax);   // 강의 03장: Random.Range
             }
         }
         else
@@ -609,10 +609,11 @@ public class MonsterAI : MonoBehaviour
             this.voiceSource.loop = true;
             this.voiceSource.time = sniffing ? 0f : Random.Range(0f, want.length * 0.8f);
             this.voiceSource.volume = sniffing ? this.sniffVolume : this.breathVolume;
-            this.voiceSource.Play();
+            this.voiceSource.Play();   // 강의 03장: AudioSource.Play
         }
     }
 
+    // [강의 외] Animator: 상태와 속도에 맞는 동작 고르기
     private void UpdateAnimation()
     {
         if (this.animator == null)
@@ -651,6 +652,7 @@ public class MonsterAI : MonoBehaviour
         this.PlayAnim(next);
     }
 
+    // [강의 외] Animator.CrossFade: 동작을 부드럽게 바꾸기
     private void PlayAnim(string animName)
     {
         if (this.animator == null || animName == this.currentAnim)
@@ -687,7 +689,7 @@ public class MonsterAI : MonoBehaviour
         this.footstepSound.minDistance = this.IsPlayerHidden() ? this.hiddenStepMinDistance : this.normalStepMinDistance;
         this.footstepSound.clip = this.footstepClips[Random.Range(0, this.footstepClips.Length)];
         this.footstepSound.volume = fast ? this.chaseStepVolume : this.walkStepVolume;
-        this.footstepSound.pitch = Random.Range(0.9f, 1.1f);
+        this.footstepSound.pitch = Random.Range(0.9f, 1.1f);   // 강의 03장: AudioSource Pitch
         this.footstepSound.Play();
     }
 
@@ -703,7 +705,7 @@ public class MonsterAI : MonoBehaviour
 
         if ((this.agent.destination - target).magnitude > 0.3f || this.agent.hasPath == false)
         {
-            this.agent.SetDestination(target);
+            this.agent.SetDestination(target);   // 강의 07장: NavMeshAgent.SetDestination
         }
 
         if (this.agent.pathPending)
@@ -775,11 +777,11 @@ public class MonsterAI : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);   // 강의 04장: SceneManager.LoadScene
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.showDebug == false)
         {

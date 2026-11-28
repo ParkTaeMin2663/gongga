@@ -60,6 +60,7 @@ public class DraggableDoor : MonoBehaviour, IInteractable
 
     private Rigidbody rb;
 
+    // [강의 외] HingeJoint: 문을 경첩처럼 고정하고 열린 각도를 읽는다
     private HingeJoint hinge;
 
     private bool isClosed = true;
@@ -77,7 +78,7 @@ public class DraggableDoor : MonoBehaviour, IInteractable
         this.rb = this.GetComponent<Rigidbody>();
         this.hinge = this.GetComponent<HingeJoint>();
 
-        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        GameObject noiseObject = GameObject.Find("NoiseSystem");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (noiseObject != null)
         {
             this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
@@ -89,7 +90,7 @@ public class DraggableDoor : MonoBehaviour, IInteractable
             return;
         }
 
-        this.rb.isKinematic = true;
+        this.rb.isKinematic = true;   // 강의 03장: Rigidbody Is Kinematic
     }
 
     public void OnGrabStart(Transform cameraTransform)
@@ -107,7 +108,7 @@ public class DraggableDoor : MonoBehaviour, IInteractable
             PlayerKeys.ShowMessage(this.requiredKey + "로 문을 열었다");
             if (this.unlockClip != null)
             {
-                AudioSource.PlayClipAtPoint(this.unlockClip, this.transform.position);
+                AudioSource.PlayClipAtPoint(this.unlockClip, this.transform.position);   // 강의 07장: AudioSource.PlayClipAtPoint
             }
         }
 
@@ -148,14 +149,15 @@ public class DraggableDoor : MonoBehaviour, IInteractable
 
         Vector3 push = forward * mouseDelta.y + right * mouseDelta.x;
 
-        this.rb.AddForce(push * this.pushStrength, ForceMode.Impulse);
+        // [강의 외] ForceMode.Impulse: 한 번에 툭 미는 힘
+        this.rb.AddForce(push * this.pushStrength, ForceMode.Impulse);   // 강의 03장: Rigidbody.AddForce
     }
 
     private void Update()
     {
         if (this.settleTimer > 0f)
         {
-            this.settleTimer = this.settleTimer - Time.deltaTime;
+            this.settleTimer = this.settleTimer - Time.deltaTime;   // 강의 03장: Time.deltaTime
             if (this.settleTimer <= 0f && this.cameraTransform == null && this.IsBroken == false && this.rb != null)
             {
                 this.rb.isKinematic = true;
@@ -195,14 +197,14 @@ public class DraggableDoor : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnCollisionEnter(Collision coll)
+    private void OnCollisionEnter(Collision coll)   // 강의 03장: OnCollisionEnter
     {
         if (this.IsBroken == false || this.fallSound == null)
         {
             return;
         }
 
-        float speed = coll.relativeVelocity.magnitude;
+        float speed = coll.relativeVelocity.magnitude;   // 강의 07장: relativeVelocity
         if (speed < this.fallSoundMinSpeed || Time.time - this.lastFallSoundTime < 0.15f)
         {
             return;
@@ -210,8 +212,8 @@ public class DraggableDoor : MonoBehaviour, IInteractable
         this.lastFallSoundTime = Time.time;
 
         this.fallSound.volume = Mathf.Clamp01((speed - this.fallSoundMinSpeed) / (this.fallSoundMaxSpeed - this.fallSoundMinSpeed)) * 0.7f + 0.3f;
-        this.fallSound.pitch = Random.Range(0.85f, 1.05f);
-        this.fallSound.Play();
+        this.fallSound.pitch = Random.Range(0.85f, 1.05f);   // 강의 03장: Random.Range, AudioSource Pitch
+        this.fallSound.Play();   // 강의 03장: AudioSource.Play
     }
 
     public void PushOpen(Vector3 direction, float impulse)
@@ -245,14 +247,14 @@ public class DraggableDoor : MonoBehaviour, IInteractable
 
         if (this.hinge != null)
         {
-            Destroy(this.hinge);
+            Destroy(this.hinge);   // 강의 05장: Destroy
             this.hinge = null;
         }
 
         if (this.rb != null)
         {
             this.rb.isKinematic = false;
-            this.rb.useGravity = true;
+            this.rb.useGravity = true;   // 강의 03장: Rigidbody Use Gravity
             this.rb.AddForce(direction.normalized * impulse, ForceMode.Impulse);
             this.rb.AddTorque(new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)) * impulse * 0.3f, ForceMode.Impulse);
         }
@@ -261,7 +263,7 @@ public class DraggableDoor : MonoBehaviour, IInteractable
         {
             if (this.breakSound.gameObject != this.gameObject)
             {
-                this.breakSound.transform.parent = null;
+                this.breakSound.transform.parent = null;   // 강의 04장: transform.parent (계층구조)
                 Destroy(this.breakSound.gameObject, 3f);
             }
             this.breakSound.Play();

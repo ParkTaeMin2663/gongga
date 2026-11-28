@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogWarning("[PlayerMovement] Player에 Audio Source가 없어서 발소리가 나지 않습니다.");
         }
 
-        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        GameObject noiseObject = GameObject.Find("NoiseSystem");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (noiseObject != null)
         {
             this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
@@ -76,14 +76,14 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnMove(InputValue value)
+    private void OnMove(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnMove
     {
         this.moveInput = value.Get<Vector2>();
     }
 
-    private void OnSprint(InputValue value)
+    private void OnSprint(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnSprint
     {
-        this.isSprintHeld = value.isPressed;
+        this.isSprintHeld = value.isPressed;   // 강의 02장: value.isPressed (Press And Release)
     }
 
     private void Update()
@@ -101,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isMoving)
         {
-            this.stepTimer = this.stepTimer - Time.deltaTime;
+            this.stepTimer = this.stepTimer - Time.deltaTime;   // 강의 03장: Time.deltaTime
             if (this.stepTimer <= 0f)
             {
                 this.stepTimer = this.IsSprinting ? this.sprintStepInterval : this.walkStepInterval;
@@ -114,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Transform basis = this.cameraTransform != null ? this.cameraTransform : this.transform;
-        Quaternion yawOnly = Quaternion.Euler(0f, basis.eulerAngles.y, 0f);
+        Quaternion yawOnly = Quaternion.Euler(0f, basis.eulerAngles.y, 0f);   // 강의 03장: Quaternion.Euler
         Vector3 forward = yawOnly * Vector3.forward;
         Vector3 right = yawOnly * Vector3.right;
         Vector3 direction = right * this.moveInput.x + forward * this.moveInput.y;
@@ -134,8 +134,8 @@ public class PlayerMovement : MonoBehaviour
         if (this.footstepAudio != null)
         {
             this.footstepAudio.volume = this.IsSprinting ? this.sprintVolume : this.walkVolume;
-            this.footstepAudio.pitch = Random.Range(1f - this.pitchVariation, 1f + this.pitchVariation);
-            this.footstepAudio.Play();
+            this.footstepAudio.pitch = Random.Range(1f - this.pitchVariation, 1f + this.pitchVariation);   // 강의 03장: Random.Range, AudioSource Pitch
+            this.footstepAudio.Play();   // 강의 03장: AudioSource.Play
         }
 
         if (this.IsSprinting && this.noiseSystem != null)

@@ -47,7 +47,7 @@ public class RoarScare : MonoBehaviour
             return;
         }
 
-        this.timer = this.timer - Time.deltaTime;
+        this.timer = this.timer - Time.deltaTime;   // 강의 03장: Time.deltaTime
         if (this.timer > 0f)
         {
             return;
@@ -67,7 +67,7 @@ public class RoarScare : MonoBehaviour
         }
         else
         {
-            Vector3 dir = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f) * Vector3.forward;
+            Vector3 dir = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f) * Vector3.forward;   // 강의 03장: Quaternion.Euler, Random.Range
             from = this.transform.position + dir * 15f + Vector3.down * 3f;
         }
 
@@ -89,7 +89,7 @@ public class RoarScare : MonoBehaviour
         Vector3 toSource = from - this.transform.position;
         float distance = Mathf.Min(toSource.magnitude, this.nearDistance);
         Vector3 position = this.transform.position + toSource.normalized * distance;
-        AudioSource.PlayClipAtPoint(clip, position, this.volume);
+        AudioSource.PlayClipAtPoint(clip, position, this.volume);   // 강의 07장: AudioSource.PlayClipAtPoint
     }
 
     private void ResetTimer()

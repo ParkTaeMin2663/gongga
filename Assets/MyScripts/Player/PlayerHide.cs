@@ -63,9 +63,9 @@ public class PlayerHide : MonoBehaviour
         this.whiteTexture = Texture2D.whiteTexture;
     }
 
-    private void OnInteract(InputValue value)
+    private void OnInteract(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnInteract
     {
-        this.isInteractHeld = value.isPressed;
+        this.isInteractHeld = value.isPressed;   // 강의 02장: value.isPressed (Press And Release)
         this.holdTimer = 0f;
     }
 
@@ -81,7 +81,7 @@ public class PlayerHide : MonoBehaviour
 
         if (this.IsHidden)
         {
-            this.holdTimer = this.holdTimer + Time.deltaTime;
+            this.holdTimer = this.holdTimer + Time.deltaTime;   // 강의 03장: Time.deltaTime
             if (this.holdTimer >= this.exitHoldTime)
             {
                 this.isInteractHeld = false;
@@ -205,7 +205,7 @@ public class PlayerHide : MonoBehaviour
             {
                 this.rb.linearVelocity = Vector3.zero;
             }
-            this.rb.isKinematic = frozen;
+            this.rb.isKinematic = frozen;   // 강의 03장: Rigidbody Is Kinematic
         }
         if (this.playerMovement != null)
         {
@@ -222,7 +222,7 @@ public class PlayerHide : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.currentSpot != null && this.currentSpot.FadeAmount > 0f)
         {

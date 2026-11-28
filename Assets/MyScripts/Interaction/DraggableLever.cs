@@ -41,7 +41,7 @@ public class DraggableLever : MonoBehaviour, IInteractable
         this.startLocalRotation = this.transform.localRotation;
         this.audioSource = this.GetComponent<AudioSource>();
 
-        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        GameObject noiseObject = GameObject.Find("NoiseSystem");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (noiseObject != null)
         {
             this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
@@ -108,7 +108,7 @@ public class DraggableLever : MonoBehaviour, IInteractable
 
         if (this.audioSource != null)
         {
-            this.audioSource.Play();
+            this.audioSource.Play();   // 강의 03장: AudioSource.Play
         }
 
         if (this.noiseSystem != null)
@@ -121,6 +121,6 @@ public class DraggableLever : MonoBehaviour, IInteractable
     {
         float angle = this.offAngle + (this.onAngle - this.offAngle) * this.Progress;
 
-        this.transform.localRotation = this.startLocalRotation * Quaternion.Euler(angle, 0f, 0f);
+        this.transform.localRotation = this.startLocalRotation * Quaternion.Euler(angle, 0f, 0f);   // 강의 03장: Quaternion.Euler
     }
 }

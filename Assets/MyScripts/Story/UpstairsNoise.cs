@@ -47,7 +47,7 @@ public class UpstairsNoise : MonoBehaviour
 
     private void Start()
     {
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");   // 강의 05장: FindGameObjectWithTag
         if (playerObject != null)
         {
             this.player = playerObject.transform;
@@ -58,9 +58,9 @@ public class UpstairsNoise : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)   // 강의 05장: Is Trigger + OnTriggerEnter
     {
-        if (other.CompareTag("Player") == false || this.isInside)
+        if (other.CompareTag("Player") == false || this.isInside)   // 강의 07장: CompareTag
         {
             return;
         }
@@ -69,10 +69,10 @@ public class UpstairsNoise : MonoBehaviour
             return;
         }
         this.isInside = true;
-        this.loop = this.StartCoroutine(this.NoiseLoop());
+        this.loop = this.StartCoroutine(this.NoiseLoop());   // 강의 05장: 코루틴 StartCoroutine
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)   // 강의 05장: Is Trigger + OnTriggerExit
     {
         if (other.CompareTag("Player") == false)
         {
@@ -88,7 +88,7 @@ public class UpstairsNoise : MonoBehaviour
 
     private IEnumerator NoiseLoop()
     {
-        yield return new WaitForSeconds(this.firstDelay);
+        yield return new WaitForSeconds(this.firstDelay);   // 강의 05장: WaitForSeconds
 
         while (this.isInside)
         {
@@ -101,7 +101,7 @@ public class UpstairsNoise : MonoBehaviour
             }
             else
             {
-                Vector3 step = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-0.5f, 0.5f)).normalized * 0.8f;
+                Vector3 step = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-0.5f, 0.5f)).normalized * 0.8f;   // 강의 03장: Random.Range
                 for (int i = 0; i < this.repeat; i++)
                 {
                     this.PlayRandomClip(this.stepClips, spot + step * i);
@@ -128,7 +128,7 @@ public class UpstairsNoise : MonoBehaviour
         AudioClip clip = list[Random.Range(0, list.Length)];
         if (clip != null)
         {
-            AudioSource.PlayClipAtPoint(clip, position, this.volume);
+            AudioSource.PlayClipAtPoint(clip, position, this.volume);   // 강의 07장: AudioSource.PlayClipAtPoint
         }
     }
 }

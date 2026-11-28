@@ -141,7 +141,7 @@ public class PlayerDeath : MonoBehaviour
     {
         if (this.IsDead == false && this.blackAmount > 0f)
         {
-            this.blackAmount = Mathf.Max(0f, this.blackAmount - Time.deltaTime / this.fadeTime);
+            this.blackAmount = Mathf.Max(0f, this.blackAmount - Time.deltaTime / this.fadeTime);   // 강의 03장: Time.deltaTime
         }
 
         if (this.showMenu)
@@ -166,17 +166,17 @@ public class PlayerDeath : MonoBehaviour
         if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
-            rb.isKinematic = true;
+            rb.isKinematic = true;   // 강의 03장: Rigidbody Is Kinematic
         }
 
         if (this.deathSound != null)
         {
-            this.deathSound.Play();
+            this.deathSound.Play();   // 강의 03장: AudioSource.Play
         }
 
         if (this.deathWhispers != null && this.deathWhispers.Length > 0)
         {
-            this.whisper = this.deathWhispers[Random.Range(0, this.deathWhispers.Length)];
+            this.whisper = this.deathWhispers[Random.Range(0, this.deathWhispers.Length)];   // 강의 03장: Random.Range
         }
         if (this.floorHints != null && this.floorHints.Length >= 4)
         {
@@ -185,7 +185,7 @@ public class PlayerDeath : MonoBehaviour
             this.hint = this.floorHints[floor];
         }
 
-        this.StartCoroutine(this.DeathRoutine(killer));
+        this.StartCoroutine(this.DeathRoutine(killer));   // 강의 05장: 코루틴 StartCoroutine
     }
 
     private IEnumerator DeathRoutine(Transform killer)
@@ -226,13 +226,13 @@ public class PlayerDeath : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(this.blackTime);
+        yield return new WaitForSeconds(this.blackTime);   // 강의 05장: WaitForSeconds
         this.ShowMenu();
     }
 
     private IEnumerator JumpscareRoutine(Transform killer)
     {
-        NavMeshAgent agent = killer.GetComponent<NavMeshAgent>();
+        NavMeshAgent agent = killer.GetComponent<NavMeshAgent>();   // 강의 07장: NavMeshAgent
         if (agent != null)
         {
             agent.enabled = false;
@@ -248,21 +248,21 @@ public class PlayerDeath : MonoBehaviour
         Vector3 startPos = killer.position;
 
         Vector3 lookPoint = new Vector3(camPos.x, killer.position.y, camPos.z);
-        killer.LookAt(lookPoint);
+        killer.LookAt(lookPoint);   // 강의 07장: transform.LookAt
 
         float time = 0f;
         while (time < this.freezeTime)
         {
             time = time + Time.deltaTime;
             float k = Mathf.Clamp01(time / this.freezeTime);
-            this.cameraTransform.rotation = Quaternion.Euler(Mathf.Lerp(0f, this.lookUpPitch, k), yaw, 0f);
+            this.cameraTransform.rotation = Quaternion.Euler(Mathf.Lerp(0f, this.lookUpPitch, k), yaw, 0f);   // 강의 03장: Quaternion.Euler
             this.edgeAmount = k * 0.3f;
             yield return null;
         }
 
         if (this.jumpscareSound != null)
         {
-            AudioSource.PlayClipAtPoint(this.jumpscareSound, camPos, 1f);
+            AudioSource.PlayClipAtPoint(this.jumpscareSound, camPos, 1f);   // 강의 07장: AudioSource.PlayClipAtPoint
         }
 
         time = 0f;
@@ -335,6 +335,7 @@ public class PlayerDeath : MonoBehaviour
         }
     }
 
+    // [강의 외] Cursor.lockState / Cursor.visible: 메뉴에서 마우스 커서 보이기
     private void ShowMenu()
     {
         this.redAmount = 0f;
@@ -354,9 +355,10 @@ public class PlayerDeath : MonoBehaviour
     private void Restart()
     {
         Checkpoint.isRespawning = Checkpoint.savedOrder > 0;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);   // 강의 04장: SceneManager.LoadScene
     }
 
+    // [강의 외] Application.Quit: 게임 종료
     private void Quit()
     {
 #if UNITY_EDITOR
@@ -366,7 +368,7 @@ public class PlayerDeath : MonoBehaviour
 #endif
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.redAmount > 0f)
         {

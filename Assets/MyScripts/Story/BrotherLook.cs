@@ -20,7 +20,7 @@ public class BrotherLook : MonoBehaviour
 
     private void Start()
     {
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.player = playerObject.transform;
@@ -59,9 +59,9 @@ public class BrotherLook : MonoBehaviour
         float targetYaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg + this.yawOffset;
         float currentYaw = this.transform.eulerAngles.y;
 
-        float newYaw = Mathf.MoveTowardsAngle(currentYaw, targetYaw, this.turnSpeed * Time.deltaTime);
+        float newYaw = Mathf.MoveTowardsAngle(currentYaw, targetYaw, this.turnSpeed * Time.deltaTime);   // 강의 03장: Time.deltaTime
         float step = Mathf.DeltaAngle(currentYaw, newYaw);
 
-        this.transform.RotateAround(this.pivot, Vector3.up, step);
+        this.transform.RotateAround(this.pivot, Vector3.up, step);   // 강의 07장: transform.RotateAround
     }
 }

@@ -40,7 +40,7 @@ public class FlashlightSway : MonoBehaviour
         bool sprinting = moving && this.playerMovement.IsSprinting;
 
         float target = moving ? (sprinting ? this.sprintBobAmount : this.walkBobAmount) : 0f;
-        this.currentAmount = Mathf.Lerp(this.currentAmount, target, this.settleSpeed * Time.deltaTime);
+        this.currentAmount = Mathf.Lerp(this.currentAmount, target, this.settleSpeed * Time.deltaTime);   // 강의 03장: Time.deltaTime
 
         if (moving)
         {
@@ -54,6 +54,6 @@ public class FlashlightSway : MonoBehaviour
         this.transform.localPosition = this.startLocalPosition + offset;
 
         float roll = Mathf.Cos(this.bobTimer) * this.currentAmount * 80f;
-        this.transform.localRotation = this.startLocalRotation * Quaternion.Euler(0f, 0f, roll);
+        this.transform.localRotation = this.startLocalRotation * Quaternion.Euler(0f, 0f, roll);   // 강의 03장: Quaternion.Euler
     }
 }

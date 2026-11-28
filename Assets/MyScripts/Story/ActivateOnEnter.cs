@@ -28,15 +28,15 @@ public class ActivateOnEnter : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)   // 강의 05장: Is Trigger + OnTriggerEnter
     {
-        if (this.isDone || other.CompareTag("Player") == false)
+        if (this.isDone || other.CompareTag("Player") == false)   // 강의 07장: CompareTag
         {
             return;
         }
         if (this.enterSound != null)
         {
-            AudioSource.PlayClipAtPoint(this.enterSound, this.transform.position);
+            AudioSource.PlayClipAtPoint(this.enterSound, this.transform.position);   // 강의 07장: AudioSource.PlayClipAtPoint
         }
         this.Activate(true);
     }

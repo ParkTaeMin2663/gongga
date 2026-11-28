@@ -41,7 +41,7 @@ public class PlayerBreath : MonoBehaviour
         this.playerMovement = this.GetComponent<PlayerMovement>();
         this.playerHide = this.GetComponent<PlayerHide>();
 
-        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        GameObject noiseObject = GameObject.Find("NoiseSystem");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (noiseObject != null)
         {
             this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
@@ -65,7 +65,7 @@ public class PlayerBreath : MonoBehaviour
         bool isSprinting = this.playerMovement != null && this.playerMovement.enabled && this.playerMovement.IsSprinting;
         if (isSprinting)
         {
-            this.Exertion = Mathf.Min(1f, this.Exertion + this.exertionUpSpeed * Time.deltaTime);
+            this.Exertion = Mathf.Min(1f, this.Exertion + this.exertionUpSpeed * Time.deltaTime);   // 강의 03장: Time.deltaTime
         }
         else
         {

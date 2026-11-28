@@ -78,7 +78,7 @@ public class HideSpot : MonoBehaviour
             this.PrepareDoor(this.doorRight, out this.rightHinge, out this.rightClosedPos, out this.rightClosedRot, out this.rightSign);
         }
 
-        GameObject noiseObject = GameObject.Find("NoiseSystem");
+        GameObject noiseObject = GameObject.Find("NoiseSystem");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (noiseObject != null)
         {
             this.noiseSystem = noiseObject.GetComponent<NoiseSystem>();
@@ -106,7 +106,7 @@ public class HideSpot : MonoBehaviour
             return;
         }
 
-        this.stepTime = this.stepTime + Time.deltaTime;
+        this.stepTime = this.stepTime + Time.deltaTime;   // 강의 03장: Time.deltaTime
 
         float doorRate = this.doorTime > 0f ? Mathf.Clamp01(this.stepTime / this.doorTime) : 1f;
         float moveRate = this.moveTime > 0f ? Mathf.Clamp01(this.stepTime / this.moveTime) : 1f;
@@ -231,7 +231,7 @@ public class HideSpot : MonoBehaviour
     {
         door.position = closedPos;
         door.rotation = closedRot;
-        door.RotateAround(hinge, this.transform.up, angle);
+        door.RotateAround(hinge, this.transform.up, angle);   // 강의 07장: transform.RotateAround
     }
 
     private void PrepareDoor(Transform door, out Vector3 hinge, out Vector3 closedPos, out Quaternion closedRot, out float sign)
@@ -266,6 +266,7 @@ public class HideSpot : MonoBehaviour
         if (this.closeDoorsOnStart)
         {
             Vector3 target = hingeX < 0f ? this.transform.right : -this.transform.right;
+            // [강의 외] Vector3.SignedAngle: 장롱 문이 닫힌 정도(각도)
             float closeAngle = Vector3.SignedAngle(along, target, this.transform.up);
             door.RotateAround(hinge, this.transform.up, closeAngle);
             along = target;
@@ -281,7 +282,7 @@ public class HideSpot : MonoBehaviour
     {
         if (this.doorSound != null)
         {
-            this.doorSound.Play();
+            this.doorSound.Play();   // 강의 03장: AudioSource.Play
         }
 
         if (this.noiseSystem != null)

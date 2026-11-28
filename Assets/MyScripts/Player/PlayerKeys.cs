@@ -8,13 +8,14 @@ public class PlayerKeys : MonoBehaviour
     [Tooltip("글자 크기 (1080p 기준)")]
     public int messageSize = 30;
 
-    public static List<string> held = new List<string>();
+    // [강의 외] List<string>: 크기가 늘어나는 열쇠 목록
+    public static List<string> held = new List<string>();   // 강의 07장: public static 변수
     public static List<string> saved = new List<string>();
 
     private static string message = "";
     private static float messageEndTime = -100f;
 
-    private void Awake()
+    private void Awake()   // 강의 05장: Awake
     {
         if (Checkpoint.isRespawning)
         {
@@ -52,7 +53,7 @@ public class PlayerKeys : MonoBehaviour
         messageEndTime = Time.time + 2.2f;
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         float left = messageEndTime - Time.time;
         if (left <= 0f || message == "")

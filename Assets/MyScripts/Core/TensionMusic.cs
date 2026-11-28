@@ -45,7 +45,7 @@ public class TensionMusic : MonoBehaviour
             this.ambientSource.clip = this.ambientClip;
             this.ambientSource.loop = true;
             this.ambientSource.volume = 0f;
-            this.ambientSource.Play();
+            this.ambientSource.Play();   // 강의 03장: AudioSource.Play
         }
     }
 
@@ -86,7 +86,7 @@ public class TensionMusic : MonoBehaviour
 
             float target = want != null ? wantVolume : 0f;
             float speed = target > this.musicSource.volume ? 1f / this.fadeInTime : 1f / this.fadeOutTime;
-            this.musicSource.volume = Mathf.MoveTowards(this.musicSource.volume, target, speed * Time.deltaTime);
+            this.musicSource.volume = Mathf.MoveTowards(this.musicSource.volume, target, speed * Time.deltaTime);   // 강의 03장: Time.deltaTime
             if (want == null && this.musicSource.volume <= 0f && this.musicSource.isPlaying)
             {
                 this.musicSource.Stop();

@@ -36,7 +36,7 @@ public class EndingScreen : MonoBehaviour
     [Tooltip("(없어도 됨) 엔딩 음악. 이 오브젝트에 Audio Source(Spatial Blend 0, Play On Awake 끔)를 붙이고 Clip을 넣는다")]
     public AudioSource endingMusic;
 
-    public static bool isEnding = false;
+    public static bool isEnding = false;   // 강의 07장: public static 변수
 
     private bool started;
     private float blackAmount;
@@ -55,7 +55,7 @@ public class EndingScreen : MonoBehaviour
     private void Start()
     {
         isEnding = false;
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.playerMovement = playerObject.GetComponent<PlayerMovement>();
@@ -67,21 +67,22 @@ public class EndingScreen : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)   // 강의 05장: Is Trigger + OnTriggerEnter
     {
-        if (this.started || other.CompareTag("Player") == false)
+        if (this.started || other.CompareTag("Player") == false)   // 강의 07장: CompareTag
         {
             return;
         }
         this.started = true;
         isEnding = true;
-        this.StartCoroutine(this.EndingRoutine());
+        this.StartCoroutine(this.EndingRoutine());   // 강의 05장: 코루틴 StartCoroutine
     }
 
     private void Update()
     {
         if (this.showMenu)
         {
+            // [강의 외] Cursor.lockState / Cursor.visible: 메뉴에서 마우스 커서 보이기
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -120,13 +121,13 @@ public class EndingScreen : MonoBehaviour
         float ambientStart = ambient != null ? ambient.volume : 0f;
         while (this.blackAmount < 1f)
         {
-            this.blackAmount = Mathf.Min(1f, this.blackAmount + Time.deltaTime / this.fadeTime);
+            this.blackAmount = Mathf.Min(1f, this.blackAmount + Time.deltaTime / this.fadeTime);   // 강의 03장: Time.deltaTime
             if (music != null) music.volume = Mathf.Lerp(musicStart, 0f, this.blackAmount);
             if (ambient != null) ambient.volume = Mathf.Lerp(ambientStart, 0f, this.blackAmount);
             if (this.endingMusic != null) this.endingMusic.volume = this.blackAmount * 0.6f;
             yield return null;
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f);   // 강의 05장: WaitForSeconds
 
         for (int i = 0; i < this.lines.Length; i++)
         {
@@ -167,9 +168,10 @@ public class EndingScreen : MonoBehaviour
         BrotherEncounter.finished = false;
         TitleScreen.hasStarted = false;
         isEnding = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);   // 강의 04장: SceneManager.LoadScene
     }
 
+    // [강의 외] Application.Quit: 게임 종료
     private void Quit()
     {
 #if UNITY_EDITOR
@@ -178,7 +180,7 @@ public class EndingScreen : MonoBehaviour
         Application.Quit();
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.blackAmount <= 0f)
         {

@@ -85,7 +85,7 @@ public class Floor2Event : MonoBehaviour
 
     public bool IsFinished { get; private set; }
 
-    public static bool reachedHidePhase = false;
+    public static bool reachedHidePhase = false;   // 강의 07장: public static 변수
 
     private bool isStarted;
     private bool showHint;
@@ -107,7 +107,7 @@ public class Floor2Event : MonoBehaviour
     private Rigidbody playerBody;
     private bool isViewLocked;
 
-    private void Awake()
+    private void Awake()   // 강의 05장: Awake
     {
         this.isRespawn = Checkpoint.isRespawning;
         if (this.isRespawn == false)
@@ -118,7 +118,7 @@ public class Floor2Event : MonoBehaviour
 
     private void Start()
     {
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.player = playerObject.transform;
@@ -175,7 +175,7 @@ public class Floor2Event : MonoBehaviour
                 this.SetShutterRaised(Mathf.Clamp(this.shutterJamHeight, 0f, fullHeight - 0.1f), fullHeight,
                                       this.shutterClosedPosition.y + fullHeight / 2f);
             }
-            this.StartCoroutine(this.RetryRoutine());
+            this.StartCoroutine(this.RetryRoutine());   // 강의 05장: 코루틴 StartCoroutine
         }
     }
 
@@ -184,7 +184,7 @@ public class Floor2Event : MonoBehaviour
         this.SetBlockers(true);
         this.ShowMonster();
         this.StartViewLock();
-        yield return new WaitForSeconds(this.retryDelay);
+        yield return new WaitForSeconds(this.retryDelay);   // 강의 05장: WaitForSeconds
         this.StartMonsterMove();
         yield return this.StartCoroutine(this.HideRoutine());
     }
@@ -227,7 +227,7 @@ public class Floor2Event : MonoBehaviour
             this.sensorLights[i].enabled = true;
             if (this.sensorClickClip != null)
             {
-                AudioSource.PlayClipAtPoint(this.sensorClickClip, this.sensorLights[i].transform.position);
+                AudioSource.PlayClipAtPoint(this.sensorClickClip, this.sensorLights[i].transform.position);   // 강의 07장: AudioSource.PlayClipAtPoint
             }
             yield return new WaitForSeconds(this.sensorInterval);
         }
@@ -326,10 +326,10 @@ public class Floor2Event : MonoBehaviour
             {
                 Vector3 dir = target.position + Vector3.up * this.viewHeight - this.playerLook.cameraTransform.position;
                 float endYaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-                float flat = Mathf.Sqrt(dir.x * dir.x + dir.z * dir.z);
+                float flat = Mathf.Sqrt(dir.x * dir.x + dir.z * dir.z);   // 강의 06장: Mathf.Sqrt
                 float endPitch = -Mathf.Atan2(dir.y, flat) * Mathf.Rad2Deg;
 
-                t = Mathf.Min(1f, t + Time.deltaTime / this.viewTurnTime);
+                t = Mathf.Min(1f, t + Time.deltaTime / this.viewTurnTime);   // 강의 03장: Time.deltaTime
                 this.playerLook.IsLocked = true;
                 this.playerLook.SetLook(Mathf.LerpAngle(startYaw, endYaw, t), Mathf.Lerp(startPitch, endPitch, t));
             }
@@ -426,13 +426,14 @@ public class Floor2Event : MonoBehaviour
 
     private void SetMonsterAgent(bool on)
     {
-        NavMeshAgent agent = this.monster.GetComponent<NavMeshAgent>();
+        NavMeshAgent agent = this.monster.GetComponent<NavMeshAgent>();   // 강의 07장: NavMeshAgent
         if (agent != null)
         {
             agent.enabled = on;
         }
     }
 
+    // [강의 외] Animator.speed: 괴물 동작 멈추기
     private void SetMonsterPose(bool freeze)
     {
         Animator animator = this.monster.GetComponentInChildren<Animator>();
@@ -457,7 +458,7 @@ public class Floor2Event : MonoBehaviour
     {
         if (this.shutterSound != null)
         {
-            this.shutterSound.Play();
+            this.shutterSound.Play();   // 강의 03장: AudioSource.Play
         }
     }
 
@@ -477,7 +478,7 @@ public class Floor2Event : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.showHint == false || (this.playerHide != null && this.playerHide.IsHidden) || (this.playerDeath != null && this.playerDeath.IsDead))
         {

@@ -21,7 +21,7 @@ public class UIStyle : MonoBehaviour
     [Tooltip("흰색 안내 글자(타이틀 조작법, 인트로 자막, 플레이 중 안내·[E] 문구, 동생·엔딩 자막)만 더 키우는 배율. 1 = 그대로. Play 중에 바꿔도 바로 보인다")]
     public float textScale = 1.25f;
 
-    public static Font regular;
+    public static Font regular;   // 강의 07장: public static 변수
     public static Font bold;
     public static Font black;
     public static Font warning;
@@ -36,7 +36,7 @@ public class UIStyle : MonoBehaviour
     public static Color gray   = new Color(0.55f, 0.58f, 0.64f);
     public static Color shadow = new Color(0f, 0f, 0f, 0.75f);
 
-    private void Awake()
+    private void Awake()   // 강의 05장: Awake
     {
         if (this.regularFont != null) regular = this.regularFont;
         if (this.boldFont != null) bold = this.boldFont;
@@ -196,7 +196,7 @@ public class UIStyle : MonoBehaviour
     {
         EdgeShade(new Rect(0f, 0f, Screen.width, Screen.height), new Color(0.35f, 0f, 0f, 0.55f * alpha), 0.3f);
         float shake = Size(3);
-        Rect shaken = new Rect(rect.x + Random.Range(-shake, shake), rect.y + Random.Range(-shake, shake), rect.width, rect.height);
+        Rect shaken = new Rect(rect.x + Random.Range(-shake, shake), rect.y + Random.Range(-shake, shake), rect.width, rect.height);   // 강의 03장: Random.Range
         Label(shaken, text, style, alpha);
     }
 

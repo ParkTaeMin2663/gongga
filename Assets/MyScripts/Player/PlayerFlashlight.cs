@@ -58,7 +58,7 @@ public class PlayerFlashlight : MonoBehaviour
         this.flashlight.enabled = this.isOnAtStart && this.hasFlashlight && this.battery > 0f;
     }
 
-    private void OnFlashlight(InputValue value)
+    private void OnFlashlight(InputValue value)   // 강의 02장: Player Input 메시지 함수 OnFlashlight
     {
         if (this.flashlight == null || this.isScripted || this.hasFlashlight == false)
         {
@@ -88,7 +88,7 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
 
-        this.battery = Mathf.Max(0f, this.battery - this.drainPerSecond * Time.deltaTime);
+        this.battery = Mathf.Max(0f, this.battery - this.drainPerSecond * Time.deltaTime);   // 강의 03장: Time.deltaTime
         if (this.battery <= 0f)
         {
             this.flashlight.enabled = false;
@@ -103,7 +103,7 @@ public class PlayerFlashlight : MonoBehaviour
             this.flickerTimer = this.flickerTimer - Time.deltaTime;
             if (this.flickerTimer <= 0f)
             {
-                this.flickerTimer = Random.Range(0.3f, 2.5f) * (this.battery / this.lowBattery + 0.2f);
+                this.flickerTimer = Random.Range(0.3f, 2.5f) * (this.battery / this.lowBattery + 0.2f);   // 강의 03장: Random.Range
                 rate = rate * Random.Range(0f, 0.3f);
             }
         }
@@ -132,7 +132,7 @@ public class PlayerFlashlight : MonoBehaviour
             return;
         }
         this.StopAllCoroutines();
-        this.StartCoroutine(this.FlickerOutRoutine(duration));
+        this.StartCoroutine(this.FlickerOutRoutine(duration));   // 강의 05장: 코루틴 StartCoroutine
     }
 
     private IEnumerator FlickerOutRoutine(float duration)
@@ -148,7 +148,7 @@ public class PlayerFlashlight : MonoBehaviour
             this.flashlight.intensity = this.baseIntensity * Random.Range(0.3f, 1f);
             float wait = Random.Range(0.04f, 0.15f);
             time = time + wait;
-            yield return new WaitForSeconds(wait);
+            yield return new WaitForSeconds(wait);   // 강의 05장: WaitForSeconds
         }
 
         this.flashlight.enabled = false;
@@ -160,11 +160,11 @@ public class PlayerFlashlight : MonoBehaviour
     {
         if (this.clickSound != null)
         {
-            this.clickSound.Play();
+            this.clickSound.Play();   // 강의 03장: AudioSource.Play
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.showBatteryBar == false || this.hasFlashlight == false)
         {

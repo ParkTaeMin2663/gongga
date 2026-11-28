@@ -59,7 +59,7 @@ public class BrotherEncounter : MonoBehaviour
     [Tooltip("다시 시작한 뒤 괴물이 켜질 때까지 시간(초)")]
     public float retryDelay = 2f;
 
-    public static bool finished = false;
+    public static bool finished = false;   // 강의 07장: public static 변수
 
     private bool isRespawn;
     private bool isPlaying;
@@ -76,7 +76,7 @@ public class BrotherEncounter : MonoBehaviour
     private NoiseSystem noiseSystem;
     private DraggableDoor exitDoor;
 
-    private void Awake()
+    private void Awake()   // 강의 05장: Awake
     {
         this.isRespawn = Checkpoint.isRespawning;
         if (this.isRespawn == false)
@@ -87,7 +87,7 @@ public class BrotherEncounter : MonoBehaviour
 
     private void Start()
     {
-        GameObject playerObject = GameObject.Find("Player");
+        GameObject playerObject = GameObject.Find("Player");   // 강의 04장: GameObject.Find (Start에서 한 번)
         if (playerObject != null)
         {
             this.player = playerObject.transform;
@@ -128,13 +128,13 @@ public class BrotherEncounter : MonoBehaviour
         {
             this.isPlaying = true;
             this.SetEndState();
-            this.StartCoroutine(this.RetryRoutine());
+            this.StartCoroutine(this.RetryRoutine());   // 강의 05장: 코루틴 StartCoroutine
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)   // 강의 05장: Is Trigger + OnTriggerEnter
     {
-        if (this.isPlaying || other.CompareTag("Player") == false)
+        if (this.isPlaying || other.CompareTag("Player") == false)   // 강의 07장: CompareTag
         {
             return;
         }
@@ -161,7 +161,7 @@ public class BrotherEncounter : MonoBehaviour
             float t = 0f;
             while (t < 1f)
             {
-                t = t + Time.deltaTime / this.turnTime;
+                t = t + Time.deltaTime / this.turnTime;   // 강의 03장: Time.deltaTime
                 this.playerLook.SetYaw(Mathf.LerpAngle(startYaw, endYaw, t));
                 yield return null;
             }
@@ -171,7 +171,7 @@ public class BrotherEncounter : MonoBehaviour
         {
             this.currentLine = this.lines[i];
             yield return this.StartCoroutine(this.FadeLine(0f, 1f, 0.4f));
-            yield return new WaitForSeconds(this.lineTime);
+            yield return new WaitForSeconds(this.lineTime);   // 강의 05장: WaitForSeconds
             yield return this.StartCoroutine(this.FadeLine(1f, 0f, 0.4f));
         }
         this.currentLine = null;
@@ -271,7 +271,7 @@ public class BrotherEncounter : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.playerDeath != null && this.playerDeath.IsDead)
         {

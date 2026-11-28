@@ -42,7 +42,7 @@ public class NoiseSystem : MonoBehaviour
         return distance <= this.LastLoudness;
     }
 
-    private void OnGUI()
+    private void OnGUI()   // 강의 04장: OnGUI
     {
         if (this.showDebug == false || this.NoiseCount == 0)
         {

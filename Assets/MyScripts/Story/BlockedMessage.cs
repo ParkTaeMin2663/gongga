@@ -11,9 +11,9 @@ public class BlockedMessage : MonoBehaviour
 
     private float lastTime = -100f;
 
-    private void OnCollisionEnter(Collision coll)
+    private void OnCollisionEnter(Collision coll)   // 강의 03장: OnCollisionEnter
     {
-        if (coll.gameObject.CompareTag("Player") == false)
+        if (coll.gameObject.CompareTag("Player") == false)   // 강의 07장: CompareTag
         {
             return;
         }
